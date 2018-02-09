@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "lint": "node_modules/.bin/eslint -c .eslintrc.json jsdox.js lib/* bin/* test/**/*.js fixtures/*",
-    "test": "npm run lint && node_modules/.bin/mocha;"
+    "test": "npm run lint && nyc --reporter=html mocha"
   },
   "preferGlobal": true,
   "bin": {
@@ -46,6 +46,7 @@
     "eslint-plugin-json": "^1.2.0",
     "expect.js": "^0.3.1",
     "mocha": "^5.0.0",
+    "nyc": "^11.4.1",
     "should": "^13.2.1",
     "sinon": "^4.2.2"
   },

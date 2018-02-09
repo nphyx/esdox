@@ -23,6 +23,10 @@ output
 .LSOverride
 Icon
 
+## nyc coverage ##
+.nyc_output
+coverage
+
 
 # Thumbnails
 ._*
