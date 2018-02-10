@@ -1,169 +1,174 @@
-var exec = require('child_process').exec;
-var expect = require('expect.js');
-var fs = require('fs');
+/**
+ * Hyperpedantic unit tests for the main module. Basically just making
+ * sure that everything is wired up correctly.
+ */
+const proxy = require("proxyquire");
+const path = require("path");
+const sinon = require("sinon");
+const jsdpStub = require("./stubs/jsdoc3-parser.stub");
+const jsdoxStubs = require("./stubs/jsdox.stubs");
+const fsStubs = require("./stubs/fs.stubs");
+const cliStubs = require("./stubs/cliUtil.stubs");
+const testOutputDirectory = "./test/output";
+const recursive = require("recursive-readdir");
+require("should");
+require("should-sinon");
 
-var bin = 'bin/jsdox';
-
-describe('jsdox', function() {
-  it('prints an error if an input file or directory is not supplied', function(done) {
-    expectOutputFromCommand(bin, 'Error', done, true);
-  });
-
-  it('generates non-empty output markdown files from the fixtures/ files', function(done) {
-    var cmd = bin + ' fixtures/**.js -o sample_output';
-
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-        }
-      });
-
-      done();
-    });
-  });
-
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files', function(done) {
-    this.timeout(5000);
-
-    var cmd = bin + ' fixtures/ -o sample_output -r';
-    //in case an old index.md is here
-    try {
-      fs.unlinkSync('sample_output/index.md');
-    } catch(err) {}
-
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      var nbFiles = 0;
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFiles += 1;
-        }
-      });
-      expect(nbFiles).to.be(9);
-
-      done();
-    });
-  });
-
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under and' +
-      ' the fixtures/under_grandparent/under_parent files and an under and an under_grandparent/under_parent directory in outputs', function(done) {
-    this.timeout(5000);
-
-    var cmd = bin + ' fixtures/ -o sample_output --rr -i';
-
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      var nbFilesA = 0;
-      var nbFilesB = 0;
-      var nbFilesC = 0;
-
-      fs.readdirSync('sample_output/fixtures').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/' + outputFile).isDirectory()) {
-          if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-            var content = fs.readFileSync('sample_output/fixtures/' + outputFile).toString();
-            expect(content).not.to.be.empty();
-            nbFilesA += 1;
-            //clean for future tests
-            fs.unlinkSync('sample_output/fixtures/' + outputFile);
-          }
-        }
-      });
-      expect(nbFilesA).to.be(7);
-
-      fs.readdirSync('sample_output/fixtures/under').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/under/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/fixtures/under/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFilesB += 1;
-          fs.unlinkSync('sample_output/fixtures/under/' + outputFile);
-        }
-      });
-      expect(nbFilesB).to.be(2);
-
-      fs.readdirSync('sample_output/fixtures/under_grandparent/under_parent').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFilesC += 1;
-          fs.unlinkSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile);
-        }
-      });
-      expect(nbFilesC).to.be(1);
-
-      fs.rmdirSync('sample_output/fixtures/under_grandparent/under_parent/');
-      fs.rmdirSync('sample_output/fixtures/under_grandparent/');
-      fs.rmdirSync('sample_output/fixtures/under/');
-      fs.rmdirSync('sample_output/fixtures/');
-
-      done();
-    });
-  });
-
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files and index.md', function(done) {
-    this.timeout(5000);
-
-    var cmd = bin + ' fixtures/ -o sample_output -r -i';
-
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      var nbFiles = 0;
-      var hasIndex = false;
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (fs.lstatSync('sample_output/' + outputFile).isFile()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFiles += 1;
-          hasIndex = hasIndex || (outputFile === 'index.md');
-        }
-      });
-      expect(nbFiles).to.be(10);
-      expect(hasIndex).to.be(true);
-      //clean index for other tests
-      fs.unlinkSync('sample_output/index.md');
-
-      done();
-    });
-  });
-
-  describe('cli options', function() {
-    it('prints the help menu with the -H option', function(done) {
-      expectOutputFromCommand(bin + ' -H', 'Usage:', done);
-    });
-
-    it('prints the version with the -v option', function(done) {
-      expectOutputFromCommand(bin + ' -v', require('../package.json').version, done);
-    });
-
-    it('accepts a custom template directory with the -t option');
-
-    describe('-o option', function() {
-      it('converts an input file to an output markdown file');
-      it('converts an input directory of files to an output directory of markdown files');
-    });
+describe("cliStubs", () => {
+  it("should export stub functions", () => {
+    cliStubs.printHelp.should.be.a.Function();
+    cliStubs.printVersion.should.be.a.Function();
+    cliStubs.loadConfigFile.should.be.a.Function();
   });
 });
 
-/**
- * Helper for asserting that the output from running jsdox from the cli
- * contains a given string
- * @param  {String}   cmd    - The command to execute
- * @param  {String}   output - The string that should be in the output
- * @param  {Function} done   - Executed when the exec is finished
- * @param  {Boolean} isError - Whether or not to check stderr instead
- */
-function expectOutputFromCommand(cmd, output, done, isError) {
-  exec(cmd, function(err, stdout, stderr) {
-    var stream = isError ? stderr : stdout;
-    expect(stream.indexOf(output) !== -1).to.be(true);
-    done();
+const jsdoxModule = proxy("../jsdox", {
+  "jsdoc3-parser": jsdpStub,
+  "./lib/analyze": jsdoxStubs.analyze,
+  "./lib/generateMD": jsdoxStubs.generateMD,
+  "./lib/cliUtil": cliStubs,
+  fs: fsStubs
+});
+
+const {createDirectoryRecursive, generateForDir, analyze, generateMD, jsdox} = jsdoxModule;
+
+describe("jsdox", () => {
+  function cwdWrap(dir) {
+    return path.join(process.cwd(), dir);
+  }
+  describe("createDirectoryRecursive", () => {
+    it("should check whether a directory exists", async () => {
+      await createDirectoryRecursive(testOutputDirectory);
+      fsStubs.stat.should.be.calledWith(cwdWrap(testOutputDirectory));
+    });
+    it("should try to create parent directories recursively", async () => {
+      fsStubs.stat.reset();
+      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ENOENT"});
+      fsStubs.stat.onSecondCall().callsArgWith(1, null, true);
+      sinon.spy(jsdoxModule, "createDirectoryRecursive");
+      await createDirectoryRecursive(testOutputDirectory);
+      fsStubs.stat.should.be.calledWith(cwdWrap(testOutputDirectory));
+      fsStubs.stat.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
+      fsStubs.mkdir.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
+      fsStubs.mkdir.should.be.calledWith(cwdWrap(testOutputDirectory));
+      fsStubs.stat.resetBehavior();
+      jsdoxModule.createDirectoryRecursive.restore();
+    });
+    it("should not complain if the directory already exists", async () => {
+      fsStubs.mkdir.callsArgWith(1, {code: "EEXIST"});
+      createDirectoryRecursive("./test").should.not.be.rejected();
+    });
+    it("should complain on filesystem errors", async () => {
+      fsStubs.stat.callsArgWith(1, {code: "SUPERFAIL"});
+      createDirectoryRecursive("./test").should.be.rejected();
+      fsStubs.stat.resetBehavior();
+      fsStubs.mkdir.callsArgWith(1, {code: "SUPERFAIL"});
+      createDirectoryRecursive("./test").should.be.rejected();
+      fsStubs.mkdir.resetBehavior();
+    });
   });
-}
+
+  describe("generateFoDir", () => {
+    it("should handle a single file", async () => {
+      const opts = {input: "fake.js", output: "./test/output", templateDir: "templates"};
+      const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
+      const expectedGenCall = {
+        source: source,
+        dirname: path.dirname(source),
+        basename: path.basename(source),
+        destination: path.join(opts.output, source).replace(/\.js$/, '.md')
+      }
+
+      let generated = await generateForDir(opts);
+      jsdpStub.should.be.calledWith(source);
+      jsdoxStubs.analyze.should.be.calledWith({}, opts);
+      jsdoxStubs.generateMD.should.be.calledWith(
+        sinon.match(expectedGenCall), opts.templateDir, true);
+      generated.length.should.eql(1);
+      generated[0].should.deepEqual({
+        source: source,
+        destination: expectedGenCall.destination,
+        markdown: true
+      });
+    });
+    it("should handle a directory", async () => {
+      jsdpStub.resetHistory();
+      jsdoxStubs.analyze.resetHistory();
+      jsdoxStubs.generateMD.resetHistory();
+      fsStubs.stat.resetHistory();
+      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
+      let fixtureList = await recursive("./fixtures");
+      const opts = {
+        input: "./fixtures",
+        output: "./test/output",
+        templateDir: "templates"
+      };
+      let generated = await generateForDir(opts);
+      jsdpStub.callCount.should.eql(fixtureList.length);
+      jsdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      jsdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
+      generated.length.should.eql(fixtureList.length);
+      generated.forEach((entry, i) => {
+        entry.source.should.eql(fixtureList[i]);
+        entry.destination.should.eql(
+          path.join(opts.output, entry.source).replace(/\.js$/, '.md'));
+      });
+    });
+  });
+
+  describe("main", () => {
+    var _exit, _consoleLog, _consoleError;
+    const stubLog = sinon.stub();
+    const stubError = sinon.stub();
+    beforeEach(() => {
+      _exit = process.exit;
+      _consoleError = console.error;
+      process.exit = sinon.stub();
+      console.error = sinon.stub();
+      sinon.spy(console, "log");
+    });
+
+    afterEach(() => {
+      process.exit = _exit;
+      console.error = _consoleError;
+      console.log.restore();
+    });
+
+    it("should print help for opts.help then exit", async () => {
+      jsdox({help: true});
+      cliStubs.printHelp.should.be.called();
+      console.error.should.not.be.called();
+      process.exit.should.be.called();
+    });
+
+    it("should print help if called with no options or input", async () => {
+      jsdox();
+      cliStubs.printHelp.should.be.called();
+      console.error.should.not.be.called();
+      process.exit.should.be.called();
+    });
+
+    it("should print version number for opts.version then exit", async () => {
+      jsdox({version: true});
+      cliStubs.printVersion.should.be.called();
+      console.error.should.not.be.called();
+      process.exit.should.be.called();
+    });
+
+    it("should complain when given options but no input file", async () => {
+      jsdox({recursive: true});
+      console.error.should.be.calledWith("Error:", "no input supplied");
+    });
+
+    it("should load a config file when asked", async () => {
+      const stubGen = sinon.stub().resolves();
+      const _gen = jsdoxModule.generateForDir;
+      jsdoxModule.generateForDir = stubGen;
+      let opts = {config: "./test/stubs/jsdox.config.stub.json"};
+      await jsdox(opts);
+      cliStubs.loadConfigFile.should.be.calledWith(opts.config);
+      stubGen.should.be.calledWith(sinon.match({input: "fake.js"}));
+      jsdoxModule.generateForDir = _gen;
+    });
+  });
+});
