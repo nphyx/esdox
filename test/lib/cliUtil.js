@@ -1,15 +1,15 @@
 const proxy = require("proxyquire");
 const path = require("path");
 const sinon = require("sinon");
-const jsdpStub = require("./stubs/jsdoc3-parser.stub");
-const jsdoxStubs = require("./stubs/jsdox.stubs");
-const fsStubs = require("./stubs/fs.stubs");
-const packageJson = require("../package.json");
-const fakeConfig = require("./stubs/jsdox.config.stub.json");
+const jsdpStub = require("../stubs/jsdoc3-parser.stub");
+const jsdoxStubs = require("../stubs/jsdox.stubs");
+const fsStubs = require("../stubs/fs.stubs");
+const packageJson = require("../../package.json");
+const fakeConfig = require("../stubs/jsdox.config.stub.json");
 require("should");
 require("should-sinon");
 
-const cliUtil = proxy("../lib/cliUtil", {
+const cliUtil = proxy("../../lib/cliUtil", {
   fs: fsStubs
 });
 
