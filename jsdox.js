@@ -31,29 +31,28 @@ const promisedStat = promisify(fs.stat);
 
 /**
  * Collects items that should end up in the file index from a single file's analyzed data.
+ * Meant to be used with Array.reduce.
  * @param {Object} accumulator object for collecting accumulated data across multiple files
  * @param {Array} accumulator.functions functions that should appear in the index
  * @param {Array} accumulator.classes classes that should appear in the index
  * @param {Object} data analyzed data
  * @param {Object} opts options passed to the [jsdox](#jsdox) function
+ * @return {Object} accumulator
  */
-function collectIndexData(accumulator, data, opts) {
-  data.functions.forEach(func => {
+exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
+  data.analyzed.functions.forEach(func => {
     if (func.className === undefined) {
       var toAddFct = func;
-      toAddFct.destination = path.relative(opts.destination, data.destination);
-      toAddFct.source = path.relative(opts.destination, path.join(data.dirname, data.basename));
+      toAddFct.source = path.relative(opts.output, path.join(data.dirname, data.basename));
       accumulator.functions.push(toAddFct);
     }
   });
-  data.classes.forEach((klass, i) => {
-    if (klass && data.functions[i].className === undefined) {
-      var toAddClass = klass;
-      toAddClass.destination = path.relative(opts.destination, data.destination);
-      toAddClass.source = path.relative(opts.destination, path.join(data.dirname, data.basename));
-      accumulator.classes.push(toAddClass);
-    }
+  data.analyzed.classes.forEach((klass) => {
+    var toAddClass = klass;
+    toAddClass.source = path.relative(opts.output, path.join(data.dirname, data.basename));
+    accumulator.classes.push(toAddClass);
   });
+  return accumulator;
 }
 
 /**
@@ -75,23 +74,17 @@ exports.generateForDir = async function generateForDir(opts) {
     let stat = await promisedStat(filename);
     if (stat.isDirectory()) {
       files = await recursive(filename);
+      files.sort();
+    } else {
+      throw Error("input file is not a .js or directory");
     }
   }
 
-  // got list of files, now let's parse them
-  let parsed = await Promise.all(files.map(file => {
-    let filePath = path.join(path.dirname(file), path.basename(file));
-    return promisedParser(filePath)
-  }));
-
-  // assuming that worked, next let's analyze them
-  let analyzed = parsed.map(parsed => analyze(parsed, opts));
-
-  // attach file paths to the analyzed data
-  let detailed = analyzed.map((entry, i) => {
+  // create an output object with analyzed information
+  let output = await Promise.all(files.map(async (file) => {
     // this is sort of a fix for tests :/
-    let out = Object.assign({}, entry);
-    out.source = files[i];
+    let out = {};
+    out.source = file;
     out.dirname = path.dirname(out.source);
     out.basename = path.basename(out.source);
     if (opts.rr) {
@@ -100,26 +93,21 @@ exports.generateForDir = async function generateForDir(opts) {
       out.destination = path.join(opts.output, out.source);
     }
     out.destination = out.destination.replace(/\.js$/, '.md');
+    out.parsed = await promisedParser(path.join(out.dirname, out.basename));
+    out.analyzed = analyze(out.parsed, opts);
+    out.markdown = generateMD(out.analyzed, opts.templateDir, true);
     return out;
-  });
-
-  // now let's generate markdown for each
-  let output = detailed.map(entry => {
-    return {
-      markdown: generateMD(entry, opts.templateDir, true),
-      source: entry.source,
-      destination: entry.destination
-    }
-  });
+  }));
+  output.sort((a, b) => a.source > b.source);
 
   if (opts.index) {
     // if we're generating indexes, do that with the analyzed data
     let indexData = {functions: [], classes: []};
-    analyzed.reduce(collectIndexData, indexData);
+    output.reduce((p, c) => exports.collectIndexData(p, c, opts), indexData);
     indexData.source = filename;
     indexData.dirname = path.dirname(filename);
     indexData.basename = path.basename("index.md");
-    indexData.destination = path.join(opts.destination, "index.md");
+    indexData.destination = path.join(opts.output, "index.md");
     indexData.markdown = generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
     output.push(indexData);
   }
@@ -151,13 +139,8 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
   try {
     await promisedMkdir(path.join(process.cwd(), dir));
   } catch (err) {
-    switch (err.code) {
-      case "EEXIST":
-        // no problemo
-        return;
-      // maybe handle other errors elegantly here
-      default:
-        throw err;
+    if (err.code !== "EEXIST") {
+      throw err;
     }
   }
   return;
@@ -175,6 +158,7 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
  * @param {Boolean} [opts.recursive=false] generate documentation for subdirectories
  * @param {Boolean} [opts.respect-recursive=false] generate documentation for subdirectories, keeping directory structure in output files
  * @param {Boolean} [opts.index=false] generate an index file
+ * @return {Promise}
  */
 async function main(opts = {}) {
   if (Object.keys(opts).length === 0 || opts.help) {
@@ -195,8 +179,10 @@ async function main(opts = {}) {
         throw new Error("no input supplied");
       }
       let generated = await exports.generateForDir(opts);
-      await Promise.all(generated.map(async (entry) => {
-        await exports.createDirectoryRecursive(path.dirname(entry.destination));
+      await Promise.all(generated.map(entry => {
+        return exports.createDirectoryRecursive(path.dirname(entry.destination));
+      }));
+      await Promise.all(generated.map(entry => {
         return promisedWriteFile(entry.destination, entry.markdown);
       }));
       return process.exit();
