@@ -1,110 +1,148 @@
-var exec = require('child_process').exec;
-var expect = require('expect.js');
-var fs = require('fs');
+const os = require("os");
+const exec = require("child_process").exec;
+const path = require("path");
+const expect = require("expect.js");
+const promisify = require("util").promisify;
+const recursive = require("recursive-readdir");
+const fs = require("fs");
+require("should");
+const fsp = {};
+["stat", "readFile", "readdir", "rmdir", "unlink"].forEach(fn => {
+  fsp[fn] = promisify(fs[fn]);
+});
 
-var bin = 'bin/jsdox';
+const bin = "bin/jsdox";
+
+const inpath = "./fixtures/";
+const outpath = "./test/test_output/";
+
+const execp = function(cmd) {
+  return new Promise((resolve, reject) => {
+    exec(cmd, (err, stdout, stderr) => {
+      resolve({err, stdout, stderr});
+    });
+  });
+}
+
+/**
+ * Helper for asserting that the output from running jsdox from the cli
+ * contains a given string
+ * @param  {String}   cmd    - The command to execute
+ * @param  {String}   output - The string that should be in the output
+ * @param  {Function} done   - Executed when the exec is finished
+ * @param  {Boolean} isError - Whether or not to check stderr instead
+ */
+function expectOutputFromCommand(cmd, output, done, isError) {
+  exec(cmd, function(err, stdout, stderr) {
+    var stream = isError ? stderr : stdout;
+    expect(stream.indexOf(output) !== -1).to.be(true);
+    done();
+  });
+}
 
 describe('jsdox', function() {
+  let cleanup;
+  if (os.platform() === "win32") {
+    cleanup = async function() {
+      try {
+        const files = await recursive(outpath);
+        await Promise.all(files.map(file => fsp.unlink(file)));
+      } catch (err) {}
+      try {
+        await fsp.rmdir(outpath + "under_grandparent/under_parent");
+      } catch (err) {}
+      try {
+        await fsp.rmdir(outpath + "under_grandparent");
+      } catch (err) {}
+      try {
+        await fsp.rmdir(outpath + "under");
+      } catch (err) {}
+      try {
+        await fsp.rmdir(outpath);
+      } catch (err) {}
+    }
+  } else {
+    // probably has rm -rf
+    cleanup = async function() {
+      // but let's not -f
+      try {
+        const files = await recursive(outpath);
+        await Promise.all(files.map(file => fsp.unlink(file)));
+      } catch (err) {}
+      await execp("rm -r " + outpath);
+    }
+  }
+
+  async function checkFiles(files) {
+    files = await Promise.all(
+      files.map(async file => {
+        let stat = await fsp.stat(file);
+        return stat.isDirectory() ? undefined : file;
+      })
+    );
+    return Promise.all(
+      files.filter((file) => file).map(async file => {
+        let content = await fsp.readFile(file);
+        content.toString().should.not.be.empty();
+        return file;
+      })
+    );
+  }
+
+  before(cleanup);
+  afterEach(cleanup);
+
   it('prints an error if an input file or directory is not supplied', function(done) {
     expectOutputFromCommand(bin, 'Error', done, true);
   });
 
-  it('generates non-empty output markdown files from the fixtures/ files', function(done) {
-    var cmd = bin + ' fixtures/**.js -o sample_output';
+  it('generates non-empty output markdown files from the fixtures/ files', async () => {
+    const cmd = bin + " -o " + outpath + " " + inpath + "**.js";
+    const {err, stdout, stderr} = await execp(cmd);
+    expect(stderr).to.be.empty();
 
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-        }
-      });
-
-      done();
-    });
+    let inputs = await fsp.readdir(inpath);
+    let files = await recursive(outpath);
+    let found = await checkFiles(files);
+    found.length.should.eql(inputs.length - 2); // 2 subdirectories
   });
 
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files', function(done) {
-    this.timeout(5000);
+  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files', async () => {
+    const cmd = bin + " -r -o " + outpath + " " + inpath;
+    const {err, stdout, stderr} = await execp(cmd);
+    expect(stderr).to.be.empty();
 
-    var cmd = bin + ' fixtures/ -o sample_output -r';
-    //in case an old index.md is here
-    try {
-      fs.unlinkSync('sample_output/index.md');
-    } catch(err) {}
-
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
-
-      var nbFiles = 0;
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFiles += 1;
-        }
-      });
-      expect(nbFiles).to.be(9);
-
-      done();
-    });
+    let inputs = await recursive(inpath);
+    let files = await recursive(outpath);
+    files.length.should.eql(inputs.length);
+    let found = await checkFiles(files);
+    found.length.should.eql(files.length);
   });
 
   it('generates non-empty output markdown files from the fixtures/ and the fixtures/under and' +
-      ' the fixtures/under_grandparent/under_parent files and an under and an under_grandparent/under_parent directory in outputs', function(done) {
-    this.timeout(5000);
+      ' the fixtures/under_grandparent/under_parent files and an under and an under_grandparent/under_parent directory in outputs', async () => {
+    const cmd = bin + " -rr -i -o " + outpath + " " + inpath;
+    const {err, stdout, stderr} = await execp(cmd);
+    console.log(stdout);
+    expect(stderr).to.be.empty();
 
-    var cmd = bin + ' fixtures/ -o sample_output --rr -i';
+    let inputs = await recursive(inpath);
+    let files = await recursive(outpath);
+    files.length.should.eql(inputs.length + 1); // +1 for index
+    let found = await checkFiles(files);
+    found.length.should.eql(files.length);
 
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
+    // top level directory structure is correct
+    files = await fsp.readdir(outpath + "/fixtures");
+    files.length.should.eql(found.length - 2);
 
-      var nbFilesA = 0;
-      var nbFilesB = 0;
-      var nbFilesC = 0;
+    // second level directory structure is correct
+    files = await fsp.readdir(outpath + "/fixtures/under");
+    files.length.should.eql(2);
 
-      fs.readdirSync('sample_output/fixtures').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/' + outputFile).isDirectory()) {
-          if (!fs.statSync('sample_output/' + outputFile).isDirectory()) {
-            var content = fs.readFileSync('sample_output/fixtures/' + outputFile).toString();
-            expect(content).not.to.be.empty();
-            nbFilesA += 1;
-            //clean for future tests
-            fs.unlinkSync('sample_output/fixtures/' + outputFile);
-          }
-        }
-      });
-      expect(nbFilesA).to.be(7);
-
-      fs.readdirSync('sample_output/fixtures/under').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/under/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/fixtures/under/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFilesB += 1;
-          fs.unlinkSync('sample_output/fixtures/under/' + outputFile);
-        }
-      });
-      expect(nbFilesB).to.be(2);
-
-      fs.readdirSync('sample_output/fixtures/under_grandparent/under_parent').forEach(function(outputFile) {
-        if (!fs.statSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile).isDirectory()) {
-          var content = fs.readFileSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFilesC += 1;
-          fs.unlinkSync('sample_output/fixtures/under_grandparent/under_parent/' + outputFile);
-        }
-      });
-      expect(nbFilesC).to.be(1);
-
-      fs.rmdirSync('sample_output/fixtures/under_grandparent/under_parent/');
-      fs.rmdirSync('sample_output/fixtures/under_grandparent/');
-      fs.rmdirSync('sample_output/fixtures/under/');
-      fs.rmdirSync('sample_output/fixtures/');
-
-      done();
-    });
+    // third level structure correct
+    files = await fsp.readdir(outpath + "/fixtures/under_grandparent/under_parent");
+    files.length.should.eql(1);
   });
 
   it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files and index.md', function(done) {
@@ -152,18 +190,3 @@ describe('jsdox', function() {
   });
 });
 
-/**
- * Helper for asserting that the output from running jsdox from the cli
- * contains a given string
- * @param  {String}   cmd    - The command to execute
- * @param  {String}   output - The string that should be in the output
- * @param  {Function} done   - Executed when the exec is finished
- * @param  {Boolean} isError - Whether or not to check stderr instead
- */
-function expectOutputFromCommand(cmd, output, done, isError) {
-  exec(cmd, function(err, stdout, stderr) {
-    var stream = isError ? stderr : stdout;
-    expect(stream.indexOf(output) !== -1).to.be(true);
-    done();
-  });
-}

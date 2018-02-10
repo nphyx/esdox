@@ -124,7 +124,7 @@ describe("jsdox", () => {
       jsdpStub.should.be.calledWith(source);
       jsdoxStubs.analyze.should.be.calledWith({}, opts);
       jsdoxStubs.generateMD.should.be.calledWith(
-        {}, opts.templateDir, true);
+        {}, opts.templateDir, false);
       generated.length.should.eql(1);
       generated[0].should.deepEqual({
         source: source,

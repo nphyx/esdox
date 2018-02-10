@@ -68,16 +68,28 @@ exports.generateForDir = async function generateForDir(opts) {
   let files;
   let filename = opts.input;
 
-  if (filename.match(/\.js$/)) {
-    files = [filename];
-  } else {
-    let stat = await promisedStat(filename);
-    if (stat.isDirectory()) {
-      files = await recursive(filename);
-      files.sort();
+  if (filename.length === 1) {
+    filename = filename[0];
+  }
+
+
+  if (typeof(filename) === "string") {
+    if (filename.match(/\.js$/)) {
+      files = [filename];
     } else {
-      throw Error("input file is not a .js or directory");
+      let stat = await promisedStat(filename);
+      if (stat.isDirectory()) {
+        files = await recursive(filename);
+        files.sort();
+      } else {
+        throw Error("input file is not a .js or directory");
+      }
     }
+  } else if (filename.length) {
+    files = filename;
+    files.sort();
+  } else {
+    throw Error("input file is not a .js or directory");
   }
 
   // create an output object with analyzed information
@@ -95,7 +107,7 @@ exports.generateForDir = async function generateForDir(opts) {
     out.destination = out.destination.replace(/\.js$/, '.md');
     out.parsed = await promisedParser(path.join(out.dirname, out.basename));
     out.analyzed = analyze(out.parsed, opts);
-    out.markdown = generateMD(out.analyzed, opts.templateDir, true);
+    out.markdown = generateMD(out.analyzed, opts.templateDir, false);
     return out;
   }));
   output.sort((a, b) => a.source > b.source);

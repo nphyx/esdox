@@ -2,7 +2,7 @@
 
 var jsdox = require('../jsdox').jsdox;
 
-var argv = require('optimist')
+var opts = require('optimist')
   .options('output', {
     alias: 'o',
     default: 'output'
@@ -14,7 +14,7 @@ var argv = require('optimist')
     alias: 'v'
   })
   .options('help', {
-    alias: 'h'
+    alias: 'H'
   })
   .options('A', {
     alias: 'All',
@@ -41,4 +41,8 @@ var argv = require('optimist')
   })
   .argv;
 
-jsdox(argv);
+if (opts._) {
+  opts.input = opts._;
+}
+
+jsdox(opts);
