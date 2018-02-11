@@ -119,13 +119,24 @@ describe("jsdox", () => {
       jsdoxStubs.generateMD.resetHistory();
       fsStubs.stat.resetHistory();
     });
-    it("should complain if given an unusable input", async () => {
-      fsStubs.stat.resetHistory();
+    it("should complain if given a non-javascript file", async () => {
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
       generate({input: ["notascript.css"]})
-        .should.be.rejected();
+        .should.be.rejectedWith("no javascript files in input path");
+      fsStubs.stat.resetBehavior();
+    });
+    it("should complain if a file does not exist", async () => {
+      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ENOENT"});
+      generate({input: ["doesntexist.js"]})
+        .should.be.rejectedWith("file does not exist: doesntexist.js");
+    });
+    it("should bubble other filesystem errors", async () => {
+      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ESOMEERROR"});
+      generate({input: ["doesntexist.js"]})
+        .should.be.rejectedWith({code: "ESOMEERROR"});
     });
     it("should handle a single file", async () => {
+      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
       const opts = {input: ["fake.js"], output: "./test/output",
         templateDir: "templates"};
       const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
@@ -253,7 +264,7 @@ describe("jsdox", () => {
       fsStubs.writeFile.resetHistory();
       fsStubs.stat.resetHistory();
       console.error.resetHistory();
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
+      fsStubs.stat.callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
       jsdoxStubs.analyze.returns({
         functions: [],
