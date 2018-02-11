@@ -40,7 +40,7 @@ function expectOutputFromCommand(cmd, output, done, isError) {
   });
 }
 
-describe('jsdox', function() {
+describe('integration: jsdox cli', function() {
   let cleanup;
   if (os.platform() === "win32") {
     cleanup = async function() {
