@@ -1,4 +1,4 @@
-# ESDox
+# ESDox [![build status](https://travis-ci.org/nphyx/esdox.svg?branch=master)](https://travis-ci.org/nphyx/esdox)
 ESDox is a simple jsdoc 3 generator based on [jsdox](https://github.com/sutoiku/jsdox).
 
 It pulls documentation tags based on a subset of [jsdoc 3](https://usejsdoc.org/) from your javascript files and 
