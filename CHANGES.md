@@ -1,3 +1,23 @@
+ESDox 0.0.1
+-----------
+
+* hard fork from [jsdox](https://github.com/sutoiku/jsdox)
+* migrated optimist to yarg
+* incorporated istanbul/nyc for coverage testing
+* (almost) complete unit testing
+  * migrate to BDD style via should
+  * stubs and mocks via sinon
+* separate integration tests
+* tests don't overwrite `sample_output` anymore
+  * integration tests now create temporary output at `test/test_output`
+  * they clean up afterward
+* major refactor of core functions and CLI interface
+  * replaced synchronous fs calls with async versions
+  * esdox.js functions purely as a nodejs module
+  * bin/esdox handles all CLI functionality
+  * esdox.js no longer generates console output
+  * some functions broken out and exported for easier unit testing
+
 0.5.0
 ------
 
@@ -48,7 +68,7 @@
 
 * Index generation for your generated documentation with -i (vdeturckheim)
 * Recursive generation of documentation with -r (ie: documentation for subdirectories is generated too) (vdeturckheim)
-* Respectful recursive generation with --rr (ie: the documentation for dir1/dir2/file.js will be in output_dir/dir1/dir/file.md) (vdeturckheim)
+* Respectful recursive generation with --rr (ie: the documentation for dir1/dir2/file.js will be in output\_dir/dir1/dir/file.md) (vdeturckheim)
 * Use JSCS to check code formatting (mrjoelkemp, psq)
 * normalizing headers to pound format (boneskull)
 * use alternate horizontal rules so you don't get them confused with headers (boneskull)

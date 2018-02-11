@@ -1,19 +1,3 @@
-/*
-   Copyright (c) 2012-2016 Sutoiku
-
-   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-   documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-   rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-   persons to whom the Software is furnished to do so, subject to the following conditions:
-
-   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-   Software.
-
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-   WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-   COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-   */
 const util = require('util');
 const promisify = util.promisify;
 const fs = require('fs');
@@ -36,7 +20,7 @@ const promisedReaddir = promisify(fs.readdir);
  * @param {Array} accumulator.functions functions that should appear in the index
  * @param {Array} accumulator.classes classes that should appear in the index
  * @param {Object} data analyzed data
- * @param {Object} opts options passed to the [jsdox](#jsdox) function
+ * @param {Object} opts options passed to the [esdox](#esdox) function
  * @return {Object} accumulator
  */
 exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
@@ -166,7 +150,7 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
 }
 
 /**
- * Main function handles parsed CLI input from bin/jsdox or a passed
+ * Main function handles parsed CLI input from bin/esdox or a passed
  * options object.
  * @param {Object} opts may include [command line options](lib/#printHelp)
  * @param {String|Array} opts.input input file or directory
@@ -194,4 +178,4 @@ async function main(opts = {}) {
 
 exports.analyze = analyze;
 exports.generateMD = generateMD;
-exports.jsdox = main;
+exports.esdox = main;

@@ -3,8 +3,7 @@ Contributing guidelines
 
 ### Maintainers
 
-* Pascal Belloncle ([@psq](https://twitter.com/psq))
-* Joel Kemp ([@mrjoelkemp](https://twitter.com/mrjoelkemp))
+* Justen Robertson [email](justen@justen.us)
 
 ### Disclaimers:
 
@@ -15,7 +14,7 @@ Contributing guidelines
 
 If your PR makes changes to the output, regenerate the sample_output content by running
 ```
-bin/jsdox -i -r -o sample_output fixtures/
+bin/esdox -i -r -o sample_output fixtures/
 ```
 
 ### Update README.md and CHANGES.md ###

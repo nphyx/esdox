@@ -7,7 +7,7 @@ const promisify = require("util").promisify;
 const path = require("path");
 const sinon = require("sinon");
 const jsdpStub = require("./stubs/jsdoc3-parser.stub");
-const jsdoxStubs = require("./stubs/jsdox.stubs");
+const esdoxStubs = require("./stubs/esdox.stubs");
 const fsStubs = require("./stubs/fs.stubs");
 const cliStubs = require("./stubs/cliUtil.stubs");
 const testOutputDirectory = "./test/output";
@@ -30,18 +30,18 @@ describe("cliStubs", () => {
   });
 });
 
-const jsdoxModule = proxy("../jsdox", {
+const esdoxModule = proxy("../esdox", {
   "jsdoc3-parser": jsdpStub,
-  "./lib/analyze": jsdoxStubs.analyze,
-  "./lib/generateMD": jsdoxStubs.generateMD,
+  "./lib/analyze": esdoxStubs.analyze,
+  "./lib/generateMD": esdoxStubs.generateMD,
   "./lib/cliUtil": cliStubs,
   fs: fsStubs
 });
 
 const {collectIndexData, createDirectoryRecursive, generate, analyze,
-  generateMD, jsdox} = jsdoxModule;
+  generateMD, esdox} = esdoxModule;
 
-describe("jsdox", () => {
+describe("esdox", () => {
   function cwdWrap(dir) {
     return path.join(process.cwd(), dir);
   }
@@ -63,7 +63,7 @@ describe("jsdox", () => {
           {name: "baz", source: "../../src/file2.js"}
         ]
       }
-      jsdoxStubs.indexTestData.reduce((p, c) =>
+      esdoxStubs.indexTestData.reduce((p, c) =>
         collectIndexData(p, c, opts), accumulator);
       accumulator.should.deepEqual(expected);
     });
@@ -78,14 +78,14 @@ describe("jsdox", () => {
       fsStubs.stat.resetHistory();
       fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ENOENT"});
       fsStubs.stat.onSecondCall().callsArgWith(1, null, true);
-      sinon.spy(jsdoxModule, "createDirectoryRecursive");
+      sinon.spy(esdoxModule, "createDirectoryRecursive");
       await createDirectoryRecursive(testOutputDirectory);
       fsStubs.stat.should.be.calledWith(cwdWrap(testOutputDirectory));
       fsStubs.stat.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
       fsStubs.mkdir.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
       fsStubs.mkdir.should.be.calledWith(cwdWrap(testOutputDirectory));
       fsStubs.stat.callsArgWith(1, null, true);
-      jsdoxModule.createDirectoryRecursive.restore();
+      esdoxModule.createDirectoryRecursive.restore();
     });
     it("should not complain if the directory already exists", (done) => {
       fsStubs.mkdir.reset();
@@ -115,8 +115,8 @@ describe("jsdox", () => {
   describe("generate", () => {
     beforeEach(() => {
       jsdpStub.resetHistory();
-      jsdoxStubs.analyze.resetHistory();
-      jsdoxStubs.generateMD.resetHistory();
+      esdoxStubs.analyze.resetHistory();
+      esdoxStubs.generateMD.resetHistory();
       fsStubs.stat.resetHistory();
     });
     it("should complain if given a non-javascript file", async () => {
@@ -142,8 +142,8 @@ describe("jsdox", () => {
       const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
       let generated = await generate(opts);
       jsdpStub.should.be.calledWith(source);
-      jsdoxStubs.analyze.should.be.calledWith({}, opts);
-      jsdoxStubs.generateMD.should.be.calledWith(
+      esdoxStubs.analyze.should.be.calledWith({}, opts);
+      esdoxStubs.generateMD.should.be.calledWith(
         {}, opts.templateDir, false);
       generated.length.should.eql(1);
       generated[0].should.deepEqual({
@@ -170,8 +170,8 @@ describe("jsdox", () => {
       fixtureList.sort();
       let generated = await generate(opts);
       jsdpStub.callCount.should.eql(fixtureList.length);
-      jsdoxStubs.analyze.callCount.should.eql(fixtureList.length);
-      jsdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
       generated.length.should.eql(fixtureList.length);
       generated.forEach((entry, i) => {
         entry.source.should.eql(fixtureList[i]);
@@ -203,8 +203,8 @@ describe("jsdox", () => {
       fixtureList.sort();
       let generated = await generate(opts);
       jsdpStub.callCount.should.eql(fixtureList.length);
-      jsdoxStubs.analyze.callCount.should.eql(fixtureList.length);
-      jsdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
       generated.length.should.eql(fixtureList.length);
       generated.forEach((entry, i) => {
         entry.source.should.eql(fixtureList[i]);
@@ -221,7 +221,7 @@ describe("jsdox", () => {
       };
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
-      jsdoxStubs.analyze.returns({
+      esdoxStubs.analyze.returns({
         functions: [],
         classes: []
       });
@@ -237,7 +237,7 @@ describe("jsdox", () => {
       index.dirname.should.eql(path.dirname(opts.input[0]));
       index.destination.should.eql(path.join(opts.output, "index.md"));
       index.markdown.should.be.True();
-      jsdoxStubs.analyze.returns({});
+      esdoxStubs.analyze.returns({});
     });
   });
 
@@ -260,13 +260,13 @@ describe("jsdox", () => {
     });
 
     it("should create files", async () => {
-      sinon.spy(jsdoxModule, "createDirectoryRecursive");
+      sinon.spy(esdoxModule, "createDirectoryRecursive");
       fsStubs.writeFile.resetHistory();
       fsStubs.stat.resetHistory();
       console.error.resetHistory();
       fsStubs.stat.callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
-      jsdoxStubs.analyze.returns({
+      esdoxStubs.analyze.returns({
         functions: [],
         classes: []
       });
@@ -278,12 +278,12 @@ describe("jsdox", () => {
         templateDir: "templates"
       };
       let fixtureList = await recursive(opts.input);
-      await jsdox(opts);
+      await esdox(opts);
       console.error.should.not.be.called();
-      jsdoxModule.createDirectoryRecursive.callCount.should.eql(fixtureList.length + 1);
+      esdoxModule.createDirectoryRecursive.callCount.should.eql(fixtureList.length + 1);
       fsStubs.writeFile.callCount.should.eql(fixtureList.length + 1);
-      jsdoxModule.createDirectoryRecursive.restore();
-      jsdoxStubs.analyze.returns({});
+      esdoxModule.createDirectoryRecursive.restore();
+      esdoxStubs.analyze.returns({});
     });
   });
 });

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-const jsdox = require("../jsdox").jsdox;
+const esdox = require("../esdox").esdox;
 const yargs = require("yargs")
-  .usage("Usage:\tjsdox [options] [-o output_dir] [-t template_dir] <file | directory>")
+  .usage("Usage:\tesdox [options] [-o output_dir] [-t template_dir] <file | directory>")
   .options("output", {
     alias: "o",
     default: "output",
@@ -65,7 +65,7 @@ if (!argv._.length && !argv.input) {
     "index-sort": argv["index-sort"],
     input: argv.input ? argv.input : argv._
   }
-  jsdox(opts)
+  esdox(opts)
     .then(() => process.exit())
     .catch(err => console.error("Error: " + err.message))
 }

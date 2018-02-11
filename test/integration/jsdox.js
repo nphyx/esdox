@@ -11,7 +11,7 @@ const fsp = {};
   fsp[fn] = promisify(fs[fn]);
 });
 
-const bin = "bin/jsdox";
+const bin = "bin/esdox";
 
 const inpath = "./fixtures/";
 const outpath = "./test/test_output/";
@@ -25,7 +25,7 @@ const execp = function(cmd) {
 }
 
 /**
- * Helper for asserting that the output from running jsdox from the cli
+ * Helper for asserting that the output from running esdox from the cli
  * contains a given string
  * @param  {String}   cmd    - The command to execute
  * @param  {String}   output - The string that should be in the output
@@ -40,7 +40,7 @@ function expectOutputFromCommand(cmd, output, done, isError) {
   });
 }
 
-describe('integration: jsdox cli', function() {
+describe('integration: esdox cli', function() {
   let cleanup;
   if (os.platform() === "win32") {
     cleanup = async function() {
