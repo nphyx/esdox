@@ -23,8 +23,8 @@
   ],
   "scripts": {
     "lint": "node_modules/.bin/eslint -c .eslintrc.json esdox.js lib/* bin/* test/**/*.js fixtures/*",
-    "test": "npm run lint && nyc --reporter=html mocha test/lib/*.js test/*.js test/integration/*.js",
-    "test-verbose": "npm run lint && nyc --reporter=html mocha --opts . test/lib/*.js test/*.js test/integration/*.js"
+    "test": "npm run lint && nyc --reporter=text mocha --reporter=dot test/lib/*.js test/*.js test/integration/*.js",
+    "test-verbose": "npm run lint && nyc --reporter=html mocha --reporter=spec test/lib/*.js test/*.js test/integration/*.js"
   },
   "preferGlobal": true,
   "bin": {
