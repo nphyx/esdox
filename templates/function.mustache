@@ -1,33 +1,33 @@
-### {{#moduleName}}{{moduleName}}.{{/moduleName}}{{#className}}{{className}}.{{/className}}{{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}}
+***
+## {{name}}
+### {{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}} &#x21e8; {{#returns}}{{#typesString}}`{{typesString}}`{{/typesString}}{{/returns}}
 
 {{#description}}
 {{{description}}}
-
 {{/description}}
-{{#deprecated}}
-Deprecated: {{{deprecated}}}
-
-{{/deprecated}}
-{{#hasParams}}
-**Parameters**
-
-{{/hasParams}}
-{{#params}}
-{{#nested}} - {{/nested}}**{{name}}**: {{#typesString}}`{{typesString}}`{{/typesString}}{{#description}}, {{{description}}}{{/description}}
-
-{{/params}}
-{{#fires}}
-**Fires**: {{.}}
-
-{{/fires}}
-{{#returns}}
-**Returns**: {{#typesString}}`{{typesString}}`{{/typesString}}{{#description}}, {{{description}}}{{/description}}
-{{/returns}}
 
 {{#examples}}
 **Example**:
 ```js
 {{{examples}}}
 ```
-
 {{/examples}}
+
+{{#deprecated}}
+Deprecated: {{{deprecated}}}
+{{/deprecated}}
+
+{{#hasParams}}
+**Parameters**
+
+| name | type | description |
+|------|------|-------------|{{/hasParams}}{{#params}}
+| **{{name}}** | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
+
+{{#returns}}
+**Returns**: {{#typesString}}`{{typesString}}`{{/typesString}}{{#description}}{{{description}}}{{/description}}
+{{/returns}}
+
+{{#fires}}
+**Fires**: {{.}}
+{{/fires}}

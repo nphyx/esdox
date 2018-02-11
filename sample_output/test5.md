@@ -1,5 +1,11 @@
 # base
 
+* [Description &amp; Usage](#description)
+* [Functions](#functions)
+
+ - [init](#init)
+
+# Description
 init system configuration
 
 **Requires:**
@@ -12,23 +18,24 @@ init system configuration
 + UPLOAD_DIR
 + QRCODE_DIR
 
-* * *
 
-### base.init() 
+#Functions
+***
+## init
+### init()  &#x21e8; 
 
 Read global config from database
 
 
 
 
-* * *
+
+
+
 
 
 
 **Author:** lemori
-
 **License:** MIT 
-
 **Overview:** This sample will output module requires and members.
-
 **Version:** 0.0.1

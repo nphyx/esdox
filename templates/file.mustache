@@ -3,6 +3,13 @@
 # {{name}}
 {{/name}}
 
+* [Description &amp; Usage](#description)
+* [Functions](#functions)
+{{#functions}}{{function}}
+ - [{{name}}](#{{name}}){{function}}
+{{/functions}}
+
+# Description
 {{#description}}{{{description}}}{{/description}}
 
 {{#hasRequires}}
@@ -28,26 +35,20 @@
 ```
 
 {{/examples}}
-* * *
 
+#Functions
 {{#functions}}
 {{> function}}
-
 {{/functions}}
+
 {{#classes}}
 {{> class}}
-
 {{/classes}}
 
 {{/modules}}
-* * *
 
 {{#copyright}}*{{copyright}}*{{/copyright}}
-
 {{#author}}**Author:** {{author}}{{/author}}
-
 {{#license}}**License:** {{license}} {{/license}}
-
 {{#overview}}**Overview:** {{{overview}}}{{/overview}}
-
 {{#version}}**Version:** {{version}}{{/version}}

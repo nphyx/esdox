@@ -1,62 +1,90 @@
 # Global
 
+* [Description &amp; Usage](#description)
+* [Functions](#functions)
+
+ - [func1](#func1)
+
+ - [func2](#func2)
+
+ - [exported](#exported)
+
+ - [globalFunction](#globalFunction)
+
+# Description
 
 
 
 
-* * *
 
-### func1(a, b) 
+#Functions
+***
+## func1
+### func1(a, b)  &#x21e8; `String`
+
+
+
 
 **Parameters**
 
-**a**: `String`, the first param
+| name | type | description |
+|------|------|-------------|
+| **a** | `String` | the first param |
+| **b** | `String` | the second param |
 
-**b**: `String`, the second param
+**Returns**: `String`the result
 
-**Returns**: `String`, the result
+***
+## func2
+### func2(c, d)  &#x21e8; 
 
 
-### func2(c, d) 
+
 
 **Parameters**
 
-**c**: , the first param
+| name | type | description |
+|------|------|-------------|
+| **c** |  | the first param |
+| **d** |  | the second param
+@ returns the other result |
 
-**d**: , the second param
-@ returns the other result
 
-
-
-### exported(param) 
+***
+## exported
+### exported(param)  &#x21e8; 
 
 exported with dot notation
 
+
+
 **Parameters**
 
-**param**: `String`, the parameter
+| name | type | description |
+|------|------|-------------|
+| **param** | `String` | the parameter |
 
 
-
-### globalFunction(param) 
+***
+## globalFunction
+### globalFunction(param)  &#x21e8; 
 
 global function
 
+
+
 **Parameters**
 
-**param**: `String`, the parameter
+| name | type | description |
+|------|------|-------------|
+| **param** | `String` | the parameter |
 
 
 
 
-* * *
 
 *(c) 2012 Blah Blah Blah*
-
 **Author:** Joe Schmo
-
 **License:** MIT 
-
 **Overview:** This is the overview with some `markdown` included, how nice!
-
 
