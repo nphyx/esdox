@@ -65,6 +65,7 @@ if (!argv._.length && !argv.input) {
     "index-sort": argv["index-sort"],
     input: argv.input ? argv.input : argv._
   }
-  jsdox(opts);
+  jsdox(opts)
+    .then(() => process.exit())
+    .catch(err => console.error("Error: " + err.message))
 }
-

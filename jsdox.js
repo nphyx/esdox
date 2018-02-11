@@ -182,19 +182,14 @@ async function main(opts = {}) {
   if (typeof(opts.input) === "string") {
     opts.input = [opts.input];
   }
-  try {
-    let generated = await exports.generate(opts);
-    await Promise.all(generated.map(entry => {
-      return exports.createDirectoryRecursive(path.dirname(entry.destination));
-    }));
-    await Promise.all(generated.map(entry => {
-      return promisedWriteFile(entry.destination, entry.markdown);
-    }));
-    return process.exit();
-  } catch (err) {
-    console.error("Error:", err.message);
-    return process.exit();
-  }
+  let generated = await exports.generate(opts);
+  await Promise.all(generated.map(entry => {
+    return exports.createDirectoryRecursive(path.dirname(entry.destination));
+  }));
+  await Promise.all(generated.map(entry => {
+    return promisedWriteFile(entry.destination, entry.markdown);
+  }));
+  return process.exit();
 }
 
 exports.analyze = analyze;
