@@ -6,32 +6,24 @@
 
 * * *
 
-### func1(a, b) 
+### bar() 
 
-Return the sum of two numbers.
+I so cool
+
+Deprecated: Not a good function
+
+**Returns**: `Boolean | null`
+
+
+### testNamed(file, optional) 
+
+This is a test function
+  with a description on multiple lines
 
 **Parameters**
 
-**a**: `Number`, the first param
-
-**b**: `Number`, the second param
-
-**Returns**: `Number`, the result
-
-
-
-* * *
-
-
-
-**Author:** Gabor Sar
-
-**License:** MIT 
-
-**Overview:** This file is contained by a folder within an other folder.
-
-
-siness
+**file**: `String | null`, filename to parse
+                       this parsing thing is funny business
 
 **optional**: `Boolean | null`, Changes behavior
 

@@ -41,7 +41,6 @@ function expectOutputFromCommand(cmd, output, done, isError) {
 }
 
 describe('integration: esdox cli', function() {
-  this.timeout = 10000;
   let cleanup;
   if (os.platform() === "win32") {
     cleanup = async function() {
@@ -108,7 +107,7 @@ describe('integration: esdox cli', function() {
     let files = await recursive(outpath);
     let found = await checkFiles(files);
     found.length.should.eql(inputs.length - 2); // 2 subdirectories
-  });
+  }).timeout(10000);
 
   it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files', async () => {
     const cmd = bin + " -r -o " + outpath + " " + inpath;
@@ -120,7 +119,7 @@ describe('integration: esdox cli', function() {
     files.length.should.eql(inputs.length - 1); // one file with same name stomps another file
     let found = await checkFiles(files);
     found.length.should.eql(files.length);
-  });
+  }).timeout(10000);
 
   it('generates non-empty output markdown files from the fixtures/ and the fixtures/under and' +
       ' the fixtures/under_grandparent/under_parent files and an under and an under_grandparent/under_parent directory in outputs', async () => {
@@ -146,11 +145,9 @@ describe('integration: esdox cli', function() {
     // third level structure correct
     files = await fsp.readdir(path.join(outpath, "/fixtures/under_grandparent/under_parent"));
     files.length.should.eql(1);
-  });
+  }).timeout(10000);
 
   it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files and index.md', function(done) {
-    this.timeout(5000);
-
     var cmd = bin + ' fixtures/ -o sample_output -r -i';
 
     exec(cmd, function(err, stdout, stderr) {
@@ -173,7 +170,7 @@ describe('integration: esdox cli', function() {
 
       done();
     });
-  });
+  }).timeout(10000);
 
   describe('cli options', function() {
     it('prints the help menu with the -H option', function(done) {
