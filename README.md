@@ -48,4 +48,4 @@ esdox --output docs src lib index.js
 * Vladimir de Turckheim (vdeturckheim)
 
 # License
-See LICENSE.md.
+See [LICENSE.md].
