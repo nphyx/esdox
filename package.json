@@ -24,6 +24,7 @@
   "scripts": {
     "lint": "node_modules/.bin/eslint -c .eslintrc.json esdox.js lib/* bin/* test/**/*.js fixtures/*",
     "test": "npm run lint && nyc --reporter=text mocha --reporter=dot test/lib/*.js test/*.js test/integration/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-verbose": "npm run lint && nyc --reporter=html mocha --reporter=spec test/lib/*.js test/*.js test/integration/*.js"
   },
   "preferGlobal": true,
@@ -38,6 +39,7 @@
     "yargs": "^11.0.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "eslint": "^4.17.0",
     "eslint-plugin-json": "^1.2.0",
     "expect.js": "^0.3.1",
