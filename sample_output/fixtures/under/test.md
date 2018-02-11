@@ -1,22 +1,35 @@
-# Global
 
-* [Description &amp; Usage](#description)
+# Module Global
+
+
 * [Functions](#functions)
-
- - [func1](#func1)
-
-# Description
+ - [bar](#bar)
+ - [testNamed](#testNamed)
 
 
 
 
 
-# Functions
-***
-## func1
-### func1(a, b)  &#x21e8; `Number`
 
-Return the sum of two numbers.
+## Functions
+## bar
+### bar()  &#x21e8; `Boolean ❘ null`
+
+I so cool
+
+
+**Deprecated:** Not a good function
+
+
+
+
+
+---
+## Functions
+## testNamed
+### testNamed(file, optional)  &#x21e8; 
+
+This is a test function   with a description on multiple lines
 
 
 
@@ -24,51 +37,36 @@ Return the sum of two numbers.
 
 | name | type | description |
 |------|------|-------------|
-| **a** | `Number` | the first param |
-| **b** | `Number` | the second param |
+| **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
+| ***optional*** | `Boolean ❘ null` | Changes behavior |
 
-**Returns**: `Number`the result
+**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
-
-
-
-
-**Author:** Gabor Sar
-**License:** MIT 
-**Overview:** This file is contained by a folder within an other folder.
-
-ilename to parse                        this parsing thing is funny business |
-| **optional** | `Boolean ❘ null` | Changes behavior |
+---
 
 
-**Fires**: module:foo#event:one_thing
-**Fires**: module:foo#event:another
-**Fires**: module:foo#event:booyah
-
-
-# foo
+# Module foo
 
 * [Description &amp; Usage](#description)
+
 * [Functions](#functions)
-
  - [testAnonynous](#testAnonynous)
-
  - [testAnon2](#testAnon2)
-
  - [func1](#func1)
-
  - [func2](#func2)
-
  - [testDeprecated](#testDeprecated)
 
-# Description
+* [Classes](#classes)
+ - [Ketch](#class-Ketch)
+ - [SampleClass](#class-SampleClass)
+
+## Description
 Can I get some description please   on more than one line, if possible.
 
 
 
 
-# Functions
-***
+## Functions
 ## testAnonynous
 ### testAnonynous()  &#x21e8; `String`
 
@@ -76,11 +74,13 @@ function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
+
+---
+## Functions
 ## testAnon2
 ### testAnon2()  &#x21e8; `String`
 
@@ -88,16 +88,20 @@ second function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
+
+---
+## Functions
 ## func1
 ### func1(a, b)  &#x21e8; 
 
 
 
+
+**Returns:** the result.
 
 **Parameters**
 
@@ -106,14 +110,16 @@ second function without name
 | **a** |  | the first param |
 | **b** |  | the second param |
 
-**Returns**: the result
 
-***
+---
+## Functions
 ## func2
 ### func2(c, d)  &#x21e8; 
 
 
 
+
+**Returns:** the other result.
 
 **Parameters**
 
@@ -122,30 +128,32 @@ second function without name
 | **c** |  | the first param |
 | **d** |  | the second param |
 
-**Returns**: the other result
 
-***
+---
+## Functions
 ## testDeprecated
 ### testDeprecated()  &#x21e8; 
 
 This is a deprecated function.
 
 
-Deprecated: Because I said so
+**Deprecated:** Because I said so
 
 
 
 
+---
 
+## Classes
 ## Class: Ketch
 Provides chainable functions to easily build and execute a command.
 
 **last_err**: `String` , Last error, if present
 **cmd**: `Array` , Internal array representation of this command.
+## Classes
 ## Class: SampleClass
 This is a class
 
-***
 ## func1
 ### func1(a, b)  &#x21e8; 
 
@@ -155,6 +163,8 @@ A method in the class
 func1(1, 2)
 
 
+**Returns:** the result.
+
 **Parameters**
 
 | name | type | description |
@@ -162,9 +172,8 @@ func1(1, 2)
 | **a** |  | the first param |
 | **b** |  | the second param |
 
-**Returns**: the result
 
-***
+---
 ## testAnonynous
 ### testAnonynous()  &#x21e8; `String`
 
@@ -172,11 +181,12 @@ function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
+
+---
 ## testNamed
 ### testNamed(file, optional)  &#x21e8; 
 
@@ -189,16 +199,17 @@ This is a test method     with a description on multiple lines
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                          this parsing thing is funny business |
-| **optional** | `Boolean ❘ null` | Changes behavior |
+| ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
+
+---
 
 
-**Fires**: module:foo#event:one_thing
-**Fires**: module:foo#event:another
-**Fires**: module:foo#event:booyah
-
-
-*(c) 2012 Blah Blah Blah*
-**Author:** Joe Schmo
-**License:** MIT 
 **Overview:** What's up?
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
 **Version:** 1.0.1

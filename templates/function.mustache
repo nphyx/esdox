@@ -1,4 +1,3 @@
-***
 ## {{name}}
 ### {{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}} &#x21e8; {{#returns}}{{#typesString}}`{{typesString}}`{{/typesString}}{{/returns}}
 
@@ -12,20 +11,24 @@
 {{/examples}}
 
 {{#deprecated}}
-Deprecated: {{{deprecated}}}
+**Deprecated:** {{{deprecated}}}
 {{/deprecated}}
+{{#returns}}
+
+{{#description}}
+**Returns:** {{description}}.
+{{/description}}
+{{/returns}}
 
 {{#hasParams}}
 **Parameters**
 
 | name | type | description |
 |------|------|-------------|{{/hasParams}}{{#params}}
-| **{{name}}** | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
+| {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
 
-{{#returns}}
-**Returns**: {{#typesString}}`{{typesString}}`{{/typesString}}{{#description}}{{{description}}}{{/description}}
-{{/returns}}
+{{#fires.length}}
+**Fires**: {{#fires}}[`{{name}}`]({{ref}}) {{/fires}}
+{{/fires.length}}
 
-{{#fires}}
-**Fires**: {{.}}
-{{/fires}}
+---

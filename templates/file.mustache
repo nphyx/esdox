@@ -1,16 +1,31 @@
+
 {{#modules}}
 {{#name}}
-# {{name}}
+# Module {{name}}
 {{/name}}
 
+{{#description}}
 * [Description &amp; Usage](#description)
+{{/description}}
+
+{{#functions.length}}
 * [Functions](#functions)
-{{#functions}}{{function}}
- - [{{name}}](#{{name}}){{function}}
+{{/functions.length}}
+{{#functions}}
+ - [{{name}}](#{{name}})
 {{/functions}}
 
-# Description
-{{#description}}{{{description}}}{{/description}}
+{{#classes.length}}
+* [Classes](#classes)
+{{/classes.length}}
+{{#classes}}
+ - [{{name}}](#class-{{name}})
+{{/classes}}
+
+{{#description}}
+## Description
+{{{description}}}
+{{/description}}
 
 {{#hasRequires}}
 **Requires:**
@@ -30,25 +45,26 @@
 
 {{#examples}}
 **Example:**
-```js
 {{{examples}}}
-```
 
 {{/examples}}
 
-# Functions
 {{#functions}}
+## Functions
 {{> function}}
 {{/functions}}
 
 {{#classes}}
+## Classes
 {{> class}}
 {{/classes}}
 
 {{/modules}}
 
-{{#copyright}}*{{copyright}}*{{/copyright}}
-{{#author}}**Author:** {{author}}{{/author}}
-{{#license}}**License:** {{license}} {{/license}}
 {{#overview}}**Overview:** {{{overview}}}{{/overview}}
+
+{{#copyright}}**Copyright** *{{copyright}}*{{/copyright}}{{^copyright}} **Author**{{/copyright}}{{#author}} {{author}}{{/author}}
+
+{{#license}}**License:** {{license}} {{/license}}
+
 {{#version}}**Version:** {{version}}{{/version}}
