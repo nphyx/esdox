@@ -41,10 +41,9 @@ const yargs = require("yargs")
     describe: "recurse subdirectories, preserved output",
     boolean: true
   })
-  .implies("rr", "r")
   .alias("c", "config")
   .config("config", "Configuration JSON file")
-  .alias("h", "help")
+  .alias("H", "help")
   .help("help")
   .alias("v", "version")
   .version()
@@ -53,7 +52,7 @@ const yargs = require("yargs")
 yargs.wrap(Math.min(100, yargs.terminalWidth()));
 const {argv} = yargs;
 
-if (!argv._.length) {
+if (!argv._.length && !argv.input) {
   yargs.showHelp();
 } else {
   const opts = {
@@ -64,7 +63,7 @@ if (!argv._.length) {
     A: argv.A,
     index: argv.index,
     "index-sort": argv["index-sort"],
-    input: argv._
+    input: argv.input ? argv.input : argv._
   }
   jsdox(opts);
 }
