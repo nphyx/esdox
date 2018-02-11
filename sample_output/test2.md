@@ -17,7 +17,7 @@
 
 
 
-#Functions
+# Functions
 ***
 ## func1
 ### func1(a, b)  &#x21e8; `String`

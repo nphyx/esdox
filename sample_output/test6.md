@@ -13,7 +13,7 @@ The top-level namespace.
 
 
 
-#Functions
+# Functions
 ***
 ## init
 ### init()  &#x21e8; 
@@ -76,7 +76,7 @@ Namespace for utility functions.
 
 
 
-#Functions
+# Functions
 ***
 ## foo
 ### foo()  &#x21e8; 

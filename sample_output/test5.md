@@ -19,7 +19,7 @@ init system configuration
 + QRCODE_DIR
 
 
-#Functions
+# Functions
 ***
 ## init
 ### init()  &#x21e8; 

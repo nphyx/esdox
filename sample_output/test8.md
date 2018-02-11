@@ -11,7 +11,7 @@
 
 
 
-#Functions
+# Functions
 ***
 ## optionsFunction
 ### optionsFunction(file, options)  &#x21e8; 
