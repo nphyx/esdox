@@ -112,7 +112,7 @@ describe("jsdox", () => {
     });
   });
 
-  describe("generateFoDir", () => {
+  describe("generate", () => {
     beforeEach(() => {
       jsdpStub.resetHistory();
       jsdoxStubs.analyze.resetHistory();
