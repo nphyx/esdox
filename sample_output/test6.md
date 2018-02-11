@@ -25,7 +25,7 @@ Definition for a Thing object used by a Worker.  See [main.Worker](#main.worker)
 **data**: `* | undefined` , Every Thing might have some data.
 
 ## Class: Worker
-Definition for a Worker.
+Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker)
 
 ### main.Worker.do(thing) 
 

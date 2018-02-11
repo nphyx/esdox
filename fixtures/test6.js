@@ -45,7 +45,7 @@ main.Thing.prototype.data;
 
 
 /**
- * Definition for a Worker.
+ * Definition for a Worker. See {@link https://developer.mozilla.org/en-US/docs/Web/API/Worker}
  * @interface
  */
 main.Worker;
