@@ -1,48 +1,71 @@
 #!/usr/bin/env node
-
-var jsdox = require('../jsdox').jsdox;
-
-var opts = require('optimist')
-  .options('output', {
-    alias: 'o',
-    default: 'output'
+const jsdox = require("../jsdox").jsdox;
+const yargs = require("yargs")
+  .usage("Usage:\tjsdox [options] [-o output_dir] [-t template_dir] <file | directory>")
+  .options("output", {
+    alias: "o",
+    default: "output",
+    describe: "Output directory for generated docs"
   })
-  .options('config', {
-    alias: 'c'
+  .options("A", {
+    alias: "All",
+    boolean: true,
+    describe: "Include internal/private methods"
   })
-  .options('version', {
-    alias: 'v'
+  .options("d", {
+    alias: "debug",
+    boolean: true,
+    describe: "Print extended debugging information"
   })
-  .options('help', {
-    alias: 'H'
+  .options("templateDir", {
+    alias: "t",
+    describe: "Template override directory"
   })
-  .options('A', {
-    alias: 'All',
+  .options("index", {
+    alias: "i",
+    describe: "Create an index.md file",
     boolean: true
   })
-  .options('d', {
-    alias: 'debug',
+  .options("index-sort", {
+    default: "standard",
+    describe: "Sort order for index",
+    choices: ["standard","namespace","none"]
+  })
+  .options("recursive", {
+    alias: "r",
+    describe: "recurse subdirectories, flattened output",
     boolean: true
   })
-  .options('templateDir', {
-    alias: 't'
+  .options("respect-recursive", {
+    alias: "rr",
+    describe: "recurse subdirectories, preserved output",
+    boolean: true
   })
-  .options('index', {
-    alias: 'i'
-  })
-  .options('index-sort', {
-    default: 'standard'
-  })
-  .options('recursive', {
-    alias: 'r'
-  })
-  .options('respect-recursive', {
-    alias: 'rr'
-  })
-  .argv;
+  .implies("rr", "r")
+  .alias("c", "config")
+  .config("config", "Configuration JSON file")
+  .alias("h", "help")
+  .help("help")
+  .alias("v", "version")
+  .version()
+  .epilogue("See README.md for more information.");
 
-if (opts._) {
-  opts.input = opts._;
+yargs.wrap(Math.min(100, yargs.terminalWidth()));
+const {argv} = yargs;
+
+if (!argv._.length) {
+  yargs.showHelp();
+} else {
+  const opts = {
+    r: argv.r,
+    rr: argv.rr,
+    output: argv.output,
+    debug: argv.debug,
+    A: argv.A,
+    index: argv.index,
+    "index-sort": argv["index-sort"],
+    input: argv._
+  }
+  jsdox(opts);
 }
 
-jsdox(opts);
