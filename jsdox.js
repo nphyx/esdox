@@ -27,6 +27,7 @@ const promisedParser = promisify(jsdocParser);
 const promisedWriteFile = promisify(fs.writeFile);
 const promisedMkdir = promisify(fs.mkdir);
 const promisedStat = promisify(fs.stat);
+const promisedReaddir = promisify(fs.readdir);
 /* eslint no-unused-vars:2 */
 
 /**
@@ -56,41 +57,48 @@ exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
 }
 
 /**
- * Generate markdown for given configuration details.
+ * Process files in opts according to specified options.
  *
- * @param  {String}   filename
- * @param  {String}   destination
- * @param  {String}   templateDir
- * @param  {Function} cb
- * @param  {Function} fileCb
+ * @param  {Object} opts [see main opts](#main)
+ * @return {Promise}
  */
-exports.generateForDir = async function generateForDir(opts) {
-  let files;
-  let filename = opts.input;
+exports.generate = async function generate(opts) {
+  let stats;
+  let files = opts.input;
+  let recursedFiles = [];
 
-  if (filename.length === 1) {
-    filename = filename[0];
-  }
-
-
-  if (typeof(filename) === "string") {
-    if (filename.match(/\.js$/)) {
-      files = [filename];
-    } else {
-      let stat = await promisedStat(filename);
-      if (stat.isDirectory()) {
-        files = await recursive(filename);
-        files.sort();
-      } else {
-        throw Error("input file is not a .js or directory");
+  stats = await Promise.all(files.map(async file => {
+    try {
+      let stat = await promisedStat(file);
+      return stat;
+    } catch (err) {
+      switch (err.code) {
+        case "ENOENT":
+          throw Error("file does not exist: " + file);
+        default:
+          throw err;
       }
     }
-  } else if (filename.length) {
-    files = filename;
-    files.sort();
-  } else {
-    throw Error("input file is not a .js or directory");
+  }));
+  await Promise.all(stats.map(async (stat, i) => {
+    if (stat.isDirectory()) {
+      let ret = [];
+      if (opts.r || opts.rr) {
+        ret = await recursive(files[i]);
+      } else {
+        ret = await promisedReaddir(files[i]);
+        ret = ret.map(file => path.join(files[i], file));
+      }
+      recursedFiles = recursedFiles.concat(ret);
+    }
+  }));
+
+  files = files.concat(recursedFiles);
+  files = files.filter(file => file.match(/\.js$/));
+  if (files.length === 0) {
+    throw new Error("no javascript files in input path");
   }
+  files.sort();
 
   // create an output object with analyzed information
   let output = await Promise.all(files.map(async (file) => {
@@ -102,7 +110,7 @@ exports.generateForDir = async function generateForDir(opts) {
     if (opts.rr) {
       out.destination = path.join(opts.output, out.dirname, out.basename);
     } else {
-      out.destination = path.join(opts.output, out.source);
+      out.destination = path.join(opts.output, out.basename);
     }
     out.destination = out.destination.replace(/\.js$/, '.md');
     out.parsed = await promisedParser(path.join(out.dirname, out.basename));
@@ -116,9 +124,9 @@ exports.generateForDir = async function generateForDir(opts) {
     // if we're generating indexes, do that with the analyzed data
     let indexData = {functions: [], classes: []};
     output.reduce((p, c) => exports.collectIndexData(p, c, opts), indexData);
-    indexData.source = filename;
-    indexData.dirname = path.dirname(filename);
-    indexData.basename = path.basename("index.md");
+    indexData.source = "";
+    indexData.dirname = ".";
+    indexData.basename = "index.md";
     indexData.destination = path.join(opts.output, "index.md");
     indexData.markdown = generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
     output.push(indexData);
@@ -173,24 +181,27 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
  * @return {Promise}
  */
 async function main(opts = {}) {
-  if (Object.keys(opts).length === 0 || opts.help) {
-    printHelp();
-    return process.exit();
-  } else if (opts.version) {
+  if (opts.config) {
+    let config = await loadConfigFile(opts.config);
+    for (var key in config) {
+      opts[key] = config[key];
+    }
+  }
+  if (opts.version) {
     printVersion();
     return process.exit();
+  } else if (Object.keys(opts).length === 0 ||
+      !opts.input ||
+      opts.input.length === 0 ||
+      opts.help) {
+    printHelp();
+    return process.exit();
   } else {
+    if (typeof(opts.input) === "string") {
+      opts.input = [opts.input];
+    }
     try {
-      if (opts.config) {
-        let config = await loadConfigFile(opts.config);
-        for (var key in config) {
-          opts[key] = config[key];
-        }
-      }
-      if (!opts.input) {
-        throw new Error("no input supplied");
-      }
-      let generated = await exports.generateForDir(opts);
+      let generated = await exports.generate(opts);
       await Promise.all(generated.map(entry => {
         return exports.createDirectoryRecursive(path.dirname(entry.destination));
       }));

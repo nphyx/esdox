@@ -3,6 +3,7 @@
  * sure that everything is wired up correctly.
  */
 const proxy = require("proxyquire");
+const promisify = require("util").promisify;
 const path = require("path");
 const sinon = require("sinon");
 const jsdpStub = require("./stubs/jsdoc3-parser.stub");
@@ -11,6 +12,13 @@ const fsStubs = require("./stubs/fs.stubs");
 const cliStubs = require("./stubs/cliUtil.stubs");
 const testOutputDirectory = "./test/output";
 const recursive = require("recursive-readdir");
+const fs = require("fs");
+require("should");
+const fsp = {};
+["stat", "readFile", "readdir", "rmdir", "unlink"].forEach(fn => {
+  fsp[fn] = promisify(fs[fn]);
+});
+
 require("should");
 require("should-sinon");
 
@@ -30,7 +38,7 @@ const jsdoxModule = proxy("../jsdox", {
   fs: fsStubs
 });
 
-const {collectIndexData, createDirectoryRecursive, generateForDir, analyze,
+const {collectIndexData, createDirectoryRecursive, generate, analyze,
   generateMD, jsdox} = jsdoxModule;
 
 describe("jsdox", () => {
@@ -114,13 +122,14 @@ describe("jsdox", () => {
     it("should complain if given an unusable input", async () => {
       fsStubs.stat.resetHistory();
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
-      generateForDir({input: "notascript.css"})
-        .should.be.rejectedWith({message: "input file is not a .js or directory"});
+      generate({input: ["notascript.css"]})
+        .should.be.rejected();
     });
     it("should handle a single file", async () => {
-      const opts = {input: "fake.js", output: "./test/output", templateDir: "templates"};
+      const opts = {input: ["fake.js"], output: "./test/output",
+        templateDir: "templates"};
       const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
-      let generated = await generateForDir(opts);
+      let generated = await generate(opts);
       jsdpStub.should.be.calledWith(source);
       jsdoxStubs.analyze.should.be.calledWith({}, opts);
       jsdoxStubs.generateMD.should.be.calledWith(
@@ -139,13 +148,16 @@ describe("jsdox", () => {
     it("should handle a directory", async () => {
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       const opts = {
-        input: "./fixtures",
+        input: ["./fixtures"],
         output: "./test/output",
         templateDir: "templates"
       };
-      let fixtureList = await recursive(opts.input)
+      let fixtureList = await fsp.readdir(opts.input[0])
+      fixtureList = fixtureList
+        .filter(file => file.match(/\.js$/))
+        .map(file => path.join(opts.input[0], file));
       fixtureList.sort();
-      let generated = await generateForDir(opts);
+      let generated = await generate(opts);
       jsdpStub.callCount.should.eql(fixtureList.length);
       jsdoxStubs.analyze.callCount.should.eql(fixtureList.length);
       jsdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
@@ -153,20 +165,32 @@ describe("jsdox", () => {
       generated.forEach((entry, i) => {
         entry.source.should.eql(fixtureList[i]);
         entry.destination.should.eql(
-          path.join(opts.output, entry.source).replace(/\.js$/, '.md'));
+          path.join(opts.output, entry.basename).replace(/\.js$/, '.md'));
       });
+    });
+    it("should recurse subdirectories with opts.r", async () => {
+      const opts = {
+        r: true,
+        input: ["./fixtures"],
+        output: "./test/output",
+        templateDir: "templates"
+      };
+      let fixtureList = await recursive(opts.input[0])
+      fixtureList.sort();
+      let generated = await generate(opts);
+      generated.length.should.eql(fixtureList.length);
     });
     it("should keep directory structure in output with opts.rr", async () => {
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       const opts = {
-        input: "./fixtures",
+        input: ["./fixtures"],
         output: "./test/output",
         templateDir: "templates",
         rr: true
       };
-      let fixtureList = await recursive(opts.input);
+      let fixtureList = await recursive(opts.input[0]);
       fixtureList.sort();
-      let generated = await generateForDir(opts);
+      let generated = await generate(opts);
       jsdpStub.callCount.should.eql(fixtureList.length);
       jsdoxStubs.analyze.callCount.should.eql(fixtureList.length);
       jsdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
@@ -179,7 +203,7 @@ describe("jsdox", () => {
     });
     it("should generate an index file for opts.index", async () => {
       const opts = {
-        input: "./fixtures",
+        input: ["./fixtures"],
         output: "./test/output",
         index: true,
         templateDir: "templates"
@@ -190,12 +214,16 @@ describe("jsdox", () => {
         functions: [],
         classes: []
       });
-      let fixtureList = await recursive(opts.input);
-      let generated = await generateForDir(opts);
+      let fixtureList = await fsp.readdir(opts.input[0])
+      fixtureList = fixtureList
+        .filter(file => file.match(/\.js$/))
+        .map(file => path.join(opts.input[0], file));
+      fixtureList.sort();
+      let generated = await generate(opts);
       generated.length.should.eql(fixtureList.length + 1);
       let index = generated.pop();
-      index.source.should.eql(opts.input);
-      index.dirname.should.eql(path.dirname(opts.input));
+      index.source.should.eql("");
+      index.dirname.should.eql(path.dirname(opts.input[0]));
       index.destination.should.eql(path.join(opts.output, "index.md"));
       index.markdown.should.be.True();
       jsdoxStubs.analyze.returns({});
@@ -238,22 +266,24 @@ describe("jsdox", () => {
       console.error.should.not.be.called();
       process.exit.should.be.called();
     });
-    it("should complain when given options but no input file", async () => {
+    it("should print help when no input is supplied", async () => {
       jsdox({recursive: true});
-      console.error.should.be.calledWith("Error:", "no input supplied");
+      cliStubs.printVersion.should.be.called();
+      console.error.should.not.be.called();
+      process.exit.should.be.called();
     });
     it("should load a config file when asked", async () => {
       console.error.resetHistory();
-      sinon.spy(jsdoxModule, "generateForDir");
+      sinon.spy(jsdoxModule, "generate");
       let opts = {
         config: "./test/stubs/jsdox.config.stub.json",
         output: "./test/output"
       };
       await jsdox(opts);
-      console.error.should.not.be.called();
+      console.error.should.be.called(); // file not found
       cliStubs.loadConfigFile.should.be.calledWith(opts.config);
-      jsdoxModule.generateForDir.should.be.calledWith(sinon.match({input: "fake.js"}));
-      jsdoxModule.generateForDir.restore();
+      jsdoxModule.generate.should.be.calledWith(sinon.match({input: ["fake.js"]}));
+      jsdoxModule.generate.restore();
     });
     it("should create files", async () => {
       sinon.spy(jsdoxModule, "createDirectoryRecursive");
@@ -270,6 +300,7 @@ describe("jsdox", () => {
         input: "./fixtures",
         output: "./test/output",
         index: true,
+        rr: true,
         templateDir: "templates"
       };
       let fixtureList = await recursive(opts.input);
