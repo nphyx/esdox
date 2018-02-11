@@ -41,6 +41,7 @@ function expectOutputFromCommand(cmd, output, done, isError) {
 }
 
 describe('integration: esdox cli', function() {
+  this.timeout = 10000;
   let cleanup;
   if (os.platform() === "win32") {
     cleanup = async function() {
