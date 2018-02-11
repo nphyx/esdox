@@ -5,7 +5,7 @@
     "email": "justen@justen.us"
   },
   "license": "MIT",
-  "name": "esdox",
+  "name": "@nphyx/esdox",
   "description": "Clean, simple JSDoc -> Github Markdown generator with support for ES6+.",
   "version": "0.0.1",
   "repository": {
