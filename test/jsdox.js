@@ -248,43 +248,6 @@ describe("jsdox", () => {
       console.log.restore();
     });
 
-    it("should print help for opts.help then exit", async () => {
-      jsdox({help: true});
-      cliStubs.printHelp.should.be.called();
-      console.error.should.not.be.called();
-      process.exit.should.be.called();
-    });
-    it("should print help if called with no options or input", async () => {
-      jsdox();
-      cliStubs.printHelp.should.be.called();
-      console.error.should.not.be.called();
-      process.exit.should.be.called();
-    });
-    it("should print version number for opts.version then exit", async () => {
-      jsdox({version: true});
-      cliStubs.printVersion.should.be.called();
-      console.error.should.not.be.called();
-      process.exit.should.be.called();
-    });
-    it("should print help when no input is supplied", async () => {
-      jsdox({recursive: true});
-      cliStubs.printVersion.should.be.called();
-      console.error.should.not.be.called();
-      process.exit.should.be.called();
-    });
-    it("should load a config file when asked", async () => {
-      console.error.resetHistory();
-      sinon.spy(jsdoxModule, "generate");
-      let opts = {
-        config: "./test/stubs/jsdox.config.stub.json",
-        output: "./test/output"
-      };
-      await jsdox(opts);
-      console.error.should.be.called(); // file not found
-      cliStubs.loadConfigFile.should.be.calledWith(opts.config);
-      jsdoxModule.generate.should.be.calledWith(sinon.match({input: ["fake.js"]}));
-      jsdoxModule.generate.restore();
-    });
     it("should create files", async () => {
       sinon.spy(jsdoxModule, "createDirectoryRecursive");
       fsStubs.writeFile.resetHistory();

@@ -22,7 +22,6 @@ const jsdocParser = require('jsdoc3-parser');
 const analyze = require('./lib/analyze');
 const generateMD = require('./lib/generateMD');
 const recursive = require("recursive-readdir");
-const {printHelp, printVersion, loadConfigFile} = require("./lib/cliUtil");
 const promisedParser = promisify(jsdocParser);
 const promisedWriteFile = promisify(fs.writeFile);
 const promisedMkdir = promisify(fs.mkdir);
@@ -170,8 +169,7 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
  * Main function handles parsed CLI input from bin/jsdox or a passed
  * options object.
  * @param {Object} opts may include [command line options](lib/#printHelp)
- * @param {String} opts.config path to a configuration file
- * @param {String} opts.input input file or directory
+ * @param {String|Array} opts.input input file or directory
  * @param {String} opts.output output directory
  * @param {String} [opts.templateDir] directory for custom mustache templates
  * @param {String} [opts.index-sort=standard] sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none")
@@ -181,38 +179,21 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
  * @return {Promise}
  */
 async function main(opts = {}) {
-  if (opts.config) {
-    let config = await loadConfigFile(opts.config);
-    for (var key in config) {
-      opts[key] = config[key];
-    }
+  if (typeof(opts.input) === "string") {
+    opts.input = [opts.input];
   }
-  if (opts.version) {
-    printVersion();
+  try {
+    let generated = await exports.generate(opts);
+    await Promise.all(generated.map(entry => {
+      return exports.createDirectoryRecursive(path.dirname(entry.destination));
+    }));
+    await Promise.all(generated.map(entry => {
+      return promisedWriteFile(entry.destination, entry.markdown);
+    }));
     return process.exit();
-  } else if (Object.keys(opts).length === 0 ||
-      !opts.input ||
-      opts.input.length === 0 ||
-      opts.help) {
-    printHelp();
+  } catch (err) {
+    console.error("Error:", err.message);
     return process.exit();
-  } else {
-    if (typeof(opts.input) === "string") {
-      opts.input = [opts.input];
-    }
-    try {
-      let generated = await exports.generate(opts);
-      await Promise.all(generated.map(entry => {
-        return exports.createDirectoryRecursive(path.dirname(entry.destination));
-      }));
-      await Promise.all(generated.map(entry => {
-        return promisedWriteFile(entry.destination, entry.markdown);
-      }));
-      return process.exit();
-    } catch (err) {
-      console.error("Error:", err.message);
-      return process.exit();
-    }
   }
 }
 
