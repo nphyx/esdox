@@ -180,7 +180,7 @@ describe('integration: jsdox cli', function() {
     });
 
     it('prints the version with the -v option', function(done) {
-      expectOutputFromCommand(bin + ' -v', require('../package.json').version, done);
+      expectOutputFromCommand(bin + ' -v', require('../../package.json').version, done);
     });
 
     it('accepts a custom template directory with the -t option');
