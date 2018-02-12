@@ -219,7 +219,7 @@ describe("esdox", () => {
         index: true,
         indexName: "index.md", // default would be supplied by main()
         templateDir: "templates"
-      };
+      }
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
       esdoxStubs.analyze.returns({
@@ -271,25 +271,48 @@ describe("esdox", () => {
       process.exit = sinon.stub();
       console.error = sinon.stub();
       sinon.spy(console, "log");
+      esdoxStubs.analyze.returns({
+        functions: [],
+        classes: []
+      });
+      sinon.spy(esdoxModule, "createDirectoryRecursive");
+      fsStubs.writeFile.resetHistory();
+      fsStubs.stat.resetHistory();
+      console.error.resetHistory();
+      fsStubs.stat.callsArgWith(1, null, {isDirectory: () => true});
     });
 
     afterEach(() => {
       process.exit = _exit;
       console.error = _consoleError;
       console.log.restore();
+      esdoxStubs.analyze.returns({});
+      esdoxModule.createDirectoryRecursive.restore();
     });
 
-    it("should create files", async () => {
-      sinon.spy(esdoxModule, "createDirectoryRecursive");
-      fsStubs.writeFile.resetHistory();
-      fsStubs.stat.resetHistory();
+    it("should process options, wrapping input as an array and providing defaults", async () => {
+      sinon.spy(esdoxModule, "generate");
       console.error.resetHistory();
-      fsStubs.stat.callsArgWith(1, null, {isDirectory: () => true});
-      // collectIndexData needs analyzed to have some stuff in it
+      const opts = {
+        input: "./fixtures",
+        output: "./test/test_output"
+      }
       esdoxStubs.analyze.returns({
         functions: [],
         classes: []
       });
+      await esdox(opts);
+      console.error.should.not.be.called();
+      esdoxModule.generate.should.be.calledWith({
+        input: ["./fixtures"],
+        output: "./test/test_output",
+        indexName: "index.md"
+      });
+      esdoxModule.generate.restore();
+    });
+
+    it("should create files", async () => {
+      // collectIndexData needs analyzed to have some stuff in it
       const opts = {
         input: "./fixtures",
         output: "./test/output",
@@ -302,8 +325,6 @@ describe("esdox", () => {
       console.error.should.not.be.called();
       esdoxModule.createDirectoryRecursive.callCount.should.eql(fixtureList.length + 1);
       fsStubs.writeFile.callCount.should.eql(fixtureList.length + 1);
-      esdoxModule.createDirectoryRecursive.restore();
-      esdoxStubs.analyze.returns({});
     });
   });
 });
