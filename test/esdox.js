@@ -217,6 +217,7 @@ describe("esdox", () => {
         input: ["./fixtures"],
         output: "./test/output",
         index: true,
+        indexName: "index.md", // default would be supplied by main()
         templateDir: "templates"
       };
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
