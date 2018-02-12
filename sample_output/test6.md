@@ -1,21 +1,37 @@
-# main
+# File `fixtures/test6.js`
+**Overview:** This sample handles namespaces, interfaces, and links.
 
-* [Description &amp; Usage](#description)
-* [Functions](#functions)
 
- - [init](#init)
 
- - [dispose](#dispose)
+ **Author**
 
-# Description
+**License:** MIT 
+
+
+
+* Modules 
+- Module main
+- Module util
+
+
+
+# Module main
 The top-level namespace.
 
 
+* [Functions](#functions)
+ - [init](#init)
+ - [dispose](#dispose)
+* [Classes](#classes)
+ - [Thing](#class-Thing)
+ - [Worker](#class-Worker)
 
 
-# Functions
-***
-## init
+
+## Functions
+* [init](#init)
+* [dispose](#dispose)
+
 ### init()  &#x21e8; 
 
 Initializes everything.
@@ -25,8 +41,7 @@ Initializes everything.
 
 
 
-***
-## dispose
+---
 ### dispose()  &#x21e8; 
 
 Disposes everything.
@@ -36,17 +51,35 @@ Disposes everything.
 
 
 
+---
+
+## Classes
+* [Thing](#class-Thing)
+* [Worker](#class-Worker)
 
 ## Class: Thing
+
 Definition for a Thing object used by a Worker.  See [main.Worker](#main.worker).
 
-**name**: `string` , Every Thing has a name.
-**data**: `* ❘ undefined` , Every Thing might have some data.
+***
+### Members
+
+| name | type | description |
+|------|------|-------------|
+| **name** | `string` | Every Thing has a name. |
+| **data** | `* ❘ undefined` | Every Thing might have some data. |
+***
+
+
 ## Class: Worker
+
 Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker)
 
 ***
-## do
+
+### Methods
+ - [do](#do)
+
 ### do(thing)  &#x21e8; 
 
 Have a Worker do some Thing.  See [main.Thing](#main.thing).
@@ -60,25 +93,22 @@ Have a Worker do some Thing.  See [main.Thing](#main.thing).
 | **thing** | `main.Thing` | The Thing to do.  See [main.Thing](#main.thing). |
 
 
+---
 
-# util
-
-* [Description &amp; Usage](#description)
-* [Functions](#functions)
-
- - [foo](#foo)
-
- - [bar](#bar)
-
-# Description
+# Module util
 Namespace for utility functions.
 
 
+* [Functions](#functions)
+ - [foo](#foo)
+ - [bar](#bar)
 
 
-# Functions
-***
-## foo
+
+## Functions
+* [foo](#foo)
+* [bar](#bar)
+
 ### foo()  &#x21e8; 
 
 Run the Foo utility.
@@ -88,8 +118,7 @@ Run the Foo utility.
 
 
 
-***
-## bar
+---
 ### bar()  &#x21e8; 
 
 Run the Bar utility.
@@ -99,11 +128,7 @@ Run the Bar utility.
 
 
 
+---
 
 
-
-
-
-**License:** MIT 
-**Overview:** This sample handles namespaces, interfaces, and links.
 

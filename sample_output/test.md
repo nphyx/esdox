@@ -1,24 +1,37 @@
-# Global
+# File `fixtures/under_grandparent/under_parent/test.js`
+**Overview:** This file is contained by a folder within an other folder.
 
-* [Description &amp; Usage](#description)
+
+
+ **Author** Gabor Sar
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
+
+# Module Global
+
+
 * [Functions](#functions)
-
  - [func1](#func1)
 
-# Description
 
 
+## Functions
+* [func1](#func1)
 
-
-
-# Functions
-***
-## func1
 ### func1(a, b)  &#x21e8; `Number`
 
 Return the sum of two numbers.
 
 
+
+**Returns:** the result.
 
 **Parameters**
 
@@ -27,77 +40,75 @@ Return the sum of two numbers.
 | **a** | `Number` | the first param |
 | **b** | `Number` | the second param |
 
-**Returns**: `Number`the result
+
+---
 
 
 
+ type | description |
+|------|------|-------------|
+| **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
+| ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
+
+---
 
 
-**Author:** Gabor Sar
-**License:** MIT 
-**Overview:** This file is contained by a folder within an other folder.
 
-ilename to parse                        this parsing thing is funny business |
-| **optional** | `Boolean ❘ null` | Changes behavior |
-
-
-**Fires**: module:foo#event:one_thing
-**Fires**: module:foo#event:another
-**Fires**: module:foo#event:booyah
-
-
-# foo
-
-* [Description &amp; Usage](#description)
-* [Functions](#functions)
-
- - [testAnonynous](#testAnonynous)
-
- - [testAnon2](#testAnon2)
-
- - [func1](#func1)
-
- - [func2](#func2)
-
- - [testDeprecated](#testDeprecated)
-
-# Description
+# Module foo
 Can I get some description please   on more than one line, if possible.
 
 
+* [Functions](#functions)
+ - [testAnonynous](#testAnonynous)
+ - [testAnon2](#testAnon2)
+ - [func1](#func1)
+ - [func2](#func2)
+ - [testDeprecated](#testDeprecated)
+* [Classes](#classes)
+ - [Ketch](#class-Ketch)
+ - [SampleClass](#class-SampleClass)
 
 
-# Functions
-***
-## testAnonynous
+
+## Functions
+* [testAnonynous](#testAnonynous)
+* [testAnon2](#testAnon2)
+* [func1](#func1)
+* [func2](#func2)
+* [testDeprecated](#testDeprecated)
+
 ### testAnonynous()  &#x21e8; `String`
 
 function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
-## testAnon2
+
+---
 ### testAnon2()  &#x21e8; `String`
 
 second function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
-## func1
+
+---
 ### func1(a, b)  &#x21e8; 
 
 
 
+
+**Returns:** the result.
 
 **Parameters**
 
@@ -106,14 +117,14 @@ second function without name
 | **a** |  | the first param |
 | **b** |  | the second param |
 
-**Returns**: the result
 
-***
-## func2
+---
 ### func2(c, d)  &#x21e8; 
 
 
 
+
+**Returns:** the other result.
 
 **Parameters**
 
@@ -122,31 +133,49 @@ second function without name
 | **c** |  | the first param |
 | **d** |  | the second param |
 
-**Returns**: the other result
 
-***
-## testDeprecated
+---
 ### testDeprecated()  &#x21e8; 
 
 This is a deprecated function.
 
 
-Deprecated: Because I said so
+**Deprecated:** Because I said so
 
 
 
 
+---
+
+## Classes
+* [Ketch](#class-Ketch)
+* [SampleClass](#class-SampleClass)
 
 ## Class: Ketch
+
 Provides chainable functions to easily build and execute a command.
 
-**last_err**: `String` , Last error, if present
-**cmd**: `Array` , Internal array representation of this command.
+***
+### Members
+
+| name | type | description |
+|------|------|-------------|
+| **last_err** | `String` | Last error, if present |
+| **cmd** | `Array` | Internal array representation of this command. |
+***
+
+
 ## Class: SampleClass
+
 This is a class
 
 ***
-## func1
+
+### Methods
+ - [func1](#func1)
+ - [testAnonynous](#testAnonynous)
+ - [testNamed](#testNamed)
+
 ### func1(a, b)  &#x21e8; 
 
 A method in the class
@@ -155,6 +184,8 @@ A method in the class
 func1(1, 2)
 
 
+**Returns:** the result.
+
 **Parameters**
 
 | name | type | description |
@@ -162,22 +193,20 @@ func1(1, 2)
 | **a** |  | the first param |
 | **b** |  | the second param |
 
-**Returns**: the result
 
-***
-## testAnonynous
+---
 ### testAnonynous()  &#x21e8; `String`
 
 function without name
 
 
 
+**Returns:** the result.
 
 
-**Returns**: `String`the result
 
-***
-## testNamed
+
+---
 ### testNamed(file, optional)  &#x21e8; 
 
 This is a test method     with a description on multiple lines
@@ -189,16 +218,9 @@ This is a test method     with a description on multiple lines
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                          this parsing thing is funny business |
-| **optional** | `Boolean ❘ null` | Changes behavior |
+| ***optional*** | `Boolean ❘ null` | Changes behavior |
 
+**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
-**Fires**: module:foo#event:one_thing
-**Fires**: module:foo#event:another
-**Fires**: module:foo#event:booyah
+---
 
-
-*(c) 2012 Blah Blah Blah*
-**Author:** Joe Schmo
-**License:** MIT 
-**Overview:** What's up?
-**Version:** 1.0.1

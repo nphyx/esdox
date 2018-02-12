@@ -1,12 +1,25 @@
-# base
+# File `fixtures/test5.js`
+**Overview:** This sample will output module requires and members.
 
-* [Description &amp; Usage](#description)
-* [Functions](#functions)
 
- - [init](#init)
 
-# Description
+ **Author** lemori
+
+**License:** MIT 
+
+**Version:** 0.0.1
+
+* Modules 
+- Module base
+
+
+
+# Module base
 init system configuration
+
+
+* [Functions](#functions)
+ - [init](#init)
 
 **Requires:**
 
@@ -18,10 +31,9 @@ init system configuration
 + UPLOAD_DIR
 + QRCODE_DIR
 
+## Functions
+* [init](#init)
 
-# Functions
-***
-## init
 ### init()  &#x21e8; 
 
 Read global config from database
@@ -31,11 +43,7 @@ Read global config from database
 
 
 
+---
 
 
 
-
-**Author:** lemori
-**License:** MIT 
-**Overview:** This sample will output module requires and members.
-**Version:** 0.0.1

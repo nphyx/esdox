@@ -230,9 +230,9 @@ describe('analyze', function() {
         });
         it('captures @fires/@emits on functions', () => {
           const expected = [
-            "module:foo#event:one_thing",
-            "module:foo#event:another",
-            "module:foo#event:booyah"
+            {ref: "module:foo#event:one_thing", name: "foo#one_thing"},
+            {ref: "module:foo#event:another", name: "foo#another"},
+            {ref: "module:foo#event:booyah", name: "foo#booyah"}
           ];
           under.functions[1].fires.should.deepEqual(expected);
         });

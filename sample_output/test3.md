@@ -1,26 +1,39 @@
-# Global
+# File `fixtures/test3.js`
+**Overview:** This is the overview with some `markdown` included, how nice!
 
-* [Description &amp; Usage](#description)
+
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
+
+# Module Global
+
+
 * [Functions](#functions)
-
  - [create](#create)
-
  - [remove](#remove)
 
-# Description
 
 
+## Functions
+* [create](#create)
+* [remove](#remove)
 
-
-
-# Functions
-***
-## create
 ### create(values)  &#x21e8; `Object`
 
 Create a record
 
 
+
+**Returns:** The created record.
 
 **Parameters**
 
@@ -28,10 +41,8 @@ Create a record
 |------|------|-------------|
 | **values** | `Object` | An object holding the initial values of the record's fields |
 
-**Returns**: `Object`The created record
 
-***
-## remove
+---
 ### remove()  &#x21e8; 
 
 Remove a record
@@ -41,11 +52,7 @@ Remove a record
 
 
 
+---
 
 
-
-*(c) 2012 Blah Blah Blah*
-**Author:** Joe Schmo
-**License:** MIT 
-**Overview:** This is the overview with some `markdown` included, how nice!
 

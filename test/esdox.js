@@ -144,7 +144,7 @@ describe("esdox", () => {
       jsdpStub.should.be.calledWith(source);
       esdoxStubs.analyze.should.be.calledWith({}, opts);
       esdoxStubs.generateMD.should.be.calledWith(
-        {}, opts.templateDir, false);
+        {basename: "fake.js", source: "fake.js"}, opts.templateDir, false);
       generated.length.should.eql(1);
       generated[0].should.deepEqual({
         source: source,
@@ -152,7 +152,7 @@ describe("esdox", () => {
         basename: path.basename(source),
         destination: path.join(opts.output, source).replace(/\.js$/, ".md"),
         parsed: {},
-        analyzed: {},
+        analyzed: {basename: "fake.js", source: "fake.js"},
         markdown: true
       });
     });
