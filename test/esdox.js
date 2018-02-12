@@ -239,6 +239,25 @@ describe("esdox", () => {
       index.markdown.should.be.True();
       esdoxStubs.analyze.returns({});
     });
+    it("should support a custom index name with opts.indexName", async () => {
+      const opts = {
+        input: ["./fixtures"],
+        output: "./test/output",
+        index: true,
+        indexName: "customIndex.md",
+        templateDir: "templates"
+      };
+      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
+      // collectIndexData needs analyzed to have some stuff in it
+      esdoxStubs.analyze.returns({
+        functions: [],
+        classes: []
+      });
+      let generated = await generate(opts);
+      let index = generated.pop();
+      index.destination.should.eql(path.join(opts.output, "customIndex.md"));
+      esdoxStubs.analyze.returns({});
+    });
   });
 
   describe("main", () => {
