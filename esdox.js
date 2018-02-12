@@ -98,6 +98,8 @@ exports.generate = async function generate(opts) {
     out.destination = out.destination.replace(/\.js$/, '.md');
     out.parsed = await promisedParser(path.join(out.dirname, out.basename));
     out.analyzed = analyze(out.parsed, opts);
+    out.analyzed.source = out.source;
+    out.analyzed.basename = out.basename;
     out.markdown = generateMD(out.analyzed, opts.templateDir, false);
     return out;
   }));
