@@ -1,3 +1,18 @@
+# File `fixtures/test2.js`
+**Overview:** This is the overview with some `markdown` included, how nice!
+
+
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
 
@@ -10,11 +25,12 @@
 
 
 
-
-
-
 ## Functions
-## func1
+* [func1](#func1)
+* [func2](#func2)
+* [exported](#exported)
+* [globalFunction](#globalFunction)
+
 ### func1(a, b)  &#x21e8; `String`
 
 
@@ -31,8 +47,6 @@
 
 
 ---
-## Functions
-## func2
 ### func2(c, d)  &#x21e8; 
 
 
@@ -47,8 +61,6 @@
 
 
 ---
-## Functions
-## exported
 ### exported(param)  &#x21e8; 
 
 exported with dot notation
@@ -63,8 +75,6 @@ exported with dot notation
 
 
 ---
-## Functions
-## globalFunction
 ### globalFunction(param)  &#x21e8; 
 
 global function
@@ -80,12 +90,5 @@ global function
 
 ---
 
-
-
-**Overview:** This is the overview with some `markdown` included, how nice!
-
-**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
-
-**License:** MIT 
 
 

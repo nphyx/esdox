@@ -1,3 +1,18 @@
+# File `fixtures/under_grandparent/under_parent/test.js`
+**Overview:** This file is contained by a folder within an other folder.
+
+
+
+ **Author** Gabor Sar
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
 
@@ -7,11 +22,9 @@
 
 
 
-
-
-
 ## Functions
-## func1
+* [func1](#func1)
+
 ### func1(a, b)  &#x21e8; `Number`
 
 Return the sum of two numbers.
@@ -30,12 +43,5 @@ Return the sum of two numbers.
 
 ---
 
-
-
-**Overview:** This file is contained by a folder within an other folder.
-
- **Author** Gabor Sar
-
-**License:** MIT 
 
 

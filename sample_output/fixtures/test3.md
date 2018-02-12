@@ -1,3 +1,18 @@
+# File `fixtures/test3.js`
+**Overview:** This is the overview with some `markdown` included, how nice!
+
+
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
 
@@ -8,11 +23,10 @@
 
 
 
-
-
-
 ## Functions
-## create
+* [create](#create)
+* [remove](#remove)
+
 ### create(values)  &#x21e8; `Object`
 
 Create a record
@@ -29,8 +43,6 @@ Create a record
 
 
 ---
-## Functions
-## remove
 ### remove()  &#x21e8; 
 
 Remove a record
@@ -42,12 +54,5 @@ Remove a record
 
 ---
 
-
-
-**Overview:** This is the overview with some `markdown` included, how nice!
-
-**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
-
-**License:** MIT 
 
 

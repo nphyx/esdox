@@ -1,11 +1,27 @@
 {{#name}}
 ## Class: {{name}}
 {{/name}}
+
 {{#description}}{{{description}}}{{/description}}
 
-{{#members}}
-**{{name}}**: {{#typesString}}`{{typesString}}`{{/typesString}} {{#description}}, {{{description}}}{{/description}}
-{{/members}}
+***
+{{#members.length}}
+### Members
+
+| name | type | description |
+|------|------|-------------|{{/members.length}}{{#members}}
+| {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/members}}
+{{#members.length}}
+***
+
+{{/members.length}}
+{{#methods.length}}
+### Methods
+{{#methods}}
+ - [{{name}}](#{{name}})
+{{/methods}}
+{{/methods.length}}
+
 {{#methods}}
 {{> function}}
 {{/methods}}

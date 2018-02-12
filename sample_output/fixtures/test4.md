@@ -1,3 +1,18 @@
+# File `fixtures/test4.js`
+**Overview:** This is the overview with some `markdown` included, how nice!
+
+
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
 
@@ -7,11 +22,9 @@
 
 
 
-
-
-
 ## Functions
-## notAnInternalFunction
+* [notAnInternalFunction](#notAnInternalFunction)
+
 ### notAnInternalFunction(file, optional)  &#x21e8; 
 
 This is a test function   with a description on multiple lines
@@ -28,12 +41,5 @@ This is a test function   with a description on multiple lines
 
 ---
 
-
-
-**Overview:** This is the overview with some `markdown` included, how nice!
-
-**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
-
-**License:** MIT 
 
 

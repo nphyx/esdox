@@ -1,24 +1,37 @@
+# File `fixtures/test6.js`
+**Overview:** This sample handles namespaces, interfaces, and links.
+
+
+
+ **Author**
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module main
+- Module util
+
+
 
 # Module main
+The top-level namespace.
 
-* [Description &amp; Usage](#description)
 
 * [Functions](#functions)
  - [init](#init)
  - [dispose](#dispose)
-
 * [Classes](#classes)
  - [Thing](#class-Thing)
  - [Worker](#class-Worker)
 
-## Description
-The top-level namespace.
-
-
 
 
 ## Functions
-## init
+* [init](#init)
+* [dispose](#dispose)
+
 ### init()  &#x21e8; 
 
 Initializes everything.
@@ -29,8 +42,6 @@ Initializes everything.
 
 
 ---
-## Functions
-## dispose
 ### dispose()  &#x21e8; 
 
 Disposes everything.
@@ -43,16 +54,32 @@ Disposes everything.
 ---
 
 ## Classes
+* [Thing](#class-Thing)
+* [Worker](#class-Worker)
+
 ## Class: Thing
+
 Definition for a Thing object used by a Worker.  See [main.Worker](#main.worker).
 
-**name**: `string` , Every Thing has a name.
-**data**: `* ❘ undefined` , Every Thing might have some data.
-## Classes
+***
+### Members
+
+| name | type | description |
+|------|------|-------------|
+| **name** | `string` | Every Thing has a name. |
+| **data** | `* ❘ undefined` | Every Thing might have some data. |
+***
+
+
 ## Class: Worker
+
 Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker)
 
-## do
+***
+
+### Methods
+ - [do](#do)
+
 ### do(thing)  &#x21e8; 
 
 Have a Worker do some Thing.  See [main.Thing](#main.thing).
@@ -69,22 +96,19 @@ Have a Worker do some Thing.  See [main.Thing](#main.thing).
 ---
 
 # Module util
+Namespace for utility functions.
 
-* [Description &amp; Usage](#description)
 
 * [Functions](#functions)
  - [foo](#foo)
  - [bar](#bar)
 
 
-## Description
-Namespace for utility functions.
-
-
-
 
 ## Functions
-## foo
+* [foo](#foo)
+* [bar](#bar)
+
 ### foo()  &#x21e8; 
 
 Run the Foo utility.
@@ -95,8 +119,6 @@ Run the Foo utility.
 
 
 ---
-## Functions
-## bar
 ### bar()  &#x21e8; 
 
 Run the Bar utility.
@@ -108,12 +130,5 @@ Run the Bar utility.
 
 ---
 
-
-
-**Overview:** This sample handles namespaces, interfaces, and links.
-
- **Author**
-
-**License:** MIT 
 
 

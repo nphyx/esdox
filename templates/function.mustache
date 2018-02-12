@@ -1,4 +1,3 @@
-## {{name}}
 ### {{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}} &#x21e8; {{#returns}}{{#typesString}}`{{typesString}}`{{/typesString}}{{/returns}}
 
 {{#description}}
@@ -20,11 +19,11 @@
 {{/description}}
 {{/returns}}
 
-{{#hasParams}}
+{{#params.length}}
 **Parameters**
 
 | name | type | description |
-|------|------|-------------|{{/hasParams}}{{#params}}
+|------|------|-------------|{{/params.length}}{{#params}}
 | {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
 
 {{#fires.length}}

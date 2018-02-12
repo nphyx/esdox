@@ -1,3 +1,18 @@
+# File `fixtures/test8.js`
+
+
+
+
+ **Author**
+
+
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
 
@@ -7,11 +22,9 @@
 
 
 
-
-
-
 ## Functions
-## optionsFunction
+* [optionsFunction](#optionsFunction)
+
 ### optionsFunction(file, options)  &#x21e8; 
 
 This is a test function   with a object that has attributes
@@ -29,13 +42,6 @@ This is a test function   with a object that has attributes
 
 
 ---
-
-
-
-
-
- **Author**
-
 
 
 

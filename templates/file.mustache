@@ -1,12 +1,46 @@
+# File `{{{source}}}`
+{{#overview}}**Overview:** {{{overview}}}{{/overview}}
+
+{{#description}}{{description}}{{/description}}
+
+{{#copyright}}**Copyright** *{{copyright}}*{{/copyright}}{{^copyright}} **Author**{{/copyright}}{{#author}} {{author}}{{/author}}
+
+{{#license}}**License:** {{license}} {{/license}}
+
+{{#version}}**Version:** {{version}}{{/version}}
+
+{{#modules.length}}
+* Modules 
+{{#modules}}
+{{#name}}
+- Module {{name}}
+{{/name}}
+{{/modules}}
+{{/modules.length}}
+
+{{^modules.length}}
+{{#functions.length}}
+* [Functions](#functions)
+{{/functions.length}}
+{{#classes.length}}
+* [Classes](#classes)
+{{/classes.length}}
+{{/modules.length}}
+
 
 {{#modules}}
 {{#name}}
 # Module {{name}}
 {{/name}}
-
 {{#description}}
-* [Description &amp; Usage](#description)
+{{{description}}}
 {{/description}}
+
+{{#examples}}
+**Example:**
+{{{examples}}}
+
+{{/examples}}
 
 {{#functions.length}}
 * [Functions](#functions)
@@ -14,18 +48,12 @@
 {{#functions}}
  - [{{name}}](#{{name}})
 {{/functions}}
-
 {{#classes.length}}
 * [Classes](#classes)
-{{/classes.length}}
 {{#classes}}
  - [{{name}}](#class-{{name}})
 {{/classes}}
-
-{{#description}}
-## Description
-{{{description}}}
-{{/description}}
+{{/classes.length}}
 
 {{#hasRequires}}
 **Requires:**
@@ -43,28 +71,26 @@
 {{/members}}
 {{/hasMembers}}
 
-{{#examples}}
-**Example:**
-{{{examples}}}
-
-{{/examples}}
+{{#functions.length}}
+## Functions
+{{#functions}}
+* [{{name}}](#{{name}})
+{{/functions}}
+{{/functions.length}}
 
 {{#functions}}
-## Functions
 {{> function}}
 {{/functions}}
 
-{{#classes}}
+{{#classes.length}}
 ## Classes
+{{#classes}}
+* [{{name}}](#class-{{name}})
+{{/classes}}
+{{/classes.length}}
+
+{{#classes}}
 {{> class}}
 {{/classes}}
 
 {{/modules}}
-
-{{#overview}}**Overview:** {{{overview}}}{{/overview}}
-
-{{#copyright}}**Copyright** *{{copyright}}*{{/copyright}}{{^copyright}} **Author**{{/copyright}}{{#author}} {{author}}{{/author}}
-
-{{#license}}**License:** {{license}} {{/license}}
-
-{{#version}}**Version:** {{version}}{{/version}}

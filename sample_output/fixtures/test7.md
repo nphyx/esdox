@@ -1,6 +1,20 @@
+# File `fixtures/test7.js`
+**Overview:** Test classes without methods.
+
+
+
+ **Author** Gabor Sar
+
+**License:** MIT 
+
+
+
+* Modules 
+- Module Global
+
+
 
 # Module Global
-
 
 
 * [Classes](#classes)
@@ -10,19 +24,21 @@
 
 
 
-
 ## Classes
+* [Test](#class-Test)
+
 ## Class: Test
+
 Test class.
 
-**a**: `*` , First member.
-**b**: `*` , Second member.
+***
+### Members
 
+| name | type | description |
+|------|------|-------------|
+| **a** | `*` | First member. |
+| **b** | `*` | Second member. |
+***
 
-**Overview:** Test classes without methods.
-
- **Author** Gabor Sar
-
-**License:** MIT 
 
 

@@ -1,3 +1,19 @@
+# File `fixtures/under/test.js`
+**Overview:** What's up?
+
+
+
+**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
+
+**License:** MIT 
+
+**Version:** 1.0.1
+
+* Modules 
+- Module Global
+- Module foo
+
+
 
 # Module Global
 
@@ -8,11 +24,10 @@
 
 
 
-
-
-
 ## Functions
-## bar
+* [bar](#bar)
+* [testNamed](#testNamed)
+
 ### bar()  &#x21e8; `Boolean ❘ null`
 
 I so cool
@@ -25,8 +40,6 @@ I so cool
 
 
 ---
-## Functions
-## testNamed
 ### testNamed(file, optional)  &#x21e8; 
 
 This is a test function   with a description on multiple lines
@@ -45,9 +58,10 @@ This is a test function   with a description on multiple lines
 ---
 
 
-# Module foo
 
-* [Description &amp; Usage](#description)
+# Module foo
+Can I get some description please   on more than one line, if possible.
+
 
 * [Functions](#functions)
  - [testAnonynous](#testAnonynous)
@@ -55,19 +69,19 @@ This is a test function   with a description on multiple lines
  - [func1](#func1)
  - [func2](#func2)
  - [testDeprecated](#testDeprecated)
-
 * [Classes](#classes)
  - [Ketch](#class-Ketch)
  - [SampleClass](#class-SampleClass)
 
-## Description
-Can I get some description please   on more than one line, if possible.
-
-
 
 
 ## Functions
-## testAnonynous
+* [testAnonynous](#testAnonynous)
+* [testAnon2](#testAnon2)
+* [func1](#func1)
+* [func2](#func2)
+* [testDeprecated](#testDeprecated)
+
 ### testAnonynous()  &#x21e8; `String`
 
 function without name
@@ -80,8 +94,6 @@ function without name
 
 
 ---
-## Functions
-## testAnon2
 ### testAnon2()  &#x21e8; `String`
 
 second function without name
@@ -94,8 +106,6 @@ second function without name
 
 
 ---
-## Functions
-## func1
 ### func1(a, b)  &#x21e8; 
 
 
@@ -112,8 +122,6 @@ second function without name
 
 
 ---
-## Functions
-## func2
 ### func2(c, d)  &#x21e8; 
 
 
@@ -130,8 +138,6 @@ second function without name
 
 
 ---
-## Functions
-## testDeprecated
 ### testDeprecated()  &#x21e8; 
 
 This is a deprecated function.
@@ -145,16 +151,34 @@ This is a deprecated function.
 ---
 
 ## Classes
+* [Ketch](#class-Ketch)
+* [SampleClass](#class-SampleClass)
+
 ## Class: Ketch
+
 Provides chainable functions to easily build and execute a command.
 
-**last_err**: `String` , Last error, if present
-**cmd**: `Array` , Internal array representation of this command.
-## Classes
+***
+### Members
+
+| name | type | description |
+|------|------|-------------|
+| **last_err** | `String` | Last error, if present |
+| **cmd** | `Array` | Internal array representation of this command. |
+***
+
+
 ## Class: SampleClass
+
 This is a class
 
-## func1
+***
+
+### Methods
+ - [func1](#func1)
+ - [testAnonynous](#testAnonynous)
+ - [testNamed](#testNamed)
+
 ### func1(a, b)  &#x21e8; 
 
 A method in the class
@@ -174,7 +198,6 @@ func1(1, 2)
 
 
 ---
-## testAnonynous
 ### testAnonynous()  &#x21e8; `String`
 
 function without name
@@ -187,7 +210,6 @@ function without name
 
 
 ---
-## testNamed
 ### testNamed(file, optional)  &#x21e8; 
 
 This is a test method     with a description on multiple lines
@@ -205,11 +227,3 @@ This is a test method     with a description on multiple lines
 
 ---
 
-
-**Overview:** What's up?
-
-**Copyright** *(c) 2012 Blah Blah Blah* Joe Schmo
-
-**License:** MIT 
-
-**Version:** 1.0.1
