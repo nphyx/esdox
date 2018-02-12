@@ -111,8 +111,8 @@ exports.generate = async function generate(opts) {
     output.reduce((p, c) => exports.collectIndexData(p, c, opts), indexData);
     indexData.source = "";
     indexData.dirname = ".";
-    indexData.basename = "index.md";
-    indexData.destination = path.join(opts.output, "index.md");
+    indexData.basename = opts.indexName;
+    indexData.destination = path.join(opts.output, opts.indexName);
     indexData.markdown = generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
     output.push(indexData);
   }
@@ -154,17 +154,22 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
 /**
  * Main function handles parsed CLI input from bin/esdox or a passed
  * options object.
- * @param {Object} opts may include [command line options](lib/#printHelp)
+ * @param {Object} opts configuration object
  * @param {String|Array} opts.input input file or directory
  * @param {String} opts.output output directory
  * @param {String} [opts.templateDir] directory for custom mustache templates
  * @param {String} [opts.index-sort=standard] sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none")
+ * @param {String} [opts.indexName=index.md] name for generated index file
  * @param {Boolean} [opts.recursive=false] generate documentation for subdirectories
  * @param {Boolean} [opts.respect-recursive=false] generate documentation for subdirectories, keeping directory structure in output files
  * @param {Boolean} [opts.index=false] generate an index file
  * @return {Promise}
  */
 async function main(opts = {}) {
+  const defaults = {
+    indexName: "index.md"
+  }
+  opts = {...defaults, ...opts};
   if (typeof(opts.input) === "string") {
     opts.input = [opts.input];
   }

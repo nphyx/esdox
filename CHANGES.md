@@ -1,5 +1,30 @@
-ESDox 0.0.1
------------
+ESDox Changes
+=============
+
+0.2.0
+-----
+* support for custom index file name
+  * --index-name \<name\> or --in \<name\> via CLI
+  * opts.indexName via esdox module
+* esdox generates docs for itself
+  * found in docs/ folder
+  * published to (https://github.com/nphyx/esdox/wiki)
+
+0.1.0
+-----
+* template cleanups
+  * function params now displayed in table
+  * improved navigability of file-level docs
+  * layout cleanup for functions and classes
+  * file-level doc now includes original filename
+  * @files/@emits tags now have nicer generated docs
+* badges for readme
+  * travis-ci
+  * coveralls
+  * npm version
+
+0.0.1
+-----
 
 * hard fork from [jsdox](https://github.com/sutoiku/jsdox)
 * migrated optimist to yarg
@@ -17,6 +42,9 @@ ESDox 0.0.1
   * bin/esdox handles all CLI functionality
   * esdox.js no longer generates console output
   * some functions broken out and exported for easier unit testing
+
+JSDox History
+=============
 
 0.5.0
 ------

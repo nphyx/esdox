@@ -27,6 +27,7 @@ const yargs = require("yargs")
     boolean: true
   })
   .options("index-sort", {
+    alias: "is",
     default: "standard",
     describe: "Sort order for index",
     choices: ["standard","namespace","none"]
@@ -40,6 +41,11 @@ const yargs = require("yargs")
     alias: "rr",
     describe: "recurse subdirectories, preserved output",
     boolean: true
+  })
+  .options("index-name", {
+    alias: "in",
+    describe: "custom filename for the generated index",
+    default: "index.md"
   })
   .alias("c", "config")
   .config("config", "Configuration JSON file")
@@ -62,7 +68,8 @@ if (!argv._.length && !argv.input) {
     debug: argv.debug,
     A: argv.A,
     index: argv.index,
-    "index-sort": argv["index-sort"],
+    indexName: argv.in,
+    "index-sort": argv.is,
     input: argv.input ? argv.input : argv._
   }
   esdox(opts)

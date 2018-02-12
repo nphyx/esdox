@@ -91,11 +91,12 @@ Main function handles parsed CLI input from bin/esdox or a passed options object
 
 | name | type | description |
 |------|------|-------------|
-| **opts** | `Object` | may include [command line options](lib/#printHelp) |
+| **opts** | `Object` | configuration object |
 | **opts.input** | `String ❘ Array` | input file or directory |
 | **opts.output** | `String` | output directory |
 | ***opts.templateDir*** | `String` | directory for custom mustache templates |
 | ***opts.index-sort*** | `String` | sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none") |
+| ***opts.indexName*** | `String` | name for generated index file |
 | ***opts.recursive*** | `Boolean` | generate documentation for subdirectories |
 | ***opts.respect-recursive*** | `Boolean` | generate documentation for subdirectories, keeping directory structure in output files |
 | ***opts.index*** | `Boolean` | generate an index file |
