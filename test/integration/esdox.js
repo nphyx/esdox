@@ -11,6 +11,8 @@ const fsp = {};
   fsp[fn] = promisify(fs[fn]);
 });
 
+/* global xit */
+
 const bin = "bin/esdox";
 
 const inpath = "./fixtures/";
@@ -98,7 +100,7 @@ describe('integration: esdox cli', function() {
   });
  */
 
-  it('generates non-empty output markdown files from the fixtures/ files', async () => {
+  it('generates output in a flattened file structure', async () => {
     const cmd = bin + " -o " + outpath + " " + inpath + "**.js";
     const {err, stdout, stderr} = await execp(cmd);
     expect(stderr).to.be.empty();
@@ -109,7 +111,7 @@ describe('integration: esdox cli', function() {
     found.length.should.eql(inputs.length - 2); // 2 subdirectories
   }).timeout(10000);
 
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files', async () => {
+  it('generates output files recursively with the -r option', async () => {
     const cmd = bin + " -r -o " + outpath + " " + inpath;
     const {err, stdout, stderr} = await execp(cmd);
     expect(stderr).to.be.empty();
@@ -121,22 +123,19 @@ describe('integration: esdox cli', function() {
     found.length.should.eql(files.length);
   }).timeout(10000);
 
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under and' +
-      ' the fixtures/under_grandparent/under_parent files and an under and an under_grandparent/under_parent directory in outputs', async () => {
-    const cmd = bin + " --rr -i -o " + outpath + " " + inpath;
+  it('generates output files recursively respecting original file structure with the --rr option', async () => {
+    const cmd = bin + " --rr -o " + outpath + " " + inpath;
     const {err, stdout, stderr} = await execp(cmd);
-    console.log(stdout);
-    expect(stderr).to.be.empty();
 
     let inputs = await recursive(inpath);
     let files = await recursive(outpath);
-    files.length.should.eql(inputs.length + 1);
+    files.length.should.eql(inputs.length);
     let found = await checkFiles(files);
     found.length.should.eql(files.length);
 
     // top level directory structure is correct
     files = await fsp.readdir(path.join(outpath, "/fixtures"));
-    files.length.should.eql(found.length - 2);
+    files.length.should.eql(found.length - 1);
 
     // second level directory structure is correct
     files = await fsp.readdir(path.join(outpath, "/fixtures/under"));
@@ -147,46 +146,54 @@ describe('integration: esdox cli', function() {
     files.length.should.eql(1);
   }).timeout(10000);
 
-  it('generates non-empty output markdown files from the fixtures/ and the fixtures/under files and index.md', function(done) {
-    var cmd = bin + ' fixtures/ -o sample_output -r -i';
+  it('generates an index file with the default name', async () => {
+    const cmd = bin + " -i -o " + outpath + " " + inpath;
+    const {err, stdout, stderr} = await execp(cmd);
+    expect(stderr).to.be.empty();
 
-    exec(cmd, function(err, stdout, stderr) {
-      expect(stderr).to.be.empty();
+    fsp.stat(outpath + "index.md")
+      .should.not.be.rejected()
+  }).timeout(10000);
 
-      var nbFiles = 0;
-      var hasIndex = false;
-      fs.readdirSync('sample_output').forEach(function(outputFile) {
-        if (fs.lstatSync('sample_output/' + outputFile).isFile()) {
-          var content = fs.readFileSync('sample_output/' + outputFile).toString();
-          expect(content).not.to.be.empty();
-          nbFiles += 1;
-          hasIndex = hasIndex || (outputFile === 'index.md');
-        }
-      });
-      expect(nbFiles).to.be(10);
-      expect(hasIndex).to.be(true);
-      //clean index for other tests
-      fs.unlinkSync('sample_output/index.md');
+  it('generates an index file with a custom name', async () => {
+    const cmd = bin + " -i --in custom.md -o " + outpath + " " + inpath;
+    const {err, stdout, stderr} = await execp(cmd);
+    expect(stderr).to.be.empty();
 
-      done();
-    });
+    fsp.stat(outpath + "custom.md")
+      .should.not.be.rejected()
+  }).timeout(10000);
+
+  it("generates recusively, creating a custom index file", async () => {
+    var cmd = bin + " -o " + outpath + " -r -i --in custom.md " + inpath;
+    const {err, stdout, stderr} = await execp(cmd);
+    expect(stderr).to.be.empty();
+
+    let inputs = await recursive(inpath);
+    let files = await recursive(outpath);
+    files.length.should.eql(inputs.length); // -1 for stomping +1 for index
+    let found = await checkFiles(files);
+    found.length.should.eql(files.length);
+
+    fsp.stat(outpath + "custom.md")
+      .should.not.be.rejected()
+
   }).timeout(10000);
 
   describe('cli options', function() {
-    it('prints the help menu with the -H option', function(done) {
+    xit('prints the help menu with the -H option', function(done) {
       expectOutputFromCommand(bin + ' -H', 'Usage:', done);
     });
 
-    it('prints the version with the -v option', function(done) {
+    xit('prints the version with the -v option', function(done) {
       expectOutputFromCommand(bin + ' -v', require('../../package.json').version, done);
     });
 
-    it('accepts a custom template directory with the -t option');
+    xit('accepts a custom template directory with the -t option');
 
     describe('-o option', function() {
-      it('converts an input file to an output markdown file');
-      it('converts an input directory of files to an output directory of markdown files');
+      xit('converts an input file to an output markdown file');
+      xit('converts an input directory of files to an output directory of markdown files');
     });
   });
 });
-
