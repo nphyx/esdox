@@ -19,12 +19,24 @@
 {{/description}}
 {{/returns}}
 
+{{^hasDefaultParams}}
 {{#params.length}}
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|{{/params.length}}{{#params}}
 | {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
+{{/hasDefaultParams}}
+
+{{! add a default value column if any of the params have a default }}
+{{#hasDefaultParams}}
+{{#params.length}}
+**Parameters**
+
+| name | type | default | description |
+|------|------|---------|-------------|{{/params.length}}{{#params}}
+| {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#defaultvalue}}`{{{defaultvalue}}}`{{/defaultvalue}} | {{#description}}{{{description}}}{{/description}} |{{/params}}
+{{/hasDefaultParams}}
+
 
 {{#fires.length}}
 **Fires**: {{#fires}}[`{{name}}`]({{ref}}) {{/fires}}

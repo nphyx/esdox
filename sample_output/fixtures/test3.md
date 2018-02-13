@@ -36,16 +36,19 @@ Create a record
 **Returns:** The created record.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **values** | `Object` | An object holding the initial values of the record's fields |
+
+
 
 
 ---
 ### remove()  &#x21e8; `undefined`
 
 Remove a record
+
+
 
 
 

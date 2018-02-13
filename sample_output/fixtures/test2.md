@@ -39,11 +39,12 @@
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** | `String` | the first param |
 | **b** | `String` | the second param |
+
+
 
 
 ---
@@ -53,11 +54,12 @@
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **c** |  | the first param |
 | **d** |  | the second param @ returns the other result |
+
+
 
 
 ---
@@ -68,10 +70,11 @@ exported with dot notation
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **param** | `String` | the parameter |
+
+
 
 
 ---
@@ -82,10 +85,11 @@ global function
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **param** | `String` | the parameter |
+
+
 
 
 ---

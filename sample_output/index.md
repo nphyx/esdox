@@ -14,6 +14,8 @@ Run the Bar utility.
 
 
 
+
+
 ---
 
 
@@ -24,6 +26,8 @@ I so cool
 
 
 **Deprecated:** Not a good function
+
+
 
 
 
@@ -42,10 +46,11 @@ Create a record
 **Returns:** The created record.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **values** | `Object` | An object holding the initial values of the record's fields |
+
+
 
 
 ---
@@ -55,6 +60,8 @@ Create a record
 ### dispose()  &#x21e8; `undefined`
 
 Disposes everything.
+
+
 
 
 
@@ -72,10 +79,11 @@ exported with dot notation
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **param** | `String` | the parameter |
+
+
 
 
 ---
@@ -85,6 +93,8 @@ exported with dot notation
 ### foo()  &#x21e8; `undefined`
 
 Run the Foo utility.
+
+
 
 
 
@@ -104,11 +114,12 @@ Return the sum of two numbers.
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** | `Number` | the first param |
 | **b** | `Number` | the second param |
+
+
 
 
 ---
@@ -123,11 +134,12 @@ Return the sum of two numbers.
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** |  | the first param |
 | **b** |  | the second param |
+
+
 
 
 ---
@@ -142,11 +154,12 @@ Return the sum of two numbers.
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** | `String` | the first param |
 | **b** | `String` | the second param |
+
+
 
 
 ---
@@ -159,11 +172,12 @@ Return the sum of two numbers.
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **c** |  | the first param |
 | **d** |  | the second param @ returns the other result |
+
+
 
 
 ---
@@ -178,11 +192,12 @@ Return the sum of two numbers.
 **Returns:** the other result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **c** |  | the first param |
 | **d** |  | the second param |
+
+
 
 
 ---
@@ -196,10 +211,11 @@ global function
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **param** | `String` | the parameter |
+
+
 
 
 ---
@@ -209,6 +225,8 @@ global function
 ### init()  &#x21e8; `undefined`
 
 Read global config from database
+
+
 
 
 
@@ -228,6 +246,8 @@ Initializes everything.
 
 
 
+
+
 ---
 
 
@@ -239,11 +259,12 @@ This is a test function   with a description on multiple lines
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **file** | `String` | filename to parse |
 | ***optional*** | `Boolean` | Changes behavior |
+
+
 
 
 ---
@@ -256,14 +277,17 @@ This is a test function   with a object that has attributes
 
 
 
+
 **Parameters**
 
-| name | type | description |
-|------|------|-------------|
-| **file** | `String` | filename to parse |
-| ***options*** | `Object` | Changes behavior |
-| **options.enableOption1** | `Boolean` | should option1 be enabled |
-| **options.enableOption2** | `Boolean` | should option2 be enabled |
+| name | type | default | description |
+|------|------|---------|-------------|
+| **file** | `String` |  | filename to parse |
+| ***options*** | `Object` |  | Changes behavior |
+| **options.enableOption1** | `Boolean` |  | should option1 be enabled |
+| **options.enableOption2** | `Boolean` |  | should option2 be enabled |
+| ***options.default*** | `Boolean` |  | has a default value |
+
 
 
 ---
@@ -273,6 +297,8 @@ This is a test function   with a object that has attributes
 ### remove()  &#x21e8; `undefined`
 
 Remove a record
+
+
 
 
 
@@ -294,6 +320,8 @@ second function without name
 
 
 
+
+
 ---
 
 
@@ -305,6 +333,8 @@ function without name
 
 
 **Returns:** the result.
+
+
 
 
 
@@ -323,6 +353,8 @@ This is a deprecated function.
 
 
 
+
+
 ---
 
 
@@ -334,11 +366,12 @@ This is a test function   with a description on multiple lines
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
 | ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+
 
 **Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
@@ -388,11 +421,12 @@ func1(1, 2)
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** |  | the first param |
 | **b** |  | the second param |
+
+
 
 
 ---
@@ -407,6 +441,8 @@ function without name
 
 
 
+
+
 ---
 ### testNamed(file, optional)  &#x21e8; `undefined`
 
@@ -415,11 +451,12 @@ This is a test method     with a description on multiple lines
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                          this parsing thing is funny business |
 | ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+
 
 **Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
@@ -471,10 +508,11 @@ Have a Worker do some Thing.  See [main.Thing](#main.thing).
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **thing** | `main.Thing` | The Thing to do.  See [main.Thing](#main.thing). |
+
+
 
 
 ---

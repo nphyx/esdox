@@ -39,6 +39,8 @@ I so cool
 
 
 
+
+
 ---
 ### testNamed(file, optional)  &#x21e8; `undefined`
 
@@ -47,11 +49,12 @@ This is a test function   with a description on multiple lines
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
 | ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+
 
 **Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
@@ -92,6 +95,8 @@ function without name
 
 
 
+
+
 ---
 ### testAnon2()  &#x21e8; `String`
 
@@ -100,6 +105,8 @@ second function without name
 
 
 **Returns:** the result.
+
+
 
 
 
@@ -113,11 +120,12 @@ second function without name
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** |  | the first param |
 | **b** |  | the second param |
+
+
 
 
 ---
@@ -129,11 +137,12 @@ second function without name
 **Returns:** the other result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **c** |  | the first param |
 | **d** |  | the second param |
+
+
 
 
 ---
@@ -143,6 +152,8 @@ This is a deprecated function.
 
 
 **Deprecated:** Because I said so
+
+
 
 
 
@@ -189,11 +200,12 @@ func1(1, 2)
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** |  | the first param |
 | **b** |  | the second param |
+
+
 
 
 ---
@@ -208,6 +220,8 @@ function without name
 
 
 
+
+
 ---
 ### testNamed(file, optional)  &#x21e8; `undefined`
 
@@ -216,11 +230,12 @@ This is a test method     with a description on multiple lines
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **file** | `String ❘ null` | filename to parse                          this parsing thing is funny business |
 | ***optional*** | `Boolean ❘ null` | Changes behavior |
+
+
 
 **Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 

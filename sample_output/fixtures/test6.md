@@ -41,10 +41,14 @@ Initializes everything.
 
 
 
+
+
 ---
 ### dispose()  &#x21e8; `undefined`
 
 Disposes everything.
+
+
 
 
 
@@ -87,10 +91,11 @@ Have a Worker do some Thing.  See [main.Thing](#main.thing).
 
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **thing** | `main.Thing` | The Thing to do.  See [main.Thing](#main.thing). |
+
+
 
 
 ---
@@ -117,10 +122,14 @@ Run the Foo utility.
 
 
 
+
+
 ---
 ### bar()  &#x21e8; `undefined`
 
 Run the Bar utility.
+
+
 
 
 

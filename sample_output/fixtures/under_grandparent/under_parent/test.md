@@ -34,11 +34,12 @@ Return the sum of two numbers.
 **Returns:** the result.
 
 **Parameters**
-
 | name | type | description |
 |------|------|-------------|
 | **a** | `Number` | the first param |
 | **b** | `Number` | the second param |
+
+
 
 
 ---
