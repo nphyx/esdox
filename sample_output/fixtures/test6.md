@@ -1,4 +1,10 @@
-# File `fixtures/test6.js`
+# File `test6.js`
+
+**Modules**
+* [main](#module-main)
+* [util](#module-util)
+
+
 **Overview:** This sample handles namespaces, interfaces, and links.
 
 
@@ -9,28 +15,22 @@
 
 
 
-* Modules 
-- Module main
-- Module util
-
-
-
 # Module main
 The top-level namespace.
 
 
 * [Functions](#functions)
- - [init](#init)
- - [dispose](#dispose)
+* [init](#init-x21e8-)
+* [dispose](#dispose-x21e8-)
 * [Classes](#classes)
- - [Thing](#class-Thing)
- - [Worker](#class-Worker)
+* [Thing](#class-Thing)
+* [Worker](#class-Worker)
 
 
 
 ## Functions
-* [init](#init)
-* [dispose](#dispose)
+* [init](#init-x21e8-)
+* [dispose](#dispose-x21e8-)
 
 ### init()  &#x21e8; 
 
@@ -94,20 +94,19 @@ Have a Worker do some Thing.  See [main.Thing](#main.thing).
 
 
 ---
-
 # Module util
 Namespace for utility functions.
 
 
 * [Functions](#functions)
- - [foo](#foo)
- - [bar](#bar)
+* [foo](#foo-x21e8-)
+* [bar](#bar-x21e8-)
 
 
 
 ## Functions
-* [foo](#foo)
-* [bar](#bar)
+* [foo](#foo-x21e8-)
+* [bar](#bar-x21e8-)
 
 ### foo()  &#x21e8; 
 
@@ -129,6 +128,5 @@ Run the Bar utility.
 
 
 ---
-
 
 

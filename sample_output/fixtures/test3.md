@@ -1,4 +1,9 @@
-# File `fixtures/test3.js`
+# File `test3.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 **Overview:** This is the overview with some `markdown` included, how nice!
 
 
@@ -9,23 +14,18 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [create](#create)
- - [remove](#remove)
+* [create](#create-values-x21e8-Object-)
+* [remove](#remove-x21e8-)
 
 
 
 ## Functions
-* [create](#create)
-* [remove](#remove)
+* [create](#create-values-x21e8-Object-)
+* [remove](#remove-x21e8-)
 
 ### create(values)  &#x21e8; `Object`
 
@@ -53,6 +53,5 @@ Remove a record
 
 
 ---
-
 
 

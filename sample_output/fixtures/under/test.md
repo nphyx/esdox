@@ -1,4 +1,10 @@
-# File `fixtures/under/test.js`
+# File `test.js`
+
+**Modules**
+* [Global](#module-Global)
+* [foo](#module-foo)
+
+
 **Overview:** What's up?
 
 
@@ -9,24 +15,18 @@
 
 **Version:** 1.0.1
 
-* Modules 
-- Module Global
-- Module foo
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [bar](#bar)
- - [testNamed](#testNamed)
+* [bar](#bar-x21e8-Boolean ❘ null-)
+* [testNamed](#testNamed-file-optional-x21e8-)
 
 
 
 ## Functions
-* [bar](#bar)
-* [testNamed](#testNamed)
+* [bar](#bar-x21e8-Boolean ❘ null-)
+* [testNamed](#testNamed-file-optional-x21e8-)
 
 ### bar()  &#x21e8; `Boolean ❘ null`
 
@@ -58,29 +58,28 @@ This is a test function   with a description on multiple lines
 ---
 
 
-
 # Module foo
 Can I get some description please   on more than one line, if possible.
 
 
 * [Functions](#functions)
- - [testAnonynous](#testAnonynous)
- - [testAnon2](#testAnon2)
- - [func1](#func1)
- - [func2](#func2)
- - [testDeprecated](#testDeprecated)
+* [testAnonynous](#testAnonynous-x21e8-String-)
+* [testAnon2](#testAnon2-x21e8-String-)
+* [func1](#func1-a-b-x21e8--)
+* [func2](#func2-c-d-x21e8--)
+* [testDeprecated](#testDeprecated-x21e8-)
 * [Classes](#classes)
- - [Ketch](#class-Ketch)
- - [SampleClass](#class-SampleClass)
+* [Ketch](#class-Ketch)
+* [SampleClass](#class-SampleClass)
 
 
 
 ## Functions
-* [testAnonynous](#testAnonynous)
-* [testAnon2](#testAnon2)
-* [func1](#func1)
-* [func2](#func2)
-* [testDeprecated](#testDeprecated)
+* [testAnonynous](#testAnonynous-x21e8-String-)
+* [testAnon2](#testAnon2-x21e8-String-)
+* [func1](#func1-a-b-x21e8--)
+* [func2](#func2-c-d-x21e8--)
+* [testDeprecated](#testDeprecated-x21e8-)
 
 ### testAnonynous()  &#x21e8; `String`
 
@@ -226,4 +225,3 @@ This is a test method     with a description on multiple lines
 **Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
 
 ---
-

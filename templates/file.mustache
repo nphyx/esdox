@@ -1,4 +1,25 @@
-# File `{{{source}}}`
+# File `{{{basename}}}`
+
+{{! if the file has modules we'll show a list of those }}
+{{#modules.length}}
+**Modules**
+{{#modules}}
+{{#name}}
+* [{{name}}](#module-{{name}})
+{{/name}}
+{{/modules}}
+{{/modules.length}}
+
+{{! otherwise show a link to the functions and classes sections as applicable }}
+{{^modules.length}}
+{{#functions.length}}
+* [Functions](#functions)
+{{/functions.length}}
+{{#classes.length}}
+* [Classes](#classes)
+{{/classes.length}}
+{{/modules.length}}
+
 {{#overview}}**Overview:** {{{overview}}}{{/overview}}
 
 {{#description}}{{description}}{{/description}}
@@ -9,88 +30,8 @@
 
 {{#version}}**Version:** {{version}}{{/version}}
 
-{{#modules.length}}
-* Modules 
+{{! if we have modules display each one as a section (there will at least be a "Global" module) }}
 {{#modules}}
-{{#name}}
-- Module {{name}}
-{{/name}}
+  {{> module}}
 {{/modules}}
-{{/modules.length}}
-
-{{^modules.length}}
-{{#functions.length}}
-* [Functions](#functions)
-{{/functions.length}}
-{{#classes.length}}
-* [Classes](#classes)
-{{/classes.length}}
-{{/modules.length}}
-
-
-{{#modules}}
-{{#name}}
-# Module {{name}}
-{{/name}}
-{{#description}}
-{{{description}}}
-{{/description}}
-
-{{#examples}}
-**Example:**
-{{{examples}}}
-
-{{/examples}}
-
-{{#functions.length}}
-* [Functions](#functions)
-{{/functions.length}}
-{{#functions}}
- - [{{name}}](#{{name}})
-{{/functions}}
-{{#classes.length}}
-* [Classes](#classes)
-{{#classes}}
- - [{{name}}](#class-{{name}})
-{{/classes}}
-{{/classes.length}}
-
-{{#hasRequires}}
-**Requires:**
-
-{{#requires}}
-+ {{{req}}}
-{{/requires}}
-{{/hasRequires}}
-
-{{#hasMembers}}
-**Members:**
-
-{{#members}}
-+ {{{member}}}
-{{/members}}
-{{/hasMembers}}
-
-{{#functions.length}}
-## Functions
-{{#functions}}
-* [{{name}}](#{{name}})
-{{/functions}}
-{{/functions.length}}
-
-{{#functions}}
-{{> function}}
-{{/functions}}
-
-{{#classes.length}}
-## Classes
-{{#classes}}
-* [{{name}}](#class-{{name}})
-{{/classes}}
-{{/classes.length}}
-
-{{#classes}}
-{{> class}}
-{{/classes}}
-
-{{/modules}}
+{{! end modules loop }}

@@ -1,4 +1,9 @@
-# File `fixtures/test8.js`
+# File `test8.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 
 
 
@@ -9,21 +14,16 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [optionsFunction](#optionsFunction)
+* [optionsFunction](#optionsFunction-file-options-options.enableOption1-options.enableOption2-x21e8-)
 
 
 
 ## Functions
-* [optionsFunction](#optionsFunction)
+* [optionsFunction](#optionsFunction-file-options-options.enableOption1-options.enableOption2-x21e8-)
 
 ### optionsFunction(file, options)  &#x21e8; 
 
@@ -42,6 +42,5 @@ This is a test function   with a object that has attributes
 
 
 ---
-
 
 

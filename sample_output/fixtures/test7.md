@@ -1,4 +1,9 @@
-# File `fixtures/test7.js`
+# File `test7.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 **Overview:** Test classes without methods.
 
 
@@ -9,16 +14,11 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Classes](#classes)
- - [Test](#class-Test)
+* [Test](#class-Test)
 
 
 
@@ -39,6 +39,5 @@ Test class.
 | **a** | `*` | First member. |
 | **b** | `*` | Second member. |
 ***
-
 
 

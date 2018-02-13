@@ -1,4 +1,9 @@
-# File `fixtures/under_grandparent/under_parent/test.js`
+# File `test.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 **Overview:** This file is contained by a folder within an other folder.
 
 
@@ -9,21 +14,16 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [func1](#func1)
+* [func1](#func1-a-b-x21e8-Number-)
 
 
 
 ## Functions
-* [func1](#func1)
+* [func1](#func1-a-b-x21e8-Number-)
 
 ### func1(a, b)  &#x21e8; `Number`
 
@@ -42,6 +42,5 @@ Return the sum of two numbers.
 
 
 ---
-
 
 

@@ -1,4 +1,9 @@
-# File `fixtures/test5.js`
+# File `test5.js`
+
+**Modules**
+* [base](#module-base)
+
+
 **Overview:** This sample will output module requires and members.
 
 
@@ -9,17 +14,12 @@
 
 **Version:** 0.0.1
 
-* Modules 
-- Module base
-
-
-
 # Module base
 init system configuration
 
 
 * [Functions](#functions)
- - [init](#init)
+* [init](#init-x21e8-)
 
 **Requires:**
 
@@ -32,7 +32,7 @@ init system configuration
 + QRCODE_DIR
 
 ## Functions
-* [init](#init)
+* [init](#init-x21e8-)
 
 ### init()  &#x21e8; 
 
@@ -44,6 +44,5 @@ Read global config from database
 
 
 ---
-
 
 

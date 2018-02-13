@@ -1,4 +1,7 @@
-# File `fixtures/under/simple.js`
+# File `simple.js`
+
+
+
 **Overview:** What's up?
 
 
@@ -8,7 +11,4 @@
 **License:** MIT 
 
 **Version:** 1.0.1
-
-
-
 

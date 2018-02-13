@@ -1,0 +1,63 @@
+{{#name}}
+# Module {{name}}
+{{/name}}
+{{#description}}
+{{{description}}}
+{{/description}}
+
+{{#examples}}
+**Example:**
+{{{examples}}}
+
+{{/examples}}
+
+{{#functions.length}}
+* [Functions](#functions)
+{{/functions.length}}
+{{#functions}}
+ {{> function-link}}
+{{/functions}}
+{{#classes.length}}
+* [Classes](#classes)
+{{#classes}}
+ {{> class-link}}
+{{/classes}}
+{{/classes.length}}
+
+{{#hasRequires}}
+**Requires:**
+
+{{#requires}}
++ {{{req}}}
+{{/requires}}
+{{/hasRequires}}
+
+{{#hasMembers}}
+**Members:**
+
+{{#members}}
++ {{{member}}}
+{{/members}}
+{{/hasMembers}}
+
+{{#functions.length}}
+## Functions
+{{#functions}}
+{{> function-link}}
+{{/functions}}
+{{/functions.length}}
+
+{{#functions}}
+{{> function}}
+{{/functions}}
+
+{{#classes.length}}
+## Classes
+{{#classes}}
+{{> class-link}}
+{{/classes}}
+{{/classes.length}}
+
+{{#classes}}
+{{> class}}
+{{/classes}}

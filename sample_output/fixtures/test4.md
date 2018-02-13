@@ -1,4 +1,9 @@
-# File `fixtures/test4.js`
+# File `test4.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 **Overview:** This is the overview with some `markdown` included, how nice!
 
 
@@ -9,21 +14,16 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [notAnInternalFunction](#notAnInternalFunction)
+* [notAnInternalFunction](#notAnInternalFunction-file-optional-x21e8-)
 
 
 
 ## Functions
-* [notAnInternalFunction](#notAnInternalFunction)
+* [notAnInternalFunction](#notAnInternalFunction-file-optional-x21e8-)
 
 ### notAnInternalFunction(file, optional)  &#x21e8; 
 
@@ -40,6 +40,5 @@ This is a test function   with a description on multiple lines
 
 
 ---
-
 
 

@@ -1,4 +1,9 @@
-# File `fixtures/test2.js`
+# File `test2.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 **Overview:** This is the overview with some `markdown` included, how nice!
 
 
@@ -9,27 +14,22 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [func1](#func1)
- - [func2](#func2)
- - [exported](#exported)
- - [globalFunction](#globalFunction)
+* [func1](#func1-a-b-x21e8-String-)
+* [func2](#func2-c-d-x21e8-)
+* [exported](#exported-param-x21e8-)
+* [globalFunction](#globalFunction-param-x21e8-)
 
 
 
 ## Functions
-* [func1](#func1)
-* [func2](#func2)
-* [exported](#exported)
-* [globalFunction](#globalFunction)
+* [func1](#func1-a-b-x21e8-String-)
+* [func2](#func2-c-d-x21e8-)
+* [exported](#exported-param-x21e8-)
+* [globalFunction](#globalFunction-param-x21e8-)
 
 ### func1(a, b)  &#x21e8; `String`
 
@@ -89,6 +89,5 @@ global function
 
 
 ---
-
 
 
