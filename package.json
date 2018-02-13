@@ -12,6 +12,11 @@
     "type": "git",
     "url": "git://github.com/nphyx/esdox.git"
   },
+  "keywords": [
+    "jsdox", "esdox", "jsdoc", "jsdoc3", "markdown", "javascript", "es6", "es7",
+    "github", "github flavored markdown", "documentation", "generator", "cli", "api",
+    "parser", "github wiki"
+  ],
   "main": "./esdox.js",
   "files": [
     "bin/esdox",
