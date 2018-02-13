@@ -1,5 +1,10 @@
 # File `esdox.js`
 
+**Modules**
+* [Global](#module-Global)
+
+
+
 
 
 
@@ -9,27 +14,22 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [collectIndexData](#collectIndexData)
- - [generate](#generate)
- - [createDirectoryRecursive](#createDirectoryRecursive)
- - [main](#main)
+* [collectIndexData](#collectIndexData-accumulator-accumulator.functions-accumulator.classes-data-opts-x21e8-Object-)
+* [generate](#generate-opts-x21e8-Promise-)
+* [createDirectoryRecursive](#createDirectoryRecursive-dir-x21e8-)
+* [main](#main-opts-opts.input-opts.output-opts.templateDir-opts.index-sort-opts.indexName-opts.recursive-opts.respect-recursive-opts.index-x21e8-Promise-)
 
 
 
 ## Functions
-* [collectIndexData](#collectIndexData)
-* [generate](#generate)
-* [createDirectoryRecursive](#createDirectoryRecursive)
-* [main](#main)
+* [collectIndexData](#collectIndexData-accumulator-accumulator.functions-accumulator.classes-data-opts-x21e8-Object-)
+* [generate](#generate-opts-x21e8-Promise-)
+* [createDirectoryRecursive](#createDirectoryRecursive-dir-x21e8-)
+* [main](#main-opts-opts.input-opts.output-opts.templateDir-opts.index-sort-opts.indexName-opts.recursive-opts.respect-recursive-opts.index-x21e8-Promise-)
 
 ### collectIndexData(accumulator, data, opts)  &#x21e8; `Object`
 
@@ -103,6 +103,5 @@ Main function handles parsed CLI input from bin/esdox or a passed options object
 
 
 ---
-
 
 

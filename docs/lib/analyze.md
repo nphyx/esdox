@@ -1,4 +1,9 @@
-# File `lib/analyze.js`
+# File `analyze.js`
+
+**Modules**
+* [Global](#module-Global)
+
+
 
 
 
@@ -9,23 +14,18 @@
 
 
 
-* Modules 
-- Module Global
-
-
-
 # Module Global
 
 
 * [Functions](#functions)
- - [exports](#exports)
- - [setPipedTypesString](#setPipedTypesString)
+* [exports](#exports-ast-opts-x21e8-Object-)
+* [setPipedTypesString](#setPipedTypesString-node-x21e8-)
 
 
 
 ## Functions
-* [exports](#exports)
-* [setPipedTypesString](#setPipedTypesString)
+* [exports](#exports-ast-opts-x21e8-Object-)
+* [setPipedTypesString](#setPipedTypesString-node-x21e8-)
 
 ### exports(ast, opts)  &#x21e8; `Object`
 
@@ -97,6 +97,5 @@ Attaches a 'typesString' pipe-separated attribute containing the node's types
 
 
 ---
-
 
 

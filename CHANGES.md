@@ -1,6 +1,14 @@
 ESDox Changes
 =============
 
+0.2.1
+-----
+* templateDir option fixes
+  * now uses default templates for any template files that aren't supplied (you no longer have to supply a full set)
+  * unbroke support for the option (oops...)
+* markdown generation now loads templates asynchronously and caches them
+  * should be a significant performance gain for projects with many files
+
 0.2.0
 -----
 * support for custom index file name
