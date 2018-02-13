@@ -192,7 +192,7 @@ describe('integration: esdox cli', function() {
       const files = await recursive(outpath);
       const probe = await fsp.readFile(files[0]);
       probe.toString().should.eql(overridden.toString());
-    });
+    }).timeout(10000);
 
     describe('-o option', function() {
       xit('converts an input file to an output markdown file');
