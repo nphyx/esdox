@@ -70,6 +70,7 @@ if (!argv._.length && !argv.input) {
     index: argv.index,
     indexName: argv.in,
     "index-sort": argv.is,
+    templateDir: argv.templateDir,
     input: argv.input ? argv.input : argv._
   }
   esdox(opts)

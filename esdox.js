@@ -100,7 +100,7 @@ exports.generate = async function generate(opts) {
     out.analyzed = analyze(out.parsed, opts);
     out.analyzed.source = out.source;
     out.analyzed.basename = out.basename;
-    out.markdown = generateMD(out.analyzed, opts.templateDir, false);
+    out.markdown = await generateMD(out.analyzed, opts.templateDir, false);
     return out;
   }));
   output.sort((a, b) => a.source > b.source);
@@ -113,7 +113,7 @@ exports.generate = async function generate(opts) {
     indexData.dirname = ".";
     indexData.basename = opts.indexName;
     indexData.destination = path.join(opts.output, opts.indexName);
-    indexData.markdown = generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
+    indexData.markdown = await generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
     output.push(indexData);
   }
 
