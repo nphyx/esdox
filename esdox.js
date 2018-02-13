@@ -16,6 +16,7 @@ const promisedReaddir = promisify(fs.readdir);
 /**
  * Collects items that should end up in the file index from a single file's analyzed data.
  * Meant to be used with Array.reduce.
+ * @private
  * @param {Object} accumulator object for collecting accumulated data across multiple files
  * @param {Array} accumulator.functions functions that should appear in the index
  * @param {Array} accumulator.classes classes that should appear in the index
@@ -43,6 +44,7 @@ exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
  * Process files in opts according to specified options.
  *
  * @param  {Object} opts [see main opts](#main)
+ * @private
  * @return {Promise}
  */
 exports.generate = async function generate(opts) {
@@ -122,6 +124,7 @@ exports.generate = async function generate(opts) {
 
 /**
  * Recursively creates directories for an output file.
+ * @private
  * @param {String} dir directory to create
  */
 exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) {
