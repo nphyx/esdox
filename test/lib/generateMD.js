@@ -1,45 +1,43 @@
-var expect = require('expect.js');
-var sinon = require('sinon');
-var generateMD = require('../../lib/generateMD');
-var Mustache = require('mustache');
-var fs = require('fs');
+require("should");
+require("should-sinon");
+const sinon = require("sinon");
+const proxy = require("proxyquire");
+const fs = require("fs");
+const path = require("path");
+const esdoxStubs = require("../stubs/esdox.stubs");
+const fsStubs = require("../stubs/fs.stubs");
+const mustacheStubs = require("../stubs/mustache.stubs");
+const generateMD = proxy("../../lib/generateMD", {
+  "recursive-readdir": esdoxStubs.recursive,
+  mustache: mustacheStubs,
+  fs: fsStubs
+});
 
-describe('generateMD', function() {
-  // In case we need to restore earlier
-  function restore() {
-    if (fs.readFileSync.restore) { fs.readFileSync.restore(); }
-    if (Mustache.render.restore) { Mustache.render.restore(); }
-  }
-
-  beforeEach(function() {
-    sinon.stub(fs, 'readFileSync');
-    sinon.stub(Mustache, 'render');
+describe("await generateMD", async () => {
+  afterEach(() => {
+    esdoxStubs.recursive.resetHistory();
   });
 
-  afterEach(function() {
-    restore();
+  it("defaults to the library's template directory if a custom one is not supplied", async () => {
+    await generateMD([]);
+    esdoxStubs.recursive.should.be.calledWith(path.join(__dirname, "../../templates"));
   });
 
-  it('accepts a custom template directory', function() {
-    var custom = '../template';
-    generateMD([], custom);
-    expect(fs.readFileSync.args[0][0].indexOf(custom) !== -1).to.be(true);
+  it("accepts a custom template directory", async () => {
+    var custom = "test/templateOverrides";
+    await generateMD([], custom);
+    esdoxStubs.recursive.should.be.calledWith(custom);
   });
 
-  it('defaults to the library\'s template directory if a custom one is not supplied', function() {
-    generateMD([]);
-    expect(fs.readFileSync.args[0][0].indexOf('templates') !== -1).to.be(true);
+  it("renders a given ast with Mustache", async () => {
+    await generateMD([]);
+    mustacheStubs.render.should.be.called();
   });
 
-  it('renders a given ast with Mustache', function() {
-    generateMD([]);
-    expect(Mustache.render.called).to.be(true);
-  });
-
-  it('returns a string representing the generated markdown for a given ast', function() {
-    restore();
-
-    var analyzed = {
+  it("returns a string representing the generated markdown for a given ast", async () => {
+    const fake = "## FAKE TEMPLATE";
+    mustacheStubs.render.returns(fake);
+    const analyzed = {
       functions: [],
       methods: [],
       classes: [],
@@ -47,110 +45,116 @@ describe('generateMD', function() {
       members: [],
       globalModule: null,
       globalVariables: [],
-      description: '',
-      overview: 'What\'s up?',
-      copyright: '(c) 2012 Blah Blah Blah',
-      license: 'MIT',
-      author: ['Joe Schmo'],
-      version: '1.0.1',
+      description: "",
+      overview: "What's up?",
+      copyright: "(c) 2012 Blah Blah Blah",
+      license: "MIT",
+      author: ["Joe Schmo"],
+      version: "1.0.1",
       hasMembers: false,
       deprecated: true
-    };
-
-    expect(typeof generateMD(analyzed)).to.be('string');
+    }
+    const generated = await generateMD(analyzed);
+    generated.should.eql(fake);
   });
 
-  it('throws an error if an ast is not supplied', function() {
-    expect(generateMD).to.throwError();
+  it("throws an error if an ast is not supplied", (done) => {
+    generateMD().should.be.rejected().then(() => done());
   });
 
-  it('sorts index classes and functions by name', function() {
+  it("sorts index classes and functions by name", async () => {
     var analyzed = {
       functions: [
-        {name: 'zero', longname: 'zero' },
-        {name: 'one', longname: 'foo.one' },
-        {name: 'two', longname: 'bar.two' },
-        {name: 'three', longname: 'bar.three' },
-        {name: 'four', longname: 'foo.four' }
+        {name: "zero", longname: "zero" },
+        {name: "one", longname: "foo.one" },
+        {name: "two", longname: "bar.two" },
+        {name: "three", longname: "bar.three" },
+        {name: "four", longname: "foo.four" }
       ],
       classes: [
-        {name: 'Five', longname: 'Five' },
-        {name: 'Six', longname: 'bar.Six' }
+        {name: "Five", longname: "Five" },
+        {name: "Six", longname: "bar.Six" }
       ]
     };
 
-    generateMD(analyzed, null, true, 'standard');
+    await generateMD(analyzed, null, true, "standard");
 
-    expect(analyzed.functions).to.eql([
-      {name: 'four', longname: 'foo.four', target: '#foo.four' },
-      {name: 'one', longname: 'foo.one', target: '#foo.one' },
-      {name: 'three', longname: 'bar.three', target: '#bar.three' },
-      {name: 'two', longname: 'bar.two', target: '#bar.two' },
-      {name: 'zero', longname: 'zero', target: '#zero' }
+    // FIXME: generateMD should not mutate analyzed
+    // TODO: analyze should be responsible for sorting
+    analyzed.functions.should.eql([
+      {name: "four", longname: "foo.four", target: "#foo.four" },
+      {name: "one", longname: "foo.one", target: "#foo.one" },
+      {name: "three", longname: "bar.three", target: "#bar.three" },
+      {name: "two", longname: "bar.two", target: "#bar.two" },
+      {name: "zero", longname: "zero", target: "#zero" }
     ]);
-    expect(analyzed.classes).to.eql([
-      {name: 'Five', longname: 'Five', target: '#five' },
-      {name: 'Six', longname: 'bar.Six', target: '#bar.six' }
-    ]);
-  });
-
-  it('sorts index classes and functions by namespace', function() {
-    var analyzed = {
-      functions: [
-        {name: 'zero', longname: 'zero' },
-        {name: 'one', longname: 'foo.one' },
-        {name: 'two', longname: 'bar.two' },
-        {name: 'three', longname: 'bar.three' },
-        {name: 'four', longname: 'foo.four' }
-      ],
-      classes: [
-        {name: 'Five', longname: 'Five' },
-        {name: 'Six', longname: 'bar.Six' }
-      ]
-    };
-
-    generateMD(analyzed, null, true, 'namespace');
-
-    expect(analyzed.functions).to.eql([
-      {name: 'zero', longname: 'zero', target: '#zero' },
-      {name: 'three', longname: 'bar.three', target: '#bar.three' },
-      {name: 'two', longname: 'bar.two', target: '#bar.two' },
-      {name: 'four', longname: 'foo.four', target: '#foo.four' },
-      {name: 'one', longname: 'foo.one', target: '#foo.one' }
-    ]);
-    expect(analyzed.classes).to.eql([
-      {name: 'Five', longname: 'Five', target: '#five' },
-      {name: 'Six', longname: 'bar.Six', target: '#bar.six' }
+    analyzed.classes.should.eql([
+      {name: "Five", longname: "Five", target: "#five" },
+      {name: "Six", longname: "bar.Six", target: "#bar.six" }
     ]);
   });
 
-  it('leaves index classes and functions unsorted', function() {
+  it("sorts index classes and functions by namespace", async () => {
     var analyzed = {
       functions: [
-        {name: 'zero', longname: 'zero' },
-        {name: 'one', longname: 'foo.one' },
-        {name: 'two', longname: 'bar.two' },
-        {name: 'three', longname: 'bar.three' },
-        {name: 'four', longname: 'foo.four' }
+        {name: "zero", longname: "zero" },
+        {name: "one", longname: "foo.one" },
+        {name: "two", longname: "bar.two" },
+        {name: "three", longname: "bar.three" },
+        {name: "four", longname: "foo.four" }
       ],
       classes: [
-        {name: 'Five', longname: 'Five' },
-        {name: 'Six', longname: 'bar.Six' }
+        {name: "Five", longname: "Five" },
+        {name: "Six", longname: "bar.Six" }
       ]
     };
 
-    generateMD(analyzed, null, true, 'none');
+    await generateMD(analyzed, null, true, "namespace");
 
-    expect(analyzed.functions).to.eql([
-      {name: 'zero', longname: 'zero', target: '#zero' },
-      {name: 'one', longname: 'foo.one', target: '#foo.one' },
-      {name: 'two', longname: 'bar.two', target: '#bar.two' },
-      {name: 'three', longname: 'bar.three', target: '#bar.three' },
-      {name: 'four', longname: 'foo.four', target: '#foo.four' }
+    // FIXME: generateMD should not mutate analyzed
+    // TODO: analyze should be responsible for sorting
+    analyzed.functions.should.eql([
+      {name: "zero", longname: "zero", target: "#zero" },
+      {name: "three", longname: "bar.three", target: "#bar.three" },
+      {name: "two", longname: "bar.two", target: "#bar.two" },
+      {name: "four", longname: "foo.four", target: "#foo.four" },
+      {name: "one", longname: "foo.one", target: "#foo.one" }
     ]);
-    expect(analyzed.classes).to.eql([
-      {name: 'Five', longname: 'Five', target: '#five' },
-      {name: 'Six', longname: 'bar.Six', target: '#bar.six' }
+    analyzed.classes.should.eql([
+      {name: "Five", longname: "Five", target: "#five" },
+      {name: "Six", longname: "bar.Six", target: "#bar.six" }
+    ]);
+  });
+
+  it("leaves index classes and functions unsorted", async () => {
+    var analyzed = {
+      functions: [
+        {name: "zero", longname: "zero" },
+        {name: "one", longname: "foo.one" },
+        {name: "two", longname: "bar.two" },
+        {name: "three", longname: "bar.three" },
+        {name: "four", longname: "foo.four" }
+      ],
+      classes: [
+        {name: "Five", longname: "Five" },
+        {name: "Six", longname: "bar.Six" }
+      ]
+    }
+
+    await generateMD(analyzed, null, true, "none");
+
+    // FIXME: generateMD should not mutate analyzed
+    // TODO: analyze should be responsible for sorting
+    analyzed.functions.should.eql([
+      {name: "zero", longname: "zero", target: "#zero" },
+      {name: "one", longname: "foo.one", target: "#foo.one" },
+      {name: "two", longname: "bar.two", target: "#bar.two" },
+      {name: "three", longname: "bar.three", target: "#bar.three" },
+      {name: "four", longname: "foo.four", target: "#foo.four" }
+    ]);
+    analyzed.classes.should.eql([
+      {name: "Five", longname: "Five", target: "#five" },
+      {name: "Six", longname: "bar.Six", target: "#bar.six" }
     ]);
   });
 });

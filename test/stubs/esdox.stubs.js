@@ -1,6 +1,7 @@
 const sinon = require("sinon");
 exports.analyze = sinon.stub().returns({});
 exports.generateMD = sinon.stub().returns(true);
+exports.recursive = sinon.stub().resolves([]);
 exports.indexTestData = [
   {
     destination: "./test/output/",

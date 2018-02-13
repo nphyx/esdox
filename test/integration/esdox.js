@@ -94,12 +94,6 @@ describe('integration: esdox cli', function() {
   before(cleanup);
   afterEach(cleanup);
 
-  /*
-  it('prints an error if an input file or directory is not supplied', function(done) {
-    expectOutputFromCommand(bin, 'Error', done, true);
-  });
- */
-
   it('generates output in a flattened file structure', async () => {
     const cmd = bin + " -o " + outpath + " " + inpath + "**.js";
     const {err, stdout, stderr} = await execp(cmd);
@@ -189,7 +183,16 @@ describe('integration: esdox cli', function() {
       expectOutputFromCommand(bin + ' -v', require('../../package.json').version, done);
     });
 
-    xit('accepts a custom template directory with the -t option');
+    it('accepts a custom template directory with the -t option', async () => {
+      var cmd = bin + " -o " + outpath + " -r --templateDir ./test/templateOverrides " + inpath;
+      const overridden = await fsp.readFile("./test/templateOverrides/file.mustache");
+      const {err, stdout, stderr} = await execp(cmd);
+      expect(stderr).to.be.empty();
+
+      const files = await recursive(outpath);
+      const probe = await fsp.readFile(files[0]);
+      probe.toString().should.eql(overridden.toString());
+    });
 
     describe('-o option', function() {
       xit('converts an input file to an output markdown file');
