@@ -34,7 +34,7 @@ init system configuration
 ## Functions
 * [init](#init-x21e8-)
 
-### init()  &#x21e8; 
+### init()  &#x21e8; `undefined`
 
 Read global config from database
 

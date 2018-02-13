@@ -32,7 +32,7 @@ The top-level namespace.
 * [init](#init-x21e8-)
 * [dispose](#dispose-x21e8-)
 
-### init()  &#x21e8; 
+### init()  &#x21e8; `undefined`
 
 Initializes everything.
 
@@ -42,7 +42,7 @@ Initializes everything.
 
 
 ---
-### dispose()  &#x21e8; 
+### dispose()  &#x21e8; `undefined`
 
 Disposes everything.
 
@@ -80,7 +80,7 @@ Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/W
 ### Methods
  - [do](#do)
 
-### do(thing)  &#x21e8; 
+### do(thing)  &#x21e8; `undefined`
 
 Have a Worker do some Thing.  See [main.Thing](#main.thing).
 
@@ -108,7 +108,7 @@ Namespace for utility functions.
 * [foo](#foo-x21e8-)
 * [bar](#bar-x21e8-)
 
-### foo()  &#x21e8; 
+### foo()  &#x21e8; `undefined`
 
 Run the Foo utility.
 
@@ -118,7 +118,7 @@ Run the Foo utility.
 
 
 ---
-### bar()  &#x21e8; 
+### bar()  &#x21e8; `undefined`
 
 Run the Bar utility.
 

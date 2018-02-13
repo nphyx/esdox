@@ -40,7 +40,7 @@ I so cool
 
 
 ---
-### testNamed(file, optional)  &#x21e8; 
+### testNamed(file, optional)  &#x21e8; `undefined`
 
 This is a test function   with a description on multiple lines
 
@@ -137,7 +137,7 @@ second function without name
 
 
 ---
-### testDeprecated()  &#x21e8; 
+### testDeprecated()  &#x21e8; `undefined`
 
 This is a deprecated function.
 
@@ -209,7 +209,7 @@ function without name
 
 
 ---
-### testNamed(file, optional)  &#x21e8; 
+### testNamed(file, optional)  &#x21e8; `undefined`
 
 This is a test method     with a description on multiple lines
 

@@ -43,7 +43,7 @@ Create a record
 
 
 ---
-### remove()  &#x21e8; 
+### remove()  &#x21e8; `undefined`
 
 Remove a record
 

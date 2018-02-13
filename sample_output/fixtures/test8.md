@@ -25,7 +25,7 @@
 ## Functions
 * [optionsFunction](#optionsFunction-file-options-options.enableOption1-options.enableOption2-x21e8-)
 
-### optionsFunction(file, options)  &#x21e8; 
+### optionsFunction(file, options)  &#x21e8; `undefined`
 
 This is a test function   with a object that has attributes
 

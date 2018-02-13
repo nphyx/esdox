@@ -5,7 +5,7 @@ Modules
 Functions
 =========
 
-### bar()  &#x21e8; 
+### bar()  &#x21e8; `undefined`
 
 Run the Bar utility.
 
@@ -52,7 +52,7 @@ Create a record
 
 
 
-### dispose()  &#x21e8; 
+### dispose()  &#x21e8; `undefined`
 
 Disposes everything.
 
@@ -65,7 +65,7 @@ Disposes everything.
 
 
 
-### exported(param)  &#x21e8; 
+### exported(param)  &#x21e8; `undefined`
 
 exported with dot notation
 
@@ -82,7 +82,7 @@ exported with dot notation
 
 
 
-### foo()  &#x21e8; 
+### foo()  &#x21e8; `undefined`
 
 Run the Foo utility.
 
@@ -153,7 +153,7 @@ Return the sum of two numbers.
 
 
 
-### func2(c, d)  &#x21e8; 
+### func2(c, d)  &#x21e8; `undefined`
 
 
 
@@ -189,7 +189,7 @@ Return the sum of two numbers.
 
 
 
-### globalFunction(param)  &#x21e8; 
+### globalFunction(param)  &#x21e8; `undefined`
 
 global function
 
@@ -206,7 +206,7 @@ global function
 
 
 
-### init()  &#x21e8; 
+### init()  &#x21e8; `undefined`
 
 Read global config from database
 
@@ -219,7 +219,7 @@ Read global config from database
 
 
 
-### init()  &#x21e8; 
+### init()  &#x21e8; `undefined`
 
 Initializes everything.
 
@@ -232,7 +232,7 @@ Initializes everything.
 
 
 
-### notAnInternalFunction(file, optional)  &#x21e8; 
+### notAnInternalFunction(file, optional)  &#x21e8; `undefined`
 
 This is a test function   with a description on multiple lines
 
@@ -250,7 +250,7 @@ This is a test function   with a description on multiple lines
 
 
 
-### optionsFunction(file, options)  &#x21e8; 
+### optionsFunction(file, options)  &#x21e8; `undefined`
 
 This is a test function   with a object that has attributes
 
@@ -270,7 +270,7 @@ This is a test function   with a object that has attributes
 
 
 
-### remove()  &#x21e8; 
+### remove()  &#x21e8; `undefined`
 
 Remove a record
 
@@ -313,7 +313,7 @@ function without name
 
 
 
-### testDeprecated()  &#x21e8; 
+### testDeprecated()  &#x21e8; `undefined`
 
 This is a deprecated function.
 
@@ -327,7 +327,7 @@ This is a deprecated function.
 
 
 
-### testNamed(file, optional)  &#x21e8; 
+### testNamed(file, optional)  &#x21e8; `undefined`
 
 This is a test function   with a description on multiple lines
 
@@ -408,7 +408,7 @@ function without name
 
 
 ---
-### testNamed(file, optional)  &#x21e8; 
+### testNamed(file, optional)  &#x21e8; `undefined`
 
 This is a test method     with a description on multiple lines
 
@@ -464,7 +464,7 @@ Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/W
 ### Methods
  - [do](#do)
 
-### do(thing)  &#x21e8; 
+### do(thing)  &#x21e8; `undefined`
 
 Have a Worker do some Thing.  See [main.Thing](#main.thing).
 

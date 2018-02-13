@@ -47,7 +47,7 @@
 
 
 ---
-### func2(c, d)  &#x21e8; 
+### func2(c, d)  &#x21e8; `undefined`
 
 
 
@@ -61,7 +61,7 @@
 
 
 ---
-### exported(param)  &#x21e8; 
+### exported(param)  &#x21e8; `undefined`
 
 exported with dot notation
 
@@ -75,7 +75,7 @@ exported with dot notation
 
 
 ---
-### globalFunction(param)  &#x21e8; 
+### globalFunction(param)  &#x21e8; `undefined`
 
 global function
 

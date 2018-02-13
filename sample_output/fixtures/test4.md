@@ -25,7 +25,7 @@
 ## Functions
 * [notAnInternalFunction](#notAnInternalFunction-file-optional-x21e8-)
 
-### notAnInternalFunction(file, optional)  &#x21e8; 
+### notAnInternalFunction(file, optional)  &#x21e8; `undefined`
 
 This is a test function   with a description on multiple lines
 
