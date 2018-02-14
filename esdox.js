@@ -36,6 +36,7 @@ exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
     if (module.name !== "Global") { // don't list global modules
       var toAddModule = module;
       toAddModule.destination = path.relative(opts.output, data.destination);
+      toAddModule.source = path.relative(opts.output, path.join(data.dirname, data.basename));
       accumulator.modules.push(toAddModule);
     }
   });
@@ -43,6 +44,7 @@ exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
     if ((!func.moduleName) && (func.className === undefined)) {
       var toAddFct = func;
       toAddFct.destination = path.relative(opts.output, data.destination);
+      toAddFct.source = path.relative(opts.output, path.join(data.dirname, data.basename));
       accumulator.functions.push(toAddFct);
     }
   });
@@ -50,6 +52,7 @@ exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
     if (!klass.moduleName) {
       var toAddClass = klass;
       toAddClass.destination = path.relative(opts.output, data.destination);
+      toAddClass.source = path.relative(opts.output, path.join(data.dirname, data.basename));
       accumulator.classes.push(toAddClass);
     }
   });
