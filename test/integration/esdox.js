@@ -117,8 +117,8 @@ describe('integration: esdox cli', function() {
     found.length.should.eql(files.length);
   }).timeout(10000);
 
-  it('generates output files recursively respecting original file structure with the --rr option', async () => {
-    const cmd = bin + " --rr -o " + outpath + " " + inpath;
+  it('generates output files recursively respecting original file structure with the --keep-fs option', async () => {
+    const cmd = bin + " --keep-fs -o " + outpath + " " + inpath;
     const {err, stdout, stderr} = await execp(cmd);
 
     let inputs = await recursive(inpath);
@@ -184,7 +184,7 @@ describe('integration: esdox cli', function() {
     });
 
     it('accepts a custom template directory with the -t option', async () => {
-      var cmd = bin + " -o " + outpath + " -r --templateDir ./test/templateOverrides " + inpath;
+      var cmd = bin + " -o " + outpath + " -r --templates ./test/templateOverrides " + inpath;
       const overridden = await fsp.readFile("./test/templateOverrides/file.mustache");
       const {err, stdout, stderr} = await execp(cmd);
       expect(stderr).to.be.empty();

@@ -87,7 +87,7 @@ exports.generate = async function generate(opts) {
   await Promise.all(stats.map(async (stat, i) => {
     if (stat.isDirectory()) {
       let ret = [];
-      if (opts.r || opts.rr) {
+      if (opts.recursive || opts.keepFs) {
         ret = await recursive(files[i]);
       } else {
         ret = await promisedReaddir(files[i]);
@@ -111,7 +111,7 @@ exports.generate = async function generate(opts) {
     out.source = file;
     out.dirname = path.dirname(out.source);
     out.basename = path.basename(out.source);
-    if (opts.rr) {
+    if (opts.keepFs) {
       out.destination = path.join(opts.output, out.dirname, out.basename);
     } else {
       out.destination = path.join(opts.output, out.basename);
@@ -121,7 +121,7 @@ exports.generate = async function generate(opts) {
     out.analyzed = analyze(out.parsed, opts);
     out.analyzed.source = out.source;
     out.analyzed.basename = out.basename;
-    out.markdown = await generateMD(out.analyzed, opts.templateDir, false);
+    out.markdown = await generateMD(out.analyzed, opts.templates, false);
     return out;
   }));
   output.sort((a, b) => a.source > b.source);
@@ -139,7 +139,7 @@ exports.generate = async function generate(opts) {
     indexData.license = packageJson.license;
     indexData.version = packageJson.version;
     indexData.destination = path.join(opts.output, opts.indexName);
-    indexData.markdown = await generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
+    indexData.markdown = await generateMD(indexData, opts.templates, true, opts["index-sort"]);
     output.push(indexData);
   }
 
@@ -181,20 +181,23 @@ exports.createDirectoryRecursive = async function createDirectoryRecursive(dir) 
 /**
  * Main function handles parsed CLI input from bin/esdox or a passed
  * options object.
- * @param {Object} opts configuration object
+ * @async
+ * @param {Object}       opts configuration object
  * @param {String|Array} opts.input input file or directory
- * @param {String} opts.output output directory
- * @param {String} [opts.templateDir] directory for custom mustache templates
- * @param {String} [opts.index-sort=standard] sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none")
- * @param {String} [opts.indexName=index.md] name for generated index file
- * @param {Boolean} [opts.recursive=false] generate documentation for subdirectories
- * @param {Boolean} [opts.respect-recursive=false] generate documentation for subdirectories, keeping directory structure in output files
- * @param {Boolean} [opts.index=false] generate an index file
+ * @param {Boolean}      [opts.index=false] generate an index file
+ * @param {String}       [opts.indexName=index.md] name for generated index file
+ * @param {String}       [opts.indexSort=standard] sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none")
+ * @param {Boolean}      [opts.keepFs=false] generate documentation for subdirectories of opts.input, keeping directory structure in output files
+ * @param {String}       [opts.output=esdox_output] output directory
+ * @param {String}       [opts.private=false] include @private/@internal in docs
+ * @param {Boolean}      [opts.recursive=false] include subdirectories of opts.input
+ * @param {String}       [opts.templates] directory for custom mustache templates
  * @return {Promise}
  */
 async function main(opts = {}) {
   const defaults = {
-    indexName: "index.md"
+    indexName: "index.md",
+    output: "esdox_output"
   }
   opts = {...defaults, ...opts};
   if (typeof(opts.input) === "string") {

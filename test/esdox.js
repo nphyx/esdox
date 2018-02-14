@@ -142,13 +142,13 @@ describe("esdox", () => {
     it("should handle a single file", async () => {
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
       const opts = {input: ["fake.js"], output: "./test/output",
-        templateDir: "templates"};
+        templates: "templates"};
       const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
       let generated = await generate(opts);
       jsdpStub.should.be.calledWith(source);
       esdoxStubs.analyze.should.be.calledWith({}, opts);
       esdoxStubs.generateMD.should.be.calledWith(
-        {modules: [], functions: [], classes: [], basename: "fake.js", source: "fake.js"}, opts.templateDir, false);
+        {modules: [], functions: [], classes: [], basename: "fake.js", source: "fake.js"}, opts.templates, false);
       generated.length.should.eql(1);
       generated[0].should.deepEqual({
         source: source,
@@ -165,7 +165,7 @@ describe("esdox", () => {
       const opts = {
         input: ["./fixtures"],
         output: "./test/output",
-        templateDir: "templates"
+        templates: "templates"
       };
       let fixtureList = await fsp.readdir(opts.input[0])
       fixtureList = fixtureList
@@ -185,23 +185,23 @@ describe("esdox", () => {
     });
     it("should recurse subdirectories with opts.r", async () => {
       const opts = {
-        r: true,
+        recursive: true,
         input: ["./fixtures"],
         output: "./test/output",
-        templateDir: "templates"
+        templates: "templates"
       };
       let fixtureList = await recursive(opts.input[0])
       fixtureList.sort();
       let generated = await generate(opts);
       generated.length.should.eql(fixtureList.length);
     });
-    it("should keep directory structure in output with opts.rr", async () => {
+    it("should keep directory structure in output with opts.keepFs", async () => {
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       const opts = {
         input: ["./fixtures"],
         output: "./test/output",
-        templateDir: "templates",
-        rr: true
+        templates: "templates",
+        keepFs: true
       };
       let fixtureList = await recursive(opts.input[0]);
       fixtureList.sort();
@@ -222,7 +222,7 @@ describe("esdox", () => {
         output: "./test/output",
         index: true,
         indexName: "index.md", // default would be supplied by main()
-        templateDir: "templates"
+        templates: "templates"
       }
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
@@ -245,7 +245,7 @@ describe("esdox", () => {
         output: "./test/output",
         index: true,
         indexName: "customIndex.md",
-        templateDir: "templates"
+        templates: "templates"
       };
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       let generated = await generate(opts);
@@ -300,8 +300,8 @@ describe("esdox", () => {
         input: "./fixtures",
         output: "./test/output",
         index: true,
-        rr: true,
-        templateDir: "templates"
+        keepFs: true,
+        templates: "templates"
       };
       let fixtureList = await recursive(opts.input);
       await esdox(opts);

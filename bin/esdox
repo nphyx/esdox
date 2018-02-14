@@ -7,17 +7,17 @@ const yargs = require("yargs")
     default: "output",
     describe: "Output directory for generated docs"
   })
-  .options("A", {
-    alias: "All",
+  .options("include-private", {
+    alias: "p",
     boolean: true,
     describe: "Include internal/private methods"
   })
-  .options("d", {
-    alias: "debug",
+  .options("debug", {
+    alias: "d",
     boolean: true,
     describe: "Print extended debugging information"
   })
-  .options("templateDir", {
+  .options("templates", {
     alias: "t",
     describe: "Template override directory"
   })
@@ -37,9 +37,9 @@ const yargs = require("yargs")
     describe: "recurse subdirectories, flattened output",
     boolean: true
   })
-  .options("respect-recursive", {
-    alias: "rr",
-    describe: "recurse subdirectories, preserved output",
+  .options("keep-fs", {
+    alias: "kfs",
+    describe: "recurse subdirectories, keeping file structure",
     boolean: true
   })
   .options("index-name", {
@@ -62,16 +62,16 @@ if (!argv._.length && !argv.input) {
   yargs.showHelp();
 } else {
   const opts = {
-    r: argv.r,
-    rr: argv.rr,
-    output: argv.output,
-    debug: argv.debug,
-    A: argv.A,
-    index: argv.index,
+    debug: argv.d,
+    index: argv.i,
     indexName: argv.in,
-    "index-sort": argv.is,
-    templateDir: argv.templateDir,
-    input: argv.input ? argv.input : argv._
+    indexSort: argv.is,
+    input: argv.input ? argv.input : argv._,
+    keepFs: argv.kfs,
+    output: argv.o,
+    private: argv.p,
+    recursive: argv.r,
+    templates: argv.templates
   }
   esdox(opts)
     .then(() => process.exit())
