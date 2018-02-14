@@ -1,3 +1,8 @@
+/**
+ * Contains the main esdox module.
+ *
+ * @module main
+ */
 const util = require('util');
 const promisify = util.promisify;
 const fs = require('fs');
@@ -6,6 +11,7 @@ const jsdocParser = require('jsdoc3-parser');
 const analyze = require('./lib/analyze');
 const generateMD = require('./lib/generateMD');
 const recursive = require("recursive-readdir");
+const packageJson = require("./package.json");
 const promisedParser = promisify(jsdocParser);
 const promisedWriteFile = promisify(fs.writeFile);
 const promisedMkdir = promisify(fs.mkdir);
@@ -18,6 +24,7 @@ const promisedReaddir = promisify(fs.readdir);
  * Meant to be used with Array.reduce.
  * @private
  * @param {Object} accumulator object for collecting accumulated data across multiple files
+ * @param {Array} accumulator.modules modules that should appear in the index
  * @param {Array} accumulator.functions functions that should appear in the index
  * @param {Array} accumulator.classes classes that should appear in the index
  * @param {Object} data analyzed data
@@ -25,17 +32,26 @@ const promisedReaddir = promisify(fs.readdir);
  * @return {Object} accumulator
  */
 exports.collectIndexData = function collectIndexData(accumulator, data, opts) {
+  data.analyzed.modules.forEach(module => {
+    if (module.name !== "Global") { // don't list global modules
+      var toAddModule = module;
+      toAddModule.destination = path.relative(opts.output, data.destination);
+      accumulator.modules.push(toAddModule);
+    }
+  });
   data.analyzed.functions.forEach(func => {
-    if (func.className === undefined) {
+    if ((!func.moduleName) && (func.className === undefined)) {
       var toAddFct = func;
-      toAddFct.source = path.relative(opts.output, path.join(data.dirname, data.basename));
+      toAddFct.destination = path.relative(opts.output, data.destination);
       accumulator.functions.push(toAddFct);
     }
   });
   data.analyzed.classes.forEach((klass) => {
-    var toAddClass = klass;
-    toAddClass.source = path.relative(opts.output, path.join(data.dirname, data.basename));
-    accumulator.classes.push(toAddClass);
+    if (!klass.moduleName) {
+      var toAddClass = klass;
+      toAddClass.destination = path.relative(opts.output, data.destination);
+      accumulator.classes.push(toAddClass);
+    }
   });
   return accumulator;
 }
@@ -109,11 +125,16 @@ exports.generate = async function generate(opts) {
 
   if (opts.index) {
     // if we're generating indexes, do that with the analyzed data
-    let indexData = {functions: [], classes: []};
+    let indexData = {modules: [], functions: [], classes: []};
     output.reduce((p, c) => exports.collectIndexData(p, c, opts), indexData);
     indexData.source = "";
     indexData.dirname = ".";
     indexData.basename = opts.indexName;
+    indexData.name = packageJson.name;
+    indexData.author = packageJson.author;
+    indexData.description = packageJson.description;
+    indexData.license = packageJson.license;
+    indexData.version = packageJson.version;
     indexData.destination = path.join(opts.output, opts.indexName);
     indexData.markdown = await generateMD(indexData, opts.templateDir, true, opts["index-sort"]);
     output.push(indexData);
