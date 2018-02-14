@@ -22,6 +22,7 @@
 {{^hasDefaultParams}}
 {{#params.length}}
 **Parameters**
+
 | name | type | description |
 |------|------|-------------|{{/params.length}}{{#params}}
 | {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/params}}

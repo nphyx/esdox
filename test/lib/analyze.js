@@ -187,6 +187,7 @@ describe('analyze', function() {
           console.log(test6);
           test6.namespace.should.eql("main");
         });
+        xit("wraps @example in code block backticks if necessary");
       }); // end file-level tags
       describe('object-level tags', () => {
         it('captures @description', () => {
@@ -219,6 +220,7 @@ describe('analyze', function() {
           ];
           params.should.deepEqual(expected);
         });
+        xit("flags a function with parameter defaults");
         it('captures @return/@returns on functions', () => {
           const returns = test2.functions[0].returns;
           const expected = [{
