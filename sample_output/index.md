@@ -1,519 +1,168 @@
-Modules
-=======
-
-
-Functions
-=========
-
-### bar()  &#x21e8; `undefined`
-
-Run the Bar utility.
-
-
-
-
-
-
-
-
----
-
-
-
-### bar()  &#x21e8; `Boolean ❘ null`
-
-I so cool
-
-
-**Deprecated:** Not a good function
-
-
-
-
-
-
-
----
-
-
-
-### create(values)  &#x21e8; `Object`
-
-Create a record
-
-
-
-**Returns:** The created record.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **values** | `Object` | An object holding the initial values of the record's fields |
-
-
-
-
----
-
-
-
-### dispose()  &#x21e8; `undefined`
-
-Disposes everything.
-
-
-
-
-
-
-
-
----
-
-
-
-### exported(param)  &#x21e8; `undefined`
-
-exported with dot notation
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **param** | `String` | the parameter |
-
-
-
-
----
-
-
-
-### foo()  &#x21e8; `undefined`
-
-Run the Foo utility.
-
-
-
-
-
-
-
-
----
-
-
-
-### func1(a, b)  &#x21e8; `Number`
-
-Return the sum of two numbers.
-
-
-
-**Returns:** the result.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **a** | `Number` | the first param |
-| **b** | `Number` | the second param |
-
-
-
-
----
-
-
-
-### func1(a, b)  &#x21e8; 
-
-
-
-
-**Returns:** the result.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **a** |  | the first param |
-| **b** |  | the second param |
-
-
-
-
----
-
-
-
-### func1(a, b)  &#x21e8; `String`
-
-
-
-
-**Returns:** the result.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **a** | `String` | the first param |
-| **b** | `String` | the second param |
-
-
-
-
----
-
-
-
-### func2(c, d)  &#x21e8; `undefined`
-
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **c** |  | the first param |
-| **d** |  | the second param @ returns the other result |
-
-
-
-
----
-
-
-
-### func2(c, d)  &#x21e8; 
-
-
-
-
-**Returns:** the other result.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **c** |  | the first param |
-| **d** |  | the second param |
-
-
-
-
----
-
-
-
-### globalFunction(param)  &#x21e8; `undefined`
-
-global function
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **param** | `String` | the parameter |
-
-
-
-
----
-
-
-
-### init()  &#x21e8; `undefined`
-
-Read global config from database
-
-
-
-
-
-
-
-
----
-
-
-
-### init()  &#x21e8; `undefined`
-
-Initializes everything.
-
-
-
-
-
-
-
-
----
-
-
-
-### notAnInternalFunction(file, optional)  &#x21e8; `undefined`
-
-This is a test function   with a description on multiple lines
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **file** | `String` | filename to parse |
-| ***optional*** | `Boolean` | Changes behavior |
-
-
-
-
----
-
-
-
-### optionsFunction(file, options)  &#x21e8; `undefined`
-
-This is a test function   with a object that has attributes
-
-
-
-
-**Parameters**
-
-| name | type | default | description |
-|------|------|---------|-------------|
-| **file** | `String` |  | filename to parse |
-| ***options*** | `Object` |  | Changes behavior |
-| **options.enableOption1** | `Boolean` |  | should option1 be enabled |
-| **options.enableOption2** | `Boolean` |  | should option2 be enabled |
-| ***options.default*** | `Boolean` |  | has a default value |
-
-
-
----
-
-
-
-### remove()  &#x21e8; `undefined`
-
-Remove a record
-
-
-
-
-
-
-
-
----
-
-
-
-### testAnon2()  &#x21e8; `String`
-
-second function without name
-
-
-
-**Returns:** the result.
-
-
-
-
-
-
----
-
-
-
-### testAnonynous()  &#x21e8; `String`
-
-function without name
-
-
-
-**Returns:** the result.
-
-
-
-
-
-
----
-
-
-
-### testDeprecated()  &#x21e8; `undefined`
-
-This is a deprecated function.
-
-
-**Deprecated:** Because I said so
-
-
-
-
-
-
----
-
-
-
-### testNamed(file, optional)  &#x21e8; `undefined`
-
-This is a test function   with a description on multiple lines
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
-| ***optional*** | `Boolean ❘ null` | Changes behavior |
-
-
-
-**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
-
----
-
-
-
-
-
-Classes
-=======
-
-## Class: Ketch
-
-Provides chainable functions to easily build and execute a command.
-
+# @nphyx/esdox 0.2.1
+
+Clean, simple JSDoc -&gt; Github Markdown generator with support for ES6+.
+
+**Author**: Justen Robertson
+
+**License**: MIT
+
+# Navigation
+**Modules**
+* [base](#module-base)
+ \(in [fixtures&#x2F;test5.md](fixtures&#x2F;test5.md)\)
+* [main](#module-main)
+ \(in [fixtures&#x2F;test6.md](fixtures&#x2F;test6.md)\)
+* [util](#module-util)
+ \(in [fixtures&#x2F;test6.md](fixtures&#x2F;test6.md)\)
+* [foo](#module-foo)
+ \(in [fixtures&#x2F;under&#x2F;test.md](fixtures&#x2F;under&#x2F;test.md)\)
+
+**Classes**
+* [Ketch](#class-Ketch)
+ in [fixtures&#x2F;under&#x2F;test.md](fixtures&#x2F;under&#x2F;test.md)
+* [SampleClass](#class-SampleClass)
+ in [fixtures&#x2F;under&#x2F;test.md](fixtures&#x2F;under&#x2F;test.md)
+* [Test](#class-Test)
+ in [fixtures&#x2F;test7.md](fixtures&#x2F;test7.md)
+* [Thing](#class-Thing)
+ in [fixtures&#x2F;test6.md](fixtures&#x2F;test6.md)
+* [Worker](#class-Worker)
+ in [fixtures&#x2F;test6.md](fixtures&#x2F;test6.md)
+
+**Functions**
+* [bar](#bar-x21e8-Boolean ❘ null-)
+ in [fixtures&#x2F;under&#x2F;test.md](fixtures&#x2F;under&#x2F;test.md)
+* [create](#create-values-x21e8-Object-)
+ in [fixtures&#x2F;test3.md](fixtures&#x2F;test3.md)
+* [exported](#exported-param-x21e8-undefined-)
+ in [fixtures&#x2F;test2.md](fixtures&#x2F;test2.md)
+* [func1](#func1-a-b-x21e8-Number-)
+ in [fixtures&#x2F;under_grandparent&#x2F;under_parent&#x2F;test.md](fixtures&#x2F;under_grandparent&#x2F;under_parent&#x2F;test.md)
+* [func1](#func1-a-b-x21e8-String-)
+ in [fixtures&#x2F;test2.md](fixtures&#x2F;test2.md)
+* [func2](#func2-c-d-x21e8-undefined-)
+ in [fixtures&#x2F;test2.md](fixtures&#x2F;test2.md)
+* [globalFunction](#globalFunction-param-x21e8-undefined-)
+ in [fixtures&#x2F;test2.md](fixtures&#x2F;test2.md)
+* [notAnInternalFunction](#notAnInternalFunction-file-optional-x21e8-undefined-)
+ in [fixtures&#x2F;test4.md](fixtures&#x2F;test4.md)
+* [optionsFunction](#optionsFunction-file-options-options.enableOption1-options.enableOption2-options.default-x21e8-undefined-)
+ in [fixtures&#x2F;test8.md](fixtures&#x2F;test8.md)
+* [remove](#remove-x21e8-undefined-)
+ in [fixtures&#x2F;test3.md](fixtures&#x2F;test3.md)
+* [testNamed](#testNamed-file-optional-x21e8-undefined-)
+ in [fixtures&#x2F;under&#x2F;test.md](fixtures&#x2F;under&#x2F;test.md)
+
+# Modules
+## Module base
+init system configuration
+
+**Functions**
+* [init](#init-x21e8-undefined-)
 ***
+## Module main
+The top-level namespace.
+
+**Functions**
+* [init](#init-x21e8-undefined-)
+* [dispose](#dispose-x21e8-undefined-)
+
+**Classes**
+* [Thing](#class-Thing)
+* [Worker](#class-Worker)
+***
+## Module util
+Namespace for utility functions.
+
+**Functions**
+* [foo](#foo-x21e8-undefined-)
+* [bar](#bar-x21e8-undefined-)
+***
+## Module foo
+Can I get some description please   on more than one line, if possible.
+
+**Functions**
+* [testAnonynous](#testAnonynous-x21e8-String-)
+* [testAnon2](#testAnon2-x21e8-String-)
+* [func1](#func1-a-b-x21e8-)
+* [func2](#func2-c-d-x21e8-)
+* [testDeprecated](#testDeprecated-x21e8-undefined-)
+
+**Classes**
+* [Ketch](#class-Ketch)
+* [SampleClass](#class-SampleClass)
+***
+
+# Classes
+## Class: Ketch
+Provides chainable functions to easily build and execute a command.
 ### Members
 
 | name | type | description |
 |------|------|-------------|
 | **last_err** | `String` | Last error, if present |
 | **cmd** | `Array` | Internal array representation of this command. |
+
 ***
-
-
-
 ## Class: SampleClass
-
 This is a class
 
-***
-
 ### Methods
- - [func1](#func1)
- - [testAnonynous](#testAnonynous)
- - [testNamed](#testNamed)
+**func1(a, b)  &#x21e8; **
 
-### func1(a, b)  &#x21e8; 
+**testAnonynous()  &#x21e8; `String`**
 
-A method in the class
-
-**Example**:
-func1(1, 2)
-
-
-**Returns:** the result.
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **a** |  | the first param |
-| **b** |  | the second param |
-
-
-
-
----
-### testAnonynous()  &#x21e8; `String`
-
-function without name
-
-
-
-**Returns:** the result.
-
-
-
-
-
-
----
-### testNamed(file, optional)  &#x21e8; `undefined`
-
-This is a test method     with a description on multiple lines
-
-
-
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **file** | `String ❘ null` | filename to parse                          this parsing thing is funny business |
-| ***optional*** | `Boolean ❘ null` | Changes behavior |
-
-
-
-**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
-
----
-
-## Class: Test
-
-Test class.
+**testNamed(file, optional)  &#x21e8; `undefined`**
 
 ***
+## Class: Test
+Test class.
 ### Members
 
 | name | type | description |
 |------|------|-------------|
 | **a** | `*` | First member. |
 | **b** | `*` | Second member. |
+
 ***
-
-
-
 ## Class: Thing
-
 Definition for a Thing object used by a Worker.  See [main.Worker](#main.worker).
-
-***
 ### Members
 
 | name | type | description |
 |------|------|-------------|
 | **name** | `string` | Every Thing has a name. |
 | **data** | `* ❘ undefined` | Every Thing might have some data. |
+
 ***
-
-
-
 ## Class: Worker
-
 Definition for a Worker. See [https://developer.mozilla.org/en-US/docs/Web/API/Worker](https://developer.mozilla.org/en-US/docs/Web/API/Worker)
 
+### Methods
+**do(thing)  &#x21e8; `undefined`**
+
 ***
 
-### Methods
- - [do](#do)
+# Functions
+**bar()  &#x21e8; `Boolean ❘ null`**
 
-### do(thing)  &#x21e8; `undefined`
+**create(values)  &#x21e8; `Object`**
 
-Have a Worker do some Thing.  See [main.Thing](#main.thing).
+**exported(param)  &#x21e8; `undefined`**
 
+**func1(a, b)  &#x21e8; `Number`**
 
+**func1(a, b)  &#x21e8; `String`**
 
-**Parameters**
-| name | type | description |
-|------|------|-------------|
-| **thing** | `main.Thing` | The Thing to do.  See [main.Thing](#main.thing). |
+**func2(c, d)  &#x21e8; `undefined`**
 
+**globalFunction(param)  &#x21e8; `undefined`**
 
+**notAnInternalFunction(file, optional)  &#x21e8; `undefined`**
 
+**optionsFunction(file, options)  &#x21e8; `undefined`**
 
----
+**remove()  &#x21e8; `undefined`**
+
+**testNamed(file, optional)  &#x21e8; `undefined`**
 

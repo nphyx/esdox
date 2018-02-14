@@ -1,33 +1,26 @@
 # File `esdox.js`
 
-**Modules**
-* [Global](#module-Global)
 
 
 
 
 
-
- **Author**
-
+ 
 
 
 
 
-# Module Global
 
+Contains the main esdox module.
 
-* [Functions](#functions)
+**[Functions](#functions)**
 * [main](#main-opts-opts.input-opts.output-opts.templateDir-opts.index-sort-opts.indexName-opts.recursive-opts.respect-recursive-opts.index-x21e8-Promise-)
-
 
 
 ## Functions
-* [main](#main-opts-opts.input-opts.output-opts.templateDir-opts.index-sort-opts.indexName-opts.recursive-opts.respect-recursive-opts.index-x21e8-Promise-)
-
 ### main(opts)  &#x21e8; `Promise`
-
-Main function handles parsed CLI input from bin/esdox or a passed options object.
+Main function handles parsed CLI input from bin/esdox or a passed
+options object.
 
 
 

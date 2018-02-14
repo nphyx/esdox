@@ -1,26 +1,56 @@
-Modules
-=======
+# {{^name}}Project Index{{/name}}{{#name}}{{{name}}}{{/name}}{{#version}} {{version}}{{/version}}
+{{#description}}
 
+{{description}}{{/description}}
+{{#author.name}}
+
+**Author**: {{author.name}}{{/author.name}}
+{{#license}}
+
+**License**: {{license}}{{/license}}
+
+# Navigation
+{{#modules.length}}
+**Modules**
 {{#modules}}
-    {{> module}}
-
+{{> module-link}} \(in [{{destination}}]({{destination}})\)
 {{/modules}}
+{{/modules.length}}
 
-Functions
-=========
-
-{{#functions}}
-    {{> function}}
-
-
-
-{{/functions}}
-
-
-Classes
-=======
-
+{{#classes.length}}
+**Classes**
 {{#classes}}
-    {{> class}}
-
+{{> class-link}} in [{{destination}}]({{destination}})
 {{/classes}}
+{{/classes.length}}
+
+{{#functions.length}}
+**Functions**
+{{#functions}}
+{{> function-link}} in [{{destination}}]({{destination}})
+{{/functions}}
+{{/functions.length}}
+
+{{#modules.length}}
+# Modules
+{{#modules}}
+## Module {{name}}
+{{> module-summary}}
+***
+{{/modules}}
+{{/modules.length}}
+
+{{#classes.length}}
+# Classes
+{{#classes}}
+{{> class-summary}}
+***
+{{/classes}}
+{{/classes.length}}
+
+{{#functions.length}}
+# Functions
+{{#functions}}
+{{> function-summary}}
+{{/functions}}
+{{/functions.length}}

@@ -1,38 +1,35 @@
-{{#name}}
-# Module {{name}}
-{{/name}}
 {{#description}}
 {{{description}}}
 {{/description}}
-
 {{#examples}}
 **Example:**
+
 {{{examples}}}
-
 {{/examples}}
-
 {{#functions.length}}
-* [Functions](#functions)
+
+**[Functions](#functions)**
 {{/functions.length}}
 {{#functions}}
- {{> function-link}}
+  {{> function-link}}
 {{/functions}}
 {{#classes.length}}
-* [Classes](#classes)
+
+**[Classes](#classes)**
 {{#classes}}
- {{> class-link}}
+  {{> class-link}}
 {{/classes}}
 {{/classes.length}}
-
 {{#hasRequires}}
+
 **Requires:**
 
 {{#requires}}
 + {{{req}}}
 {{/requires}}
 {{/hasRequires}}
-
 {{#hasMembers}}
+
 **Members:**
 
 {{#members}}
@@ -40,18 +37,19 @@
 {{/members}}
 {{/hasMembers}}
 
+{{! display functions }}
 {{#functions.length}}
+
 ## Functions
 {{#functions}}
-{{> function-link}}
+### {{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}} &#x21e8; {{#returns}}{{#typesString}}`{{typesString}}`{{/typesString}}{{/returns}}{{^returns.length}}`undefined`{{/returns.length}}
+{{> function}}
 {{/functions}}
 {{/functions.length}}
 
-{{#functions}}
-{{> function}}
-{{/functions}}
-
+{{! display classes }}
 {{#classes.length}}
+
 ## Classes
 {{#classes}}
 {{> class-link}}

@@ -1,8 +1,5 @@
 # File `test7.js`
 
-**Modules**
-* [Global](#module-Global)
-
 
 **Overview:** Test classes without methods.
 
@@ -14,13 +11,9 @@
 
 
 
-# Module Global
 
-
-* [Classes](#classes)
+**[Classes](#classes)**
 * [Test](#class-Test)
-
-
 
 
 
@@ -28,9 +21,7 @@
 * [Test](#class-Test)
 
 ## Class: Test
-
 Test class.
-
 ***
 ### Members
 
@@ -39,5 +30,4 @@ Test class.
 | **a** | `*` | First member. |
 | **b** | `*` | Second member. |
 ***
-
 

@@ -1,40 +1,39 @@
-Modules
-=======
+# @nphyx/esdox 0.2.1
 
+Clean, simple JSDoc -&gt; Github Markdown generator with support for ES6+.
 
-Functions
-=========
+**Author**: Justen Robertson
 
-### main(opts)  &#x21e8; `Promise`
+**License**: MIT
 
-Main function handles parsed CLI input from bin/esdox or a passed options object.
-
-
-
-
-
-**Parameters**
-
-| name | type | default | description |
-|------|------|---------|-------------|
-| **opts** | `Object` |  | configuration object |
-| **opts.input** | `String ❘ Array` |  | input file or directory |
-| **opts.output** | `String` |  | output directory |
-| ***opts.templateDir*** | `String` |  | directory for custom mustache templates |
-| ***opts.index-sort*** | `String` | `standard` | sort index entries by name ("standard"), namespace ("namespace"), or not at all ("none") |
-| ***opts.indexName*** | `String` | `index.md` | name for generated index file |
-| ***opts.recursive*** | `Boolean` |  | generate documentation for subdirectories |
-| ***opts.respect-recursive*** | `Boolean` |  | generate documentation for subdirectories, keeping directory structure in output files |
-| ***opts.index*** | `Boolean` |  | generate an index file |
+# Navigation
+**Modules**
+* [main](#module-main)
+ \(in [esdox.md](esdox.md)\)
+* [analyze](#module-analyze)
+ \(in [lib&#x2F;analyze.md](lib&#x2F;analyze.md)\)
+* [generateMD](#module-generateMD)
+ \(in [lib&#x2F;generateMD.md](lib&#x2F;generateMD.md)\)
 
 
 
----
+# Modules
+## Module main
+Contains the main esdox module.
 
+**Functions**
+* [main](#main-opts-opts.input-opts.output-opts.templateDir-opts.index-sort-opts.indexName-opts.recursive-opts.respect-recursive-opts.index-x21e8-Promise-)
+***
+## Module analyze
+Helper functions for analyzing JSDoc ASTs.
 
+Handles sorting, adding extra metadata, string escaping / cleanup, and other
+transforms of raw AST data for use by the mustache templates. These are all
+used internally and marked as private, but exported for unit testing
+purposes.
+***
+## Module generateMD
+The generateMD function, plus various internal functions to manage the process.
+***
 
-
-
-Classes
-=======
 

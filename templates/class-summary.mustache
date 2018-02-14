@@ -2,7 +2,6 @@
 ## Class: {{name}}
 {{/name}}
 {{#description}}{{{description}}}{{/description}}
-***
 {{#members.length}}
 ### Members
 
@@ -10,17 +9,11 @@
 |------|------|-------------|{{/members.length}}{{#members}}
 | {{#optional}}***{{name}}***{{/optional}}{{^optional}}**{{name}}**{{/optional}} | {{#typesString}}`{{typesString}}`{{/typesString}} | {{#description}}{{{description}}}{{/description}} |{{/members}}
 {{#members.length}}
-***
 
 {{/members.length}}
 {{#methods.length}}
 ### Methods
 {{#methods}}
-{{> function-link}}
-{{/methods}}
-***
-{{#methods}}
-### {{name}}({{#paramsString}}{{paramsString}}{{/paramsString}}) {{#version}}{{version}}{{/version}} &#x21e8; {{#returns}}{{#typesString}}`{{typesString}}`{{/typesString}}{{/returns}}{{^returns.length}}`undefined`{{/returns.length}}
-{{> function}}
+{{> function-summary}}
 {{/methods}}
 {{/methods.length}}

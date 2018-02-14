@@ -1,8 +1,5 @@
 # File `test5.js`
 
-**Modules**
-* [base](#module-base)
-
 
 **Overview:** This sample will output module requires and members.
 
@@ -14,12 +11,10 @@
 
 **Version:** 0.0.1
 
-# Module base
 init system configuration
 
-
-* [Functions](#functions)
-* [init](#init-x21e8-)
+**[Functions](#functions)**
+* [init](#init-x21e8-undefined-)
 
 **Requires:**
 
@@ -31,11 +26,9 @@ init system configuration
 + UPLOAD_DIR
 + QRCODE_DIR
 
+
 ## Functions
-* [init](#init-x21e8-)
-
 ### init()  &#x21e8; `undefined`
-
 Read global config from database
 
 
