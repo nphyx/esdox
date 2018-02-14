@@ -1,4 +1,4 @@
-# @nphyx/esdox 0.2.1
+# @nphyx/esdox 0.3.0
 
 Clean, simple JSDoc -&gt; Github Markdown generator with support for ES6+.
 

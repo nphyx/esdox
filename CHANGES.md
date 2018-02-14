@@ -1,6 +1,29 @@
 ESDox Changes
 =============
 
+0.3.0
+-----
+* vast improvements to index file
+  * now pulls author, license, description, and version info from package.json
+  * indexes now show a summary of all top-level modules, classes, and functions and links
+* new metadata for use by templates and other analysis improvements
+  * functions with at least one default param get hasDefaultParams meta
+  * files get hasMultipleModules if more than one module
+  * example blocks are intelligently wrapped as needed
+  * functions, modules, and classes can now have linebreaks in description
+* template modularization improvements
+  * links have their own partial for global use
+  * summary partials for modules, functions, and classes
+* file template updates
+  * doesn't display header/navigation for modules if there's only one module in the file
+  * @requires now shows in a bullet list instead of a single line
+* function template updates
+  * now shows "undefined" return value for functions without explicit return definition
+* self-documentation updates for github wiki
+  * internal methods tagged @private
+  * regenerated with new templates
+
+
 0.2.1
 -----
 * templateDir option fixes
