@@ -50,17 +50,21 @@ describe("esdox", () => {
     it("should collect functions and classes to place in the index", () => {
       const opts = {output: "./test/output"};
       const accumulator = {
+        modules: [],
         functions: [],
         classes: []
       }
       const expected = {
+        modules: [
+          {name: "quux", source: "../../src/file1.js", destination: ""}
+        ],
         functions: [
-          {className: undefined, name: "foo", source: "../../src/file1.js"},
-          {className: undefined, name: "qux", source: "../../src/file2.js"}
+          {className: undefined, name: "foo", source: "../../src/file1.js", destination: ""},
+          {className: undefined, name: "qux", source: "../../src/file2.js", destination: ""}
         ],
         classes: [
-          {name: "bar", source: "../../src/file1.js"},
-          {name: "baz", source: "../../src/file2.js"}
+          {name: "bar", source: "../../src/file1.js", destination: ""},
+          {name: "baz", source: "../../src/file2.js", destination: ""}
         ]
       }
       esdoxStubs.indexTestData.reduce((p, c) =>
@@ -144,7 +148,7 @@ describe("esdox", () => {
       jsdpStub.should.be.calledWith(source);
       esdoxStubs.analyze.should.be.calledWith({}, opts);
       esdoxStubs.generateMD.should.be.calledWith(
-        {basename: "fake.js", source: "fake.js"}, opts.templateDir, false);
+        {modules: [], functions: [], classes: [], basename: "fake.js", source: "fake.js"}, opts.templateDir, false);
       generated.length.should.eql(1);
       generated[0].should.deepEqual({
         source: source,
@@ -152,7 +156,7 @@ describe("esdox", () => {
         basename: path.basename(source),
         destination: path.join(opts.output, source).replace(/\.js$/, ".md"),
         parsed: {},
-        analyzed: {basename: "fake.js", source: "fake.js"},
+        analyzed: {basename: "fake.js", source: "fake.js", modules: [], functions: [], classes: []},
         markdown: true
       });
     });
@@ -222,10 +226,6 @@ describe("esdox", () => {
       }
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
       // collectIndexData needs analyzed to have some stuff in it
-      esdoxStubs.analyze.returns({
-        functions: [],
-        classes: []
-      });
       let fixtureList = await fsp.readdir(opts.input[0])
       fixtureList = fixtureList
         .filter(file => file.match(/\.js$/))
@@ -238,7 +238,6 @@ describe("esdox", () => {
       index.dirname.should.eql(path.dirname(opts.input[0]));
       index.destination.should.eql(path.join(opts.output, "index.md"));
       index.markdown.should.be.True();
-      esdoxStubs.analyze.returns({});
     });
     it("should support a custom index name with opts.indexName", async () => {
       const opts = {
@@ -249,15 +248,9 @@ describe("esdox", () => {
         templateDir: "templates"
       };
       fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
-      // collectIndexData needs analyzed to have some stuff in it
-      esdoxStubs.analyze.returns({
-        functions: [],
-        classes: []
-      });
       let generated = await generate(opts);
       let index = generated.pop();
       index.destination.should.eql(path.join(opts.output, "customIndex.md"));
-      esdoxStubs.analyze.returns({});
     });
   });
 
@@ -271,10 +264,6 @@ describe("esdox", () => {
       process.exit = sinon.stub();
       console.error = sinon.stub();
       sinon.spy(console, "log");
-      esdoxStubs.analyze.returns({
-        functions: [],
-        classes: []
-      });
       sinon.spy(esdoxModule, "createDirectoryRecursive");
       fsStubs.writeFile.resetHistory();
       fsStubs.stat.resetHistory();
@@ -286,7 +275,6 @@ describe("esdox", () => {
       process.exit = _exit;
       console.error = _consoleError;
       console.log.restore();
-      esdoxStubs.analyze.returns({});
       esdoxModule.createDirectoryRecursive.restore();
     });
 
@@ -297,10 +285,6 @@ describe("esdox", () => {
         input: "./fixtures",
         output: "./test/test_output"
       }
-      esdoxStubs.analyze.returns({
-        functions: [],
-        classes: []
-      });
       await esdox(opts);
       console.error.should.not.be.called();
       esdoxModule.generate.should.be.calledWith({
@@ -312,7 +296,6 @@ describe("esdox", () => {
     });
 
     it("should create files", async () => {
-      // collectIndexData needs analyzed to have some stuff in it
       const opts = {
         input: "./fixtures",
         output: "./test/output",
