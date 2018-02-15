@@ -1,6 +1,33 @@
 ESDox Changes
 =============
 
+0.4.0
+-----
+* BREAKING: changes to CLI and modules options for consistency/clarity:
+  * --templateDir renamed to --templates
+  * opts.templateDir renamed to opts.templates
+  * --respect-recursive | --rr renamed to --keep-fs | --kfs
+  * opts\["respect-recursive"\] renamed to  opts.keepFs
+  * --All | -A renamed to --include-private | -p
+  * opts.A renamed to opts.private 
+  * opts["index-sort"] renamed to opts.indexSort
+* BREAKING: refactored analyze
+  * no longer generates a fake "Global" module and shoves random stuff in it
+    * BREAKS previous (bad) behavior
+    * fixes tedious cleanup problems in templates
+    * stuff without a parent node goes directly into the analyzed AST's buckets (modules, methods, functions, members)
+    * but parent nodes are more correctly identified now
+  * correctly hierarchically structures output
+    * for instance module:foo.bar~baz~quux quux ends up in module foo, as a member of baz, which is a member of bar
+    * this BREAKS (fixes) things getting thrown into global space
+  * no longer tries to guess what module/class/whatever a badly documented node belongs to
+    * this BREAKS some previous behavior, but also fixes lots of weirdness
+  * a bunch of transforms and sanitization broken out into individual helper functions that can be unit tested
+    * may have gone over-general on params, properties and return values (they all share the same structure)
+  * overall behavior should be similar if you use the default templates
+* tests confirming the new analyze changes are doing the right things
+  * also updated those tests to check regressions to prior (wrong) behavior
+
 0.3.0
 -----
 * vast improvements to index file
