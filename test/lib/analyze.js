@@ -5,21 +5,234 @@ var jsdoc = require('jsdoc3-parser');
 var path = require("path");
 require("should");
 
-
 describe('analyze', function() {
+  describe("buildTypesString", () => {
+    it("should build a safe-pipe-separated string", () => {
+      analyze.buildTypesString({}).should.eql("");
+      const test = {
+        type: { names: ["foo","bar","baz"] }
+      }
+      analyze.buildTypesString(test).should.eql("foo \u2758 bar \u2758 baz");
+    });
+  });
 
-  it("returns null when no JSDoc AST is given", () => {
-    (analyze(undefined, {}) === null).should.be.True();
+  describe("isInternal", () => {
+    it("recognizes @private", () => {
+      let test = { access: "private" };
+      analyze.isInternal(test).should.be.True();
+    });
+    it("pretends items starting with _ are private", () => {
+      let test = { name: "_foo" };
+      analyze.isInternal(test).should.be.True();
+    });
+  });
+
+  describe("normNode", () => {
+    it("norms functions", () => {
+      let test = {
+        kind: "function",
+        memberof: undefined
+      }
+      const res = analyze.normNode(test);
+      res.should.not.eql(test); // should be a deep clone
+      test.membership = {modules: [], objects: []};
+      test.description = undefined;
+      test.version = undefined;
+      test.deprecated = false;
+      test.params = [];
+      res.should.deepEqual(test);
+    });
+    it("norms modules", () => {
+      let test = {
+        kind: "module",
+        memberof: undefined
+      }
+      const res = analyze.normNode(test);
+      res.should.not.eql(test); // should be a deep clone
+      test.membership = {modules: [], objects: []};
+      test.functions = [];
+      test.classes = [];
+      test.description = undefined;
+      test.version = undefined;
+      test.deprecated = false;
+      test.requires = [];
+      test.members = [];
+      res.should.deepEqual(test);
+    });
+    it("norms classes", () => {
+      let test = {
+        kind: "class",
+        memberof: undefined
+      }
+      const res = analyze.normNode(test);
+      res.should.not.eql(test); // should be a deep clone
+      test.membership = {modules: [], objects: []};
+      test.methods = [];
+      test.members = [];
+      test.description = undefined;
+      test.version = undefined;
+      test.deprecated = false;
+      res.should.deepEqual(test);
+    });
+    it("norms object literals", () => {
+      let test = {
+        kind: "member",
+        memberof: undefined
+      }
+      const res = analyze.normNode(test);
+      res.should.not.eql(test); // should be a deep clone
+      test.membership = {modules: [], objects: []};
+      test.members = [];
+      test.functions = [];
+      test.description = undefined;
+      test.version = undefined;
+      test.deprecated = false;
+      res.should.deepEqual(test);
+    });
+  });
+
+  describe("cleanProps", () => {
+    it("produces clean, normalized properties", () => {
+      const test = [
+        {
+          description: "fussy\nmultiline\ndescription",
+          name: "foo",
+          type: {names: ["bar","baz","qux"], optional: true}
+        },
+        {
+          optional: true,
+          defaultvalue: "foo"
+        }
+      ];
+      const res = analyze.cleanProps(test);
+      res[0].should.not.eql(test[0]);
+      test[0].description = "fussy multiline description";
+      test[0].nested = false;
+      test[0].optional = false;
+      test[0].defaultvalue = undefined;
+      test[0].typesString = analyze.buildTypesString(test[0]);
+      res[0].should.deepEqual(test[0]);
+      res[1].optional.should.eql(true);
+      res[1].defaultvalue.should.eql("foo");
+    });
+  });
+
+  describe("noLineBreaks", () => {
+    it("strips linefeeds", () => {
+      analyze.noLineBreaks("foo\nbar\nbaz").should.eql("foo bar baz");
+    });
+    it("strips carriage returns", () => {
+      analyze.noLineBreaks("foo\rbar\rbaz").should.eql("foo bar baz");
+    });
+    it("strips CRLFs", () => {
+      analyze.noLineBreaks("foo\r\nbar\r\nbaz").should.eql("foo bar baz");
+    });
+  });
+
+  describe("parseMembership", () => {
+    it("returns empty membership for empty strings", () => {
+      analyze.parseMembership().should.deepEqual({modules: [], objects: []});
+    });
+    it("parses module membership", () => {
+      analyze.parseMembership("module:foo").modules.should.eql(["foo"]);
+      analyze.parseMembership("module:foo.bar").modules.should.eql(["foo", "bar"]);
+    });
+    it("parses object/class membership", () => {
+      analyze.parseMembership("module:foo~bar").objects.should.eql(["bar"]);
+      analyze.parseMembership("module:foo~bar~baz~qux").objects
+        .should.eql(["bar","baz","qux"]);
+    });
+    it("parses membership in object literals", () => {
+      analyze.parseMembership("Foo").objects.should.eql(["Foo"]);
+      analyze.parseMembership("Foo~bar").objects.should.deepEqual(["Foo", "bar"]);
+      analyze.parseMembership("Foo.bar").objects.should.deepEqual(["Foo", "bar"]);
+    });
+  });
+
+  describe("collect", () => {
+    const makeResultStub = () => ({modules: [], classes: [],
+      functions: [], members: []});
+    const makeMembershipStub = () => ({objects: [], modules: []});
+    it("puts things in the right buckets", () => {
+      const result = makeResultStub();
+      const memStub = makeMembershipStub();
+      const testFn = {kind: "function", membership: memStub, name: "foo"};
+      const testClass = {kind: "class", membership: memStub, name: "bar"};
+      const testModule = {kind: "module", membership: memStub, name: "baz"};
+      const testMember = {kind: "member", membership: memStub, name: "qux"};
+      analyze.collect(testFn, result);
+      result.functions[0].name.should.eql("foo");
+      analyze.collect(testClass, result);
+      result.classes[0].name.should.eql("bar");
+      analyze.collect(testModule, result);
+      result.modules[0].name.should.eql("baz");
+      analyze.collect(testMember, result);
+      result.members[0].name.should.eql("qux");
+    });
+    it("places a module member as a child of its module", () => {
+      const result = makeResultStub();
+      const memStub = makeMembershipStub();
+      const memFoo = {objects: [], modules: ["foo"]};
+      const testModule = {kind: "module", membership: memStub, name: "foo",
+        classes: [], functions: []};
+      const testFn = {kind: "function", membership: memFoo, name: "bar"};
+      const testClass = {kind: "class", membership: memFoo, name: "baz"};
+      analyze.collect(testModule, result);
+      analyze.collect(testFn, result);
+      analyze.collect(testClass, result);
+      result.functions.length.should.eql(0);
+      result.classes.length.should.eql(0);
+      result.modules[0].functions.length.should.eql(1);
+      result.modules[0].classes.length.should.eql(1);
+    });
+    it("places a class method as a child of its class", () => {
+      const result = makeResultStub();
+      const memStub = makeMembershipStub();
+      const memFoo = {...makeMembershipStub(), ...{objects: ["foo"]}};
+      const testClass = {kind: "class", name: "foo", membership: memStub, methods: []};
+      const testFn = {kind: "function", membership: memFoo};
+      analyze.collect(testClass, result);
+      analyze.collect(testFn, result);
+      result.functions.length.should.eql(0);
+      result.classes.length.should.eql(1);
+      result.classes[0].methods.length.should.eql(1);
+    });
+    it("places a module's class's method as a child of its class", () => {
+      const result = makeResultStub();
+      const memStub = makeMembershipStub();
+      const memFoo = {...makeMembershipStub(), ...{modules: ["foo"]}};
+      const memBar = {...makeMembershipStub(), ...{objects: ["bar"], modules: ["foo"]}};
+      const testModule = {kind: "module", membership: memStub, name: "foo",
+        classes: [], functions: []};
+      const testClass = {kind: "class", name: "bar", membership: memFoo, methods: []};
+      const testFn = {kind: "function", membership: memBar};
+      analyze.collect(testModule, result);
+      analyze.collect(testClass, result);
+      analyze.collect(testFn, result);
+      result.functions.length.should.eql(0);
+      result.classes.length.should.eql(0);
+      result.modules[0].classes.length.should.eql(1);
+      result.modules[0].classes[0].methods.length.should.eql(1);
+    });
+    it("places a member of an object literal as a child of that object", () => {
+      const result = makeResultStub();
+      const memStub = makeMembershipStub();
+      const memFoo = {...makeMembershipStub(), ...{members: ["foo"]}};
+      const testFn = {kind: "function", membership: memFoo};
+      const testModule = {kind: "member", name: "foo", membership: memStub,
+        members: []};
+    });
   });
 
   describe("analysis", () => {
     var test2, test3, test4, test5, test6, test7, test8, under, fixtures;
+    const opts = {private: true};
     // let's get ASTs for all the test fixtures
     // TODO: use a standardized stub jsdoc AST instead
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test2.js"), (err, res) => {
         expect(err).to.eql(null);
-        test2 = analyze(res, {});
+        test2 = analyze(res, opts);
         done();
       });
     });
@@ -27,7 +240,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test3.js"), (err, res) => {
         expect(err).to.eql(null);
-        test3 = analyze(res, {});
+        test3 = analyze(res, opts);
         done();
       });
     });
@@ -35,7 +248,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test4.js"), (err, res) => {
         expect(err).to.eql(null);
-        test4 = analyze(res, {});
+        test4 = analyze(res, opts);
         done();
       });
     });
@@ -43,7 +256,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test5.js"), (err, res) => {
         expect(err).to.eql(null);
-        test5 = analyze(res, {});
+        test5 = analyze(res, opts);
         done();
       });
     });
@@ -51,7 +264,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test6.js"), (err, res) => {
         expect(err).to.eql(null);
-        test6 = analyze(res, {});
+        test6 = analyze(res, opts);
         done();
       });
     });
@@ -59,7 +272,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test7.js"), (err, res) => {
         expect(err).to.eql(null);
-        test7 = analyze(res, {});
+        test7 = analyze(res, opts);
         done();
       });
     });
@@ -67,7 +280,7 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/test8.js"), (err, res) => {
         expect(err).to.eql(null);
-        test8 = analyze(res, {});
+        test8 = analyze(res, opts);
         done();
       });
     });
@@ -75,9 +288,13 @@ describe('analyze', function() {
     before(function(done) {
       jsdoc(path.join(__dirname, "../../fixtures/under/test.js"), (err, res) => {
         expect(err).to.eql(null);
-        under = analyze(res, {});
+        under = analyze(res, opts);
         done();
       });
+    });
+
+    it("complains when no AST is received", () => {
+      (() => analyze(undefined, {})).should.throw();
     });
 
     it("returns an analyzed JSDoc AST", function() {
@@ -90,7 +307,6 @@ describe('analyze', function() {
           "classes",
           "modules",
           "members",
-          "globalModule",
           "description",
           "overview",
           "copyright",
@@ -103,25 +319,30 @@ describe('analyze', function() {
     });
 
     describe('aggregation', () => {
-      it('groups all functions', () => {
+      it('groups all functions under correct parents', () => {
         const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [4,     2,     1,     1,     5,     0,     1];
+        const expected = [4,     2,     3,     0,     0,     0,     1];
         fixtures.map(fixture => fixture.functions.length).should.eql(expected);
       });
-      it('groups all methods', () => {
+      it('groups all methods under correct parents', () => {
         const fixtures = [test2, test3, test4, test5, test6, test7, test8];
         const expected = [0,     0,     0,     0,     0,     0,     0];
         fixtures.map(fixture => fixture.methods.length).should.eql(expected);
       });
-      it('groups all classes', () => {
+      it('groups all classes under correct parents', () => {
         const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [0,     0,     0,     0,     2,     1,     0];
+        const expected = [0,     0,     0,     0,     0,     1,     0];
         fixtures.map(fixture => fixture.classes.length).should.eql(expected);
+        test6.modules.find(m => m.name === "main").classes.length.should.eql(2);
+        test6.modules.find(m => m.name === "main")
+          .members.find(m => m.name === "util").functions.length.should.eql(2);
       });
-      it('groups all private members', () => {
+      it('groups all members under correct parents', () => {
         const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [0,     0,     0,     3,     0,     0,     0];
+        const expected = [0,     1,     0,     0,     0,     1,     0];
         fixtures.map(fixture => fixture.members.length).should.eql(expected);
+        test5.modules[0].members.length.should.eql(3);
+        test7.classes[0].members.length.should.eql(2);
       });
     });
 
@@ -183,29 +404,31 @@ describe('analyze', function() {
           ];
           fixtures.map(fixture => fixture.copyright).should.deepEqual(expected);
         });
-        xit('captures @namespace', () => {
-          console.log(test6);
-          test6.namespace.should.eql("main");
+        it("wraps @example in code block backticks if necessary", () => {
+          under.modules
+            .find(mod => mod.name === "foo").classes
+            .find(cl => cl.name === "SampleClass").methods
+            .find(m => m.name === "func1").examples[0].should.eql("```\nfunc1(1, 2)\n```");
         });
-        xit("wraps @example in code block backticks if necessary");
       }); // end file-level tags
       describe('object-level tags', () => {
         it('captures @description', () => {
           const funcs = test2.functions;
           const expected = [
             undefined,
-            undefined,
+            "Function with no param types and a broken @return.",
             "exported with dot notation",
             "global function"
           ];
           funcs.map(func => func.description).should.eql(expected);
         });
         it('captures @param on functions', () => {
-          const params = test2.functions[0].params;
           const expected = [
             {
               name: "a",
               nested: false,
+              optional: false,
+              defaultvalue: undefined,
               description: "the first param",
               type: {names: ["String"]},
               typesString: "String"
@@ -214,19 +437,28 @@ describe('analyze', function() {
               name: "b",
               description: "the second param",
               nested: false,
+              defaultvalue: undefined,
+              optional: false,
               type: {names: ["String"]},
               typesString: "String"
             }
           ];
-          params.should.deepEqual(expected);
+          test2.functions[0].params.should.deepEqual(expected);
         });
-        xit("flags a function with parameter defaults");
+        it("flags a function with parameter defaults", () => {
+          test3.functions[0].params[0].optional.should.be.True();
+          test3.functions[0].hasDefaultParams.should.be.True();
+        });
         it('captures @return/@returns on functions', () => {
           const returns = test2.functions[0].returns;
           const expected = [{
             description: "the result",
             type: {names: ["String"]},
-            typesString: "String"
+            typesString: "String",
+            optional: false,
+            defaultvalue: undefined,
+            nested: false,
+            name: undefined
           }];
           returns.should.deepEqual(expected);
         });
@@ -236,19 +468,18 @@ describe('analyze', function() {
             {ref: "module:foo#event:another", name: "foo#another"},
             {ref: "module:foo#event:booyah", name: "foo#booyah"}
           ];
-          under.functions[1].fires.should.deepEqual(expected);
+          under.functions[0].fires.should.deepEqual(expected);
         });
       }); // end object-level tags
       describe('module-level tags', () => {
         it('captures @namespace', () => {
-          test6.modules.map(module => module.name).should.eql([
-            "main",
-            "util" // TODO: probably should be main.util
-          ]);
+          test6.modules[0].name.should.eql("main");
+        });
+        it("captures namespace members", () => {
+          test6.modules[0].members[0].name.should.eql("util");
         });
         it('captures classes', () => {
-          // TODO: test3 should have a defined class with methods and members
-          test6.classes.map(klass => klass.name).should.eql([
+          test6.modules[0].classes.map(c => c.name).should.eql([
             "Thing",
             "Worker"
           ]);
@@ -257,26 +488,25 @@ describe('analyze', function() {
       describe('Constructor-style class-level tags', () => {
         var module3, class7;
         before(() => {
-          module3 = test3.modules[0];
           class7 = test7.classes[0];
           // TODO: test3 should have a defined class with methods and members
         });
         it('captures @members', () => {
           class7.members.map(member => member.name).should.eql([
             "a",
-            "b"
+            "c"
           ]);
         });
         it('captures @methods as functions', () => {
-          module3.functions.length.should.eql(2);
-          module3.functions.map(func => func.description).should.eql([
+          test3.functions.length.should.eql(2);
+          test3.functions.map(func => func.description).should.eql([
             "Create a record",
             "Remove a record"
           ]);
         });
         it('identifies membership of methods', () => {
-          module3.functions.map(func => func.memberof).should.eql([
-            undefined, // TODO: this is definitely broken
+          test3.functions.map(func => func.memberof).should.eql([
+            "Object",
             "Object"
           ]);
         });

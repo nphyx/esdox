@@ -13,9 +13,22 @@
     "url": "git://github.com/nphyx/esdox.git"
   },
   "keywords": [
-    "jsdox", "esdox", "jsdoc", "jsdoc3", "markdown", "javascript", "es6", "es7",
-    "github", "github flavored markdown", "documentation", "generator", "cli", "api",
-    "parser", "github wiki"
+    "jsdox",
+    "esdox",
+    "jsdoc",
+    "jsdoc3",
+    "markdown",
+    "javascript",
+    "es6",
+    "es7",
+    "github",
+    "github flavored markdown",
+    "documentation",
+    "generator",
+    "cli",
+    "api",
+    "parser",
+    "github wiki"
   ],
   "main": "./esdox.js",
   "files": [
@@ -37,6 +50,7 @@
     "esdox": "./bin/esdox"
   },
   "dependencies": {
+    "clone": "^2.1.1",
     "jsdoc3-parser": "^1.1.0",
     "mustache": "^2.3.0",
     "q": "^1.5.1",

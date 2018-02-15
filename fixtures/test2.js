@@ -14,16 +14,17 @@ exports = {
    * @param {String} a - the first param
    * @param {String} b - the second param
    * @returns {String} the result
-  */
+   */
   func1: function(a, b) {
     return 1;
   },
 
   /**
+   * Function with no param types and a broken @return.
    * @param c the first param
    * @param d the second param
    * @ returns the other result
-  */
+   */
   func2: function(c, d) {
     return null;
   }
