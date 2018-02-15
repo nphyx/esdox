@@ -1,61 +1,18 @@
 # File `test.js`
 
-**Modules**
-* [Global](#module-Global)
-* [foo](#module-foo)
 
-**Overview:** What's up?
+**Overview:** This file is contained by a folder within an other folder.
 
 
 
-**Copyright** *(c) 2012 Blah Blah Blah***Author** Joe Schmo
+ **Author** Gabor Sar
 
 **License:** MIT 
 
-**Version:** 1.0.1
-
-# Module Global
-
-**[Functions](#functions)**
-* [bar](#bar-x21e8-Boolean ❘ null-)
-* [testNamed](#testNamed-file-optional-x21e8-undefined-)
 
 
-## Functions
-### bar()  &#x21e8; `Boolean ❘ null`
-I so cool
-
-
-**Deprecated:** Not a good function
-
-
-
-
-
-
-
----
-### testNamed(file, optional)  &#x21e8; `undefined`
-This is a test function   with a description on multiple lines
-
-
-
-**Parameters**
-
-| name | type | description |
-|------|------|-------------|
-| **file** | `String ❘ null` | filename to parse                        this parsing thing is funny business |
-| ***optional*** | `Boolean ❘ null` | Changes behavior |
-
-
-
-**Fires**: [`foo#one_thing`](module:foo#event:one_thing) [`foo#another`](module:foo#event:another) [`foo#booyah`](module:foo#event:booyah) 
-
----
-
-
-# Module foo
-Can I get some description please   on more than one line, if possible.
+some description please
+  on more than one line, if possible.
 
 **[Functions](#functions)**
 * [testAnonynous](#testAnonynous-x21e8-String-)
@@ -63,10 +20,14 @@ Can I get some description please   on more than one line, if possible.
 * [func1](#func1-a-b-x21e8-)
 * [func2](#func2-c-d-x21e8-)
 * [testDeprecated](#testDeprecated-x21e8-undefined-)
+* [testAnonynous](#testAnonynous-x21e8-String-)
 
 **[Classes](#classes)**
 * [Ketch](#class-Ketch)
 * [SampleClass](#class-SampleClass)
+
+**Members:**
+
 
 
 ## Functions
@@ -142,6 +103,19 @@ This is a deprecated function.
 
 
 ---
+### testAnonynous()  &#x21e8; `String`
+function without name
+
+
+
+**Returns:** the result.
+
+
+
+
+
+
+---
 
 
 ## Classes
@@ -156,7 +130,7 @@ Provides chainable functions to easily build and execute a command.
 | name | type | description |
 |------|------|-------------|
 | **last_err** | `String` | Last error, if present |
-| **cmd** | `Array` | Internal array representation of this command. |
+| **cmd** |  | Internal array representation of this command. |
 ***
 
 ## Class: SampleClass
@@ -165,7 +139,6 @@ This is a class
 
 ### Methods
 * [func1](#func1-a-b-x21e8-)
-* [testAnonynous](#testAnonynous-x21e8-String-)
 * [testNamed](#testNamed-file-optional-x21e8-undefined-)
 ***
 ### func1(a, b)  &#x21e8; 
@@ -190,21 +163,9 @@ func1(1, 2)
 
 
 ---
-### testAnonynous()  &#x21e8; `String`
-function without name
-
-
-
-**Returns:** the result.
-
-
-
-
-
-
----
 ### testNamed(file, optional)  &#x21e8; `undefined`
-This is a test method     with a description on multiple lines
+This is a test method
+    with a description on multiple lines
 
 
 

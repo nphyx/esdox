@@ -43,7 +43,9 @@
     "lint": "node_modules/.bin/eslint -c .eslintrc.json esdox.js lib/* bin/* test/**/*.js fixtures/*",
     "test": "npm run lint && nyc --reporter=text mocha --reporter=dot test/lib/*.js test/*.js test/integration/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-verbose": "npm run lint && nyc --reporter=html mocha --reporter=spec test/lib/*.js test/*.js test/integration/*.js"
+    "test-verbose": "npm run lint && nyc --reporter=html mocha --reporter=spec test/lib/*.js test/*.js test/integration/*.js",
+    "build-docs":"./bin/esdox --kfs -rio docs esdox.js lib",
+    "build-samples":"./bin/esdox -rio docs/sample_output/flat fixtures && ./bin/esdox --kfs -rio docs/sample_output/kept_structure fixtures"
   },
   "preferGlobal": true,
   "bin": {
