@@ -282,7 +282,8 @@ describe("analyze", function() {
     const opts = {private: true};
     // let's get ASTs for all the test fixtures
     // TODO: use a standardized stub jsdoc AST instead
-    before(async () => {
+    before(async function() {
+      this.timeout(10000);
       const testFiles = [
         path.join(__dirname, "../../fixtures/test2.js"),
         path.join(__dirname, "../../fixtures/test3.js"),
