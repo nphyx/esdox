@@ -44,8 +44,8 @@
     "test": "npm run lint && nyc --reporter=text mocha --reporter=dot test/lib/*.js test/*.js test/integration/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-verbose": "npm run lint && nyc --reporter=html mocha --reporter=spec test/lib/*.js test/*.js test/integration/*.js",
-    "build-docs":"./bin/esdox --kfs -rio docs esdox.js lib",
-    "build-samples":"./bin/esdox -rio docs/sample_output/flat fixtures && ./bin/esdox --kfs -rio docs/sample_output/kept_structure fixtures"
+    "build-docs": "./bin/esdox --kfs -rio docs esdox.js lib",
+    "build-samples": "./bin/esdox -rio docs/sample_output/flat fixtures && ./bin/esdox --kfs -rio docs/sample_output/kept_structure fixtures"
   },
   "preferGlobal": true,
   "bin": {
@@ -53,10 +53,10 @@
   },
   "dependencies": {
     "clone": "^2.1.1",
+    "fs-magic": "^2.1.1",
     "jsdoc3-parser": "^1.1.0",
     "mustache": "^2.3.0",
     "q": "^1.5.1",
-    "recursive-readdir": "^2.2.1",
     "yargs": "^11.0.0"
   },
   "devDependencies": {

@@ -1,11 +1,30 @@
-var expect = require('expect.js');
-var sinon = require('sinon');
-var analyze = require('../../lib/analyze');
-var jsdoc = require('jsdoc3-parser');
-var path = require("path");
+const sinon = require("sinon");
+const analyze = require("../../lib/analyze");
+const jsdoc = require("jsdoc3-parser");
+const esdoxStubs = require("../stubs/esdox.stubs");
+const parser = require("../../lib/parser");
+const path = require("path");
 require("should");
 
-describe('analyze', function() {
+describe("analyze", function() {
+  describe("analysisResult", () => {
+    it("should set up an analysis result", () => {
+      let arrays = ["modules", "members", "functions", "classes", "methods"];
+      let strings = ["source", "dirname", "basename", "name", "author", "description", "license", "version", "destination", "overview", "copyright"];
+      let result = analyze.analysisResult();
+      arrays.forEach(item => result[item].should.be.an.Array());
+      strings.forEach(item => result[item].should.be.an.String());
+    });
+    it("should accept overrides", () => {
+      let modules = ["foo", "bar", "baz", "qux"];
+      let data = {source: "source", dirname: "dirname", modules}
+      let result = analyze.analysisResult(data);
+      result.modules.should.eql(modules);
+      result.source.should.eql(data.source);
+      result.dirname.should.eql(data.dirname);
+    });
+  });
+
   describe("buildTypesString", () => {
     it("should build a safe-pipe-separated string", () => {
       analyze.buildTypesString({}).should.eql("");
@@ -91,6 +110,28 @@ describe('analyze', function() {
     });
   });
 
+  describe("cleanExamples", () => {
+    it("should wrap examples in code blocks as needed", () => {
+      let test = [
+        "// this is a example\nconsole.log('hello, world!');",
+        "```javascript\n// this is a example\nconsole.log('hello, world!');\n```",
+        "```bash\n# this is a example\necho 'hello, world!';\n```"
+      ];
+      analyze.cleanExamples(test).should.eql([
+        "```\n// this is a example\nconsole.log('hello, world!');\n```",
+        "```javascript\n// this is a example\nconsole.log('hello, world!');\n```",
+        "```bash\n# this is a example\necho 'hello, world!';\n```"
+      ]);
+    });
+  });
+
+  describe("cleanFires", () => {
+    it("should transform fires/emits strings", () => {
+      let test = ["module:foo#event:bar"];
+      analyze.cleanFires(test).should.eql([{ref: "module:foo#event:bar", name: "foo#bar"}]);
+    });
+  });
+
   describe("cleanProps", () => {
     it("produces clean, normalized properties", () => {
       const test = [
@@ -114,6 +155,18 @@ describe('analyze', function() {
       res[0].should.deepEqual(test[0]);
       res[1].optional.should.eql(true);
       res[1].defaultvalue.should.eql("foo");
+    });
+  });
+
+  describe("collectIndexData", () => {
+    it("should collect functions and classes to place in the index", () => {
+      const opts = {output: "./test/output", indexName: "index.md"};
+      const accumulator = analyze.analysisResult();
+      const stubData = esdoxStubs.indexTestData;
+      const expected = esdoxStubs.indexTestResult;
+      esdoxStubs.indexTestData.reduce((p, c) =>
+        analyze.collectIndexData(p, c, opts), accumulator);
+      accumulator.should.deepEqual(expected);
     });
   });
 
@@ -229,68 +282,20 @@ describe('analyze', function() {
     const opts = {private: true};
     // let's get ASTs for all the test fixtures
     // TODO: use a standardized stub jsdoc AST instead
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test2.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test2 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test3.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test3 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test4.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test4 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test5.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test5 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test6.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test6 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test7.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test7 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/test8.js"), (err, res) => {
-        expect(err).to.eql(null);
-        test8 = analyze(res, opts);
-        done();
-      });
-    });
-
-    before(function(done) {
-      jsdoc(path.join(__dirname, "../../fixtures/under/test.js"), (err, res) => {
-        expect(err).to.eql(null);
-        under = analyze(res, opts);
-        done();
-      });
+    before(async () => {
+      const testFiles = [
+        path.join(__dirname, "../../fixtures/test2.js"),
+        path.join(__dirname, "../../fixtures/test3.js"),
+        path.join(__dirname, "../../fixtures/test4.js"),
+        path.join(__dirname, "../../fixtures/test5.js"),
+        path.join(__dirname, "../../fixtures/test6.js"),
+        path.join(__dirname, "../../fixtures/test7.js"),
+        path.join(__dirname, "../../fixtures/test8.js"),
+        path.join(__dirname, "../../fixtures/under/test.js")
+      ];
+      const parsed = await Promise.all(testFiles.map(test => parser(test)));
+      fixtures = parsed.map(p => analyze(p, opts));
+      [test2, test3, test4, test5, test6, test7, test8, under] = fixtures;
     });
 
     it("complains when no AST is received", () => {
@@ -298,7 +303,6 @@ describe('analyze', function() {
     });
 
     it("returns an analyzed JSDoc AST", function() {
-      const fixtures = [test2, test3, test4, test5, test6, test7, test8];
       fixtures.forEach(fixture => {
         // mandatory (?) fields
         fixture.should.be.an.Object().with.keys(
@@ -320,26 +324,22 @@ describe('analyze', function() {
 
     describe('aggregation', () => {
       it('groups all functions under correct parents', () => {
-        const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [4,     2,     3,     0,     0,     0,     1];
+        const expected = [4, 2, 3, 0, 0, 0, 1, 1];
         fixtures.map(fixture => fixture.functions.length).should.eql(expected);
       });
       it('groups all methods under correct parents', () => {
-        const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [0,     0,     0,     0,     0,     0,     0];
+        const expected = [0, 0, 0, 0, 0, 0, 0, 0];
         fixtures.map(fixture => fixture.methods.length).should.eql(expected);
       });
       it('groups all classes under correct parents', () => {
-        const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [0,     0,     0,     0,     0,     1,     0];
+        const expected = [0, 0, 0, 0, 0, 1, 0, 0];
         fixtures.map(fixture => fixture.classes.length).should.eql(expected);
         test6.modules.find(m => m.name === "main").classes.length.should.eql(2);
         test6.modules.find(m => m.name === "main")
           .members.find(m => m.name === "util").functions.length.should.eql(2);
       });
       it('groups all members under correct parents', () => {
-        const fixtures = [test2, test3, test4, test5, test6, test7, test8];
-        const expected = [0,     1,     0,     0,     0,     1,     0];
+        const expected = [0, 1, 0, 0, 0, 1, 0, 1];
         fixtures.map(fixture => fixture.members.length).should.eql(expected);
         test5.modules[0].members.length.should.eql(3);
         test7.classes[0].members.length.should.eql(2);
@@ -353,7 +353,6 @@ describe('analyze', function() {
           // TODO: file level descriptions in block should be captured
         });
         it('captures @overview', () => {
-          const fixtures = [test2, test3, test4, test5, test6, test7, test8];
           const expected = [
             "This is the overview with some `markdown` included, how nice!",
             "This is the overview with some `markdown` included, how nice!",
@@ -361,12 +360,12 @@ describe('analyze', function() {
             "This sample will output module requires and members.",
             "This sample handles namespaces, interfaces, and links.",
             "Test classes without methods.",
-            ""
+            "",
+            "What's up?"
           ];
           fixtures.map(fixture => fixture.overview).should.eql(expected);
         });
         it('captures @license', () => {
-          const fixtures = [test2, test3, test4, test5, test6, test7, test8];
           const expected = [
             "MIT",
             "MIT",
@@ -374,12 +373,12 @@ describe('analyze', function() {
             "MIT",
             "MIT",
             "MIT",
-            ""
+            "",
+            "MIT"
           ];
           fixtures.map(fixture => fixture.license).should.eql(expected);
         });
         it('captures @author', () => {
-          const fixtures = [test2, test3, test4, test5, test6, test7, test8];
           const expected = [
             ["Joe Schmo"],
             ["Joe Schmo"],
@@ -387,12 +386,12 @@ describe('analyze', function() {
             ["lemori"],
             undefined,
             ["Gabor Sar"],
-            '' // TODO: check if this should happen
+            '', // TODO: check if this should happen
+            ["Joe Schmo"]
           ];
           fixtures.map(fixture => fixture.author).should.deepEqual(expected);
         });
         it('captures @copyright', () => {
-          const fixtures = [test2, test3, test4, test5, test6, test7, test8];
           const expected = [
             "(c) 2012 Blah Blah Blah",
             "(c) 2012 Blah Blah Blah",
@@ -400,7 +399,8 @@ describe('analyze', function() {
             undefined,
             undefined,
             undefined,
-            '' // TODO: check if this should happen
+            '', // TODO: check if this should happen
+            "(c) 2012 Blah Blah Blah"
           ];
           fixtures.map(fixture => fixture.copyright).should.deepEqual(expected);
         });

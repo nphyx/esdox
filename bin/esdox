@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const esdox = require("../esdox").esdox;
+const esdox = require("../esdox");
 const yargs = require("yargs")
   .usage("Usage:\tesdox [options] [-o output_dir] [-t template_dir] <file | directory>")
   .options("output", {
@@ -75,5 +75,5 @@ if (!argv._.length && !argv.input) {
   }
   esdox(opts)
     .then(() => process.exit())
-    .catch(err => console.error("Error: " + err.message))
+    .catch(err => console.error(err))
 }

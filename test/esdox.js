@@ -6,251 +6,71 @@ const proxy = require("proxyquire");
 const promisify = require("util").promisify;
 const path = require("path");
 const sinon = require("sinon");
-const jsdpStub = require("./stubs/jsdoc3-parser.stub");
 const esdoxStubs = require("./stubs/esdox.stubs");
 const fsStubs = require("./stubs/fs.stubs");
 const cliStubs = require("./stubs/cliUtil.stubs");
+const fsm = require("fs-magic");
 const testOutputDirectory = "./test/output";
-const recursive = require("recursive-readdir");
-const fs = require("fs");
+const {analysisResult} = require("../lib/analyze");
 require("should");
-const fsp = {};
-["stat", "readFile", "readdir", "rmdir", "unlink"].forEach(fn => {
-  fsp[fn] = promisify(fs[fn]);
-});
-
 require("should");
 require("should-sinon");
 
-describe("cliStubs", () => {
-  it("should export stub functions", () => {
-    cliStubs.printHelp.should.be.a.Function();
-    cliStubs.printVersion.should.be.a.Function();
-    cliStubs.loadConfigFile.should.be.a.Function();
-  });
-});
-
-const esdoxModule = proxy("../esdox", {
-  "jsdoc3-parser": jsdpStub,
+const esdox = proxy("../esdox", {
+  "./lib/parser": esdoxStubs.parser,
   "./lib/analyze": esdoxStubs.analyze,
-  "./lib/generateMD": esdoxStubs.generateMD,
+  "./lib/generate": esdoxStubs.generate,
   "./lib/cliUtil": cliStubs,
-  fs: fsStubs
+  "fs-magic": fsStubs
 });
 
-const {collectIndexData, createDirectoryRecursive, generate, analyze,
-  generateMD, esdox} = esdoxModule;
+const {collectIndexData, generate, analyze} = esdox;
 
 describe("esdox", () => {
   function cwdWrap(dir) {
     return path.join(process.cwd(), dir);
   }
 
-  describe("collectIndexData", () => {
-    it("should collect functions and classes to place in the index", () => {
-      const opts = {output: "./test/output"};
-      const accumulator = {
-        modules: [],
-        functions: [],
-        classes: []
-      }
-      const expected = {
-        modules: [
-          {name: "quux", source: "../../src/file1.js", destination: ""}
-        ],
-        functions: [
-          {className: undefined, name: "foo", source: "../../src/file1.js", destination: ""},
-          {className: undefined, name: "qux", source: "../../src/file2.js", destination: ""}
-        ],
-        classes: [
-          {name: "bar", source: "../../src/file1.js", destination: ""},
-          {name: "baz", source: "../../src/file2.js", destination: ""}
-        ]
-      }
-      esdoxStubs.indexTestData.reduce((p, c) =>
-        collectIndexData(p, c, opts), accumulator);
-      accumulator.should.deepEqual(expected);
-    });
-  });
-
   describe("createDirectoryRecursive", () => {
     it("should check whether a directory exists", async () => {
-      await createDirectoryRecursive(testOutputDirectory);
+      await esdox.createDirectoryRecursive(testOutputDirectory);
       fsStubs.stat.should.be.calledWith(cwdWrap(testOutputDirectory));
     });
     it("should try to create parent directories recursively", async () => {
       fsStubs.stat.resetHistory();
-      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ENOENT"});
-      fsStubs.stat.onSecondCall().callsArgWith(1, null, true);
-      sinon.spy(esdoxModule, "createDirectoryRecursive");
-      await createDirectoryRecursive(testOutputDirectory);
+      fsStubs.stat.onFirstCall().rejects({code: "ENOENT"});
+      fsStubs.stat.onSecondCall().resolves(true);
+      sinon.spy(esdox, "createDirectoryRecursive");
+      await esdox.createDirectoryRecursive(testOutputDirectory);
       fsStubs.stat.should.be.calledWith(cwdWrap(testOutputDirectory));
       fsStubs.stat.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
       fsStubs.mkdir.should.be.calledWith(cwdWrap(path.dirname(testOutputDirectory)));
       fsStubs.mkdir.should.be.calledWith(cwdWrap(testOutputDirectory));
-      fsStubs.stat.callsArgWith(1, null, true);
-      esdoxModule.createDirectoryRecursive.restore();
+      fsStubs.stat.resolves(true);
+      esdox.createDirectoryRecursive.restore();
     });
     it("should not complain if the directory already exists", (done) => {
       fsStubs.mkdir.reset();
-      fsStubs.mkdir.callsArgWith(1, {code: "EEXIST"});
-      createDirectoryRecursive("./test").should.be.resolved()
+      fsStubs.mkdir.rejects({code: "EEXIST"});
+      esdox.createDirectoryRecursive("./test").should.be.resolved()
         .then(() => {
-          fsStubs.mkdir.callsArgWith(1, null, true);
+          fsStubs.mkdir.resolves(true);
           done();
         });
     });
     it("should complain on filesystem errors", (done) => {
-      fsStubs.stat.callsArgWith(1, {code: "SUPERFAIL"});
+      fsStubs.stat.rejects({code: "SUPERFAIL"});
       // would prefer async/await but it's easier to check rejects this way
-      createDirectoryRecursive("./test").should.be.rejected()
+      esdox.createDirectoryRecursive("./test").should.be.rejected()
         .then(() => {
-          fsStubs.stat.callsArgWith(1, null, true);
-          fsStubs.mkdir.callsArgWith(1, {code: "SUPERFAIL"});
-          return createDirectoryRecursive("./test").should.be.rejected()
+          fsStubs.stat.resolves(true);
+          fsStubs.mkdir.rejects({code: "SUPERFAIL"});
+          return esdox.createDirectoryRecursive("./test").should.be.rejected()
         })
         .then(() => {
-          fsStubs.mkdir.callsArgWith(1, null, true);
+          fsStubs.mkdir.resolves(true);
           done();
         });
-    });
-  });
-
-  describe("generate", () => {
-    beforeEach(() => {
-      jsdpStub.resetHistory();
-      esdoxStubs.analyze.resetHistory();
-      esdoxStubs.generateMD.resetHistory();
-      fsStubs.stat.resetHistory();
-    });
-    it("should complain if given a non-javascript file", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
-      generate({input: ["notascript.css"]})
-        .should.be.rejectedWith("no javascript files in input path");
-      fsStubs.stat.resetBehavior();
-    });
-    it("should complain if a file does not exist", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ENOENT"});
-      generate({input: ["doesntexist.js"]})
-        .should.be.rejectedWith("file does not exist: doesntexist.js");
-    });
-    it("should bubble other filesystem errors", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, {code: "ESOMEERROR"});
-      generate({input: ["doesntexist.js"]})
-        .should.be.rejectedWith({code: "ESOMEERROR"});
-    });
-    it("should handle a single file", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => false});
-      const opts = {input: ["fake.js"], output: "./test/output",
-        templates: "templates"};
-      const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
-      let generated = await generate(opts);
-      jsdpStub.should.be.calledWith(source);
-      esdoxStubs.analyze.should.be.calledWith({}, opts);
-      esdoxStubs.generateMD.should.be.calledWith(
-        {modules: [], functions: [], classes: [], basename: "fake.js", source: "fake.js"}, opts.templates, false);
-      generated.length.should.eql(1);
-      generated[0].should.deepEqual({
-        source: source,
-        dirname: path.dirname(source),
-        basename: path.basename(source),
-        destination: path.join(opts.output, source).replace(/\.js$/, ".md"),
-        parsed: {},
-        analyzed: {basename: "fake.js", source: "fake.js", modules: [], functions: [], classes: []},
-        markdown: true
-      });
-    });
-    it("should handle a directory", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
-      const opts = {
-        input: ["./fixtures"],
-        output: "./test/output",
-        templates: "templates"
-      };
-      let fixtureList = await fsp.readdir(opts.input[0])
-      fixtureList = fixtureList
-        .filter(file => file.match(/\.js$/))
-        .map(file => path.join(opts.input[0], file));
-      fixtureList.sort();
-      let generated = await generate(opts);
-      jsdpStub.callCount.should.eql(fixtureList.length);
-      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
-      esdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
-      generated.length.should.eql(fixtureList.length);
-      generated.forEach((entry, i) => {
-        entry.source.should.eql(fixtureList[i]);
-        entry.destination.should.eql(
-          path.join(opts.output, entry.basename).replace(/\.js$/, '.md'));
-      });
-    });
-    it("should recurse subdirectories with opts.r", async () => {
-      const opts = {
-        recursive: true,
-        input: ["./fixtures"],
-        output: "./test/output",
-        templates: "templates"
-      };
-      let fixtureList = await recursive(opts.input[0])
-      fixtureList.sort();
-      let generated = await generate(opts);
-      generated.length.should.eql(fixtureList.length);
-    });
-    it("should keep directory structure in output with opts.keepFs", async () => {
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
-      const opts = {
-        input: ["./fixtures"],
-        output: "./test/output",
-        templates: "templates",
-        keepFs: true
-      };
-      let fixtureList = await recursive(opts.input[0]);
-      fixtureList.sort();
-      let generated = await generate(opts);
-      jsdpStub.callCount.should.eql(fixtureList.length);
-      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
-      esdoxStubs.generateMD.callCount.should.eql(fixtureList.length);
-      generated.length.should.eql(fixtureList.length);
-      generated.forEach((entry, i) => {
-        entry.source.should.eql(fixtureList[i]);
-        entry.destination.should.eql(
-          path.join(opts.output, entry.dirname, entry.basename).replace(/\.js$/, '.md'));
-      });
-    });
-    it("should generate an index file for opts.index", async () => {
-      const opts = {
-        input: ["./fixtures"],
-        output: "./test/output",
-        index: true,
-        indexName: "index.md", // default would be supplied by main()
-        templates: "templates"
-      }
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
-      // collectIndexData needs analyzed to have some stuff in it
-      let fixtureList = await fsp.readdir(opts.input[0])
-      fixtureList = fixtureList
-        .filter(file => file.match(/\.js$/))
-        .map(file => path.join(opts.input[0], file));
-      fixtureList.sort();
-      let generated = await generate(opts);
-      generated.length.should.eql(fixtureList.length + 1);
-      let index = generated.pop();
-      index.source.should.eql("");
-      index.dirname.should.eql(path.dirname(opts.input[0]));
-      index.destination.should.eql(path.join(opts.output, "index.md"));
-      index.markdown.should.be.True();
-    });
-    it("should support a custom index name with opts.indexName", async () => {
-      const opts = {
-        input: ["./fixtures"],
-        output: "./test/output",
-        index: true,
-        indexName: "customIndex.md",
-        templates: "templates"
-      };
-      fsStubs.stat.onFirstCall().callsArgWith(1, null, {isDirectory: () => true});
-      let generated = await generate(opts);
-      let index = generated.pop();
-      index.destination.should.eql(path.join(opts.output, "customIndex.md"));
     });
   });
 
@@ -264,37 +84,129 @@ describe("esdox", () => {
       process.exit = sinon.stub();
       console.error = sinon.stub();
       sinon.spy(console, "log");
-      sinon.spy(esdoxModule, "createDirectoryRecursive");
+      sinon.spy(esdox, "createDirectoryRecursive");
       fsStubs.writeFile.resetHistory();
       fsStubs.stat.resetHistory();
       console.error.resetHistory();
-      fsStubs.stat.callsArgWith(1, null, {isDirectory: () => true});
+      fsStubs.stat.resolves({isDirectory: () => true});
+      esdoxStubs.parser.resetHistory();
+      esdoxStubs.analyze.resetHistory();
+      esdoxStubs.generate.resetHistory();
     });
 
     afterEach(() => {
       process.exit = _exit;
       console.error = _consoleError;
       console.log.restore();
-      esdoxModule.createDirectoryRecursive.restore();
+      esdox.createDirectoryRecursive.restore();
     });
 
+    it("should complain if a file does not exist", async () => {
+      fsStubs.stat.onFirstCall().rejects({code: "ENOENT"});
+      try {
+        await esdox({input: ["doesntexist.js"]})
+      } catch (err) {
+        err.message.should.eql("file does not exist: doesntexist.js");
+      }
+    });
+    it("should complain if it didn't receive any javascript files", async () => {
+      fsStubs.stat.resetBehavior();
+      fsStubs.stat.resolves({isDirectory: () => false});
+      fsStubs.scandir.resolves([[], []]);
+      try {
+        await esdox({input: ["./foo.css", "./bar.php"]})
+      } catch (err) {
+        err.message.should.eql("no javascript files in input path");
+      }
+      fsStubs.scandir.resolves([[],[]]);
+    });
+    it("should bubble other filesystem errors", async () => {
+      fsStubs.stat.onFirstCall().rejects({code: "ESOMEERROR"});
+      try {
+        await esdox({input: ["doesntexist.js"]})
+      } catch (err) {
+        err.code.should.eql("ESOMEERROR");
+      }
+    });
+    it("should handle a single file", async () => {
+      fsStubs.stat.onFirstCall().resolves({isDirectory: () => false});
+      const opts = {input: ["fake.js"], output: "./test/output", indexName: "index.md",
+        templates: "templates"};
+      const source = path.join(path.dirname("fake.js"), path.basename("fake.js"));
+      let generated = await esdox(opts);
+      esdoxStubs.parser.should.be.calledWith(source);
+      esdoxStubs.analyze.should.be.calledWith([], opts);
+      esdoxStubs.generate.should.be.calledWith(
+        {...analysisResult(), ...{source: "fake.js", basename: "fake.js"}},
+        opts
+      );
+    });
+    it("should handle a directory", async () => {
+      fsStubs.stat.onFirstCall().resolves({isDirectory: () => true});
+      const opts = {
+        input: ["./fixtures"],
+        output: "./test/output",
+        templates: "templates"
+      };
+      let [fixtureList, dirs] = await fsm.scandir(opts.input[0], false);
+      fsStubs.scandir.resolves([fixtureList, dirs]);
+      fixtureList = fixtureList
+        .filter(file => file.match(/\.js$/))
+        .map(file => path.join(opts.input[0], file));
+      await esdox(opts);
+      console.error.should.not.be.called();
+      esdoxStubs.parser.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generate.callCount.should.eql(fixtureList.length);
+      fsStubs.scandir.resolves([[],[]]);
+    });
+    it("should recurse subdirectories with opts.recursive", async () => {
+      const opts = {
+        recursive: true,
+        input: ["./fixtures"],
+        output: "./test/output",
+        templates: "templates"
+      };
+      let [fixtureList, dirs] = await fsm.scandir(opts.input[0]);
+      fsStubs.scandir.resolves([fixtureList, dirs]);
+      await esdox(opts);
+      console.error.should.not.be.called();
+      esdoxStubs.parser.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generate.callCount.should.eql(fixtureList.length);
+      fsStubs.scandir.resolves([[],[]]);
+    });
+    it("should keep directory structure in output with opts.keepFs", async () => {
+      fsStubs.stat.onFirstCall().resolves({isDirectory: () => true});
+      const opts = {
+        input: ["./fixtures"],
+        output: "./test/output",
+        templates: "templates",
+        keepFs: true
+      };
+      let [fixtureList, dirs] = await fsm.scandir(opts.input[0]);
+      fsStubs.scandir.resolves([fixtureList, dirs]);
+      await esdox(opts);
+      console.error.should.not.be.called();
+      esdoxStubs.parser.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generate.callCount.should.eql(fixtureList.length);
+      fsStubs.scandir.resolves([[],[]]);
+    });
     it("should process options, wrapping input as an array and providing defaults", async () => {
-      sinon.spy(esdoxModule, "generate");
-      console.error.resetHistory();
       const opts = {
         input: "./fixtures",
         output: "./test/test_output"
       }
+      let [fixtureList, dirs] = await fsm.scandir(opts.input, false);
+      fsStubs.scandir.resolves([fixtureList, dirs]);
       await esdox(opts);
       console.error.should.not.be.called();
-      esdoxModule.generate.should.be.calledWith({
-        input: ["./fixtures"],
-        output: "./test/test_output",
-        indexName: "index.md"
-      });
-      esdoxModule.generate.restore();
+      esdoxStubs.parser.callCount.should.eql(fixtureList.length);
+      esdoxStubs.analyze.callCount.should.eql(fixtureList.length);
+      esdoxStubs.generate.callCount.should.eql(fixtureList.length);
+      fsStubs.scandir.resolves([[],[]]);
     });
-
     it("should create files", async () => {
       const opts = {
         input: "./fixtures",
@@ -303,11 +215,13 @@ describe("esdox", () => {
         keepFs: true,
         templates: "templates"
       };
-      let fixtureList = await recursive(opts.input);
+      let [fixtureList, dirs] = await fsm.scandir(opts.input);
+      fsStubs.scandir.resolves([fixtureList, dirs]);
       await esdox(opts);
       console.error.should.not.be.called();
-      esdoxModule.createDirectoryRecursive.callCount.should.eql(fixtureList.length + 1);
+      esdox.createDirectoryRecursive.callCount.should.eql(fixtureList.length + 1);
       fsStubs.writeFile.callCount.should.eql(fixtureList.length + 1);
+      fsStubs.scandir.resolves([[],[]]);
     });
   });
 });
